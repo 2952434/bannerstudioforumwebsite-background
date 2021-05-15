@@ -22,6 +22,7 @@ import java.util.Map;
  * Created with IntelliJ IDEA.
  * @Author: HYK
  * @Date: 2021/05/10/21:30
+ * Despriction:帖子
  */
 
 @RestController
@@ -289,15 +290,11 @@ public class PostController {
         }
         return RespBean.error("查找失败，为查询到该帖子 ");
     }
-
     /**
      * 查询全部帖子接口
      * @return RespBean
      */
     @GetMapping("/selectAllPost")
-    /**
-     * Swagger接口文档属性配置注解
-     */
     @ApiOperation(value = "查找所有帖子", notes = "帖子需存在", httpMethod = "GET")
     public RespBean selectAllPost() {
         List<PostBean>list = iPostService.selectAllPost();

@@ -1,5 +1,4 @@
 package studio.banner.forumwebsite.bean;
-
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -22,10 +21,11 @@ public class PostBean {
     @TableId(type = IdType.AUTO)
     protected Integer postId;
     @TableField
+    @NotNull(message = "用户id不能为空")
     protected Integer postMemberId;
-    @Valid
-    @NotNull
+    @NotNull(message = "帖子内容不能为空")
     protected String postContent;
+    @NotNull(message = "帖子创建时间不能为空")
     protected String postTime;
     protected Integer postPageview;
     protected Integer postCommentNumber;
