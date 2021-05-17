@@ -31,11 +31,19 @@ public class CollectController {
 
     @ApiOperation(value = "收藏增加", notes ="收藏对象不能为空",httpMethod = "POST")
     @PostMapping("/insertCollect")
-    public void insert(CollectBean collectBean){
+    public RespBean insert(CollectBean collectBean){
+        for (CollectBean list: iCollectService.selectCollectByUserId(null)) {
+            if (collectBean.getColArtId().equals(list.getColArtId())&&collectBean.getCloUserId().equals(list.getCloUserId())){
+                logger.error("收藏"+collectBean.getColArtTit()+"添加失败");
+                return RespBean.error("收藏"+collectBean.getColArtTit()+"已存在");
+            }
+        }
         if (iCollectService.insertCollect(collectBean)){
             logger.info("收藏"+collectBean.getColArtTit()+"添加成功");
+            return RespBean.ok("收藏"+collectBean.getColArtTit()+"添加成功");
         }else {
             logger.error("收藏"+collectBean.getColArtTit()+"添加失败");
+            return RespBean.error("收藏"+collectBean.getColArtTit()+"添加失败");
         }
     }
     @ApiOperation(value = "删除收藏", notes = "id不能为空", httpMethod = "DELETE")
@@ -53,13 +61,13 @@ public class CollectController {
     @GetMapping ("/selectCollect")
     public RespBean select(Integer userid){
         List<CollectBean> artTit = iCollectService.selectCollectByUserId(userid);
-        if (artTit != null){
+        if (artTit.size() != 0){
             logger.info("查询成功");
-            List<String> l = new ArrayList<>(artTit.size());
+            List<String> list = new ArrayList<>(artTit.size());
             for(CollectBean c:artTit){
-                l.add(c.getColArtTit());
+                list.add(c.getColArtTit());
             }
-            return RespBean.ok("查询成功",l);
+            return RespBean.ok("查询成功",list);
         }else {
             logger.error("查询失败");
             return RespBean.error("查询失败");
