@@ -69,7 +69,7 @@ public class ReplyController {
         if (bindingResult.hasErrors()) {
             Map<String, Object> map = new HashMap<>(999);
             List<FieldError> errors = bindingResult.getFieldErrors();
-            logger.error("增加失败！");
+            logger.error("回复失败！");
             for (FieldError error : errors) {
                 logger.error("错误的字段名：" + error.getField());
                 logger.error("错误信息：" + error.getDefaultMessage());
@@ -105,7 +105,7 @@ public class ReplyController {
     @ApiOperation(value = "根据用户id删除该用户全部回复", notes = "用户需存在", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "replyMemberId",
-                    value = "用户d", required = true, dataType = "int"),
+                    value = "用户id", required = true, dataType = "int"),
     }
     )
     public RespBean deleteAllCommentByMemberId(Integer replyMemberId) {
