@@ -43,7 +43,7 @@ public class CommentServiceImpl implements ICommentService{
 
     @Override
     public boolean deleteAllCommnetByPostId(int commentPostId) {
-        if (selectAllCommentByPostID(commentPostId) != null)
+        if (selectAllCommentByPostId(commentPostId) != null)
         {
             UpdateWrapper<CommentBean>updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("comment_post_id",commentPostId);
@@ -88,7 +88,7 @@ public class CommentServiceImpl implements ICommentService{
 
     @Override
 
-    public List<CommentBean> selectAllCommentByPostID(int commentPostId) {
+    public List<CommentBean> selectAllCommentByPostId(int commentPostId) {
         QueryWrapper<CommentBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("comment_post_id",commentPostId);
         if (commentMapper.selectList(queryWrapper).size() != 0){

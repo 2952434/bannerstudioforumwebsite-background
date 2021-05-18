@@ -18,7 +18,7 @@ import java.util.Date;
  *
  * @Author: HYK
  * @Date: 2021/05/15/15:07
- * @Description: 评论类实体
+ * @Description: 评论实体类
  */
 @Data
 @AllArgsConstructor

@@ -13,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import studio.banner.forumwebsite.bean.CommentBean;
 import studio.banner.forumwebsite.bean.PostBean;
+import studio.banner.forumwebsite.bean.ReplyBean;
 import studio.banner.forumwebsite.service.ICommentService;
 import studio.banner.forumwebsite.service.IPostService;
+import studio.banner.forumwebsite.service.IReplyService;
 import studio.banner.forumwebsite.service.impl.CommentServiceImpl;
 import studio.banner.forumwebsite.service.impl.PostServiceImpl;
 
@@ -25,16 +27,16 @@ import java.util.TimeZone;
 @SpringBootTest
 class ForumApplicationTests {
         @Autowired
-        ICommentService iCommentService;
+        IReplyService iReplyService;
         @Test
         void updatePost() {
             SimpleDateFormat bjSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");     // 北京
             bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));  // 设置北京时区
             Date date = new Date();
-            //iCommentService.insertComment(new CommentBean(1, 3, 1, 0,"太棒了！！！",bjSdf.format(date)));
-            iCommentService.deleteAllCommnetByPostId(1);
-
-
+            iReplyService.insertReply(new ReplyBean(1, 2, 2, 2,"太牛了！！！",0,bjSdf.format(date)));
+            System.out.println(iReplyService.selectAllReplyByCommentId(1));
+            iReplyService.updateReplyLikeNumber(1);
+           // iReplyService.deleteAllReplyByMemberId(1);
 //    public void testFileUpload() {
 //        //构造一个带指定Zone对象的配置类
 //        Configuration cfg = new Configuration(Zone.zone0());

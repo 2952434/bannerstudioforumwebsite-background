@@ -1,8 +1,5 @@
 package studio.banner.forumwebsite.service;
-
 import studio.banner.forumwebsite.bean.CommentBean;
-import studio.banner.forumwebsite.mapper.CommentMapper;
-
 import java.util.List;
 
 /**
@@ -10,7 +7,7 @@ import java.util.List;
  *
  * @Author: HYK
  * @Date: 2021/05/15/17:03
- * @Description:评论功能服务层接口
+ * @Description: 评论功能服务层接口
  */
 public interface ICommentService {
     /**
@@ -60,7 +57,7 @@ public interface ICommentService {
      * @param commentPostId
      * @return boolean
      */
-    List<CommentBean> selectAllCommentByPostID(int commentPostId);
+    List<CommentBean> selectAllCommentByPostId(int commentPostId);
 
     /**
      * 根据用户id查找该用户全部评论
@@ -81,5 +78,6 @@ public interface ICommentService {
      * @return
      */
     List<CommentBean> selectAllComment();
+
 
 }

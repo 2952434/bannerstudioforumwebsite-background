@@ -11,12 +11,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import studio.banner.forumwebsite.bean.CommentBean;
-import studio.banner.forumwebsite.bean.PostBean;
 import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.service.ICommentService;
-import studio.banner.forumwebsite.service.IPostService;
+import studio.banner.forumwebsite.service.IReplyService;
 
-import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +25,7 @@ import java.util.Map;
  *
  * @Author: HYK
  * @Date: 2021/05/15/21:23
- * @Description:
+ * @Description: 评论接口
  */
 @RestController
 @Api(tags = "评论接口",value = "CommentController")
@@ -38,6 +36,8 @@ public class CommentController {
     private static final Logger logger = LoggerFactory.getLogger(PostController.class);
     @Autowired
     protected ICommentService iCommentServicel;
+    @Autowired
+    protected IReplyService iReplyService;
 
     /**
      * 评论增加接口
@@ -97,11 +97,15 @@ public class CommentController {
     }
     )
     public RespBean deleteAllCommentByPostId(int commentPostId) {
-        if (iCommentServicel.selectAllCommentByPostID(commentPostId) != null){
+        if (iCommentServicel.selectAllCommentByPostId(commentPostId) != null){
+            List<CommentBean> list = iCommentServicel.selectAllCommentByPostId(commentPostId);
+            for (int i = 0; i < list.size(); i++) {
+                iReplyService.deleteAllReplyByCommentId(list.get(i).getCommentId());
+            }
             iCommentServicel.deleteAllCommnetByPostId(commentPostId);
             return RespBean.ok("删除成功");
         }
-        return RespBean.error("删除失败，未找到该帖子");
+        return RespBean.error("删除失败，未找到该帖子或该帖子下无评论");
     }
 
     /**
@@ -118,10 +122,14 @@ public class CommentController {
     )
     public RespBean deleteAllCommentByMemberId(int commentMemberId) {
         if (iCommentServicel.selectAllCommentByMemberId(commentMemberId) != null){
+            List<CommentBean>list = iCommentServicel.selectAllCommentByMemberId(commentMemberId);
+            for (int i = 0; i < list.size(); i++) {
+                iReplyService.deleteAllReplyByCommentId(list.get(i).getCommentId());
+            }
             iCommentServicel.deleteAllCommentByMemberId(commentMemberId);
             return RespBean.ok("删除成功");
         }
-        return RespBean.error("删除失败，未找到该用户");
+        return RespBean.error("删除失败，未找到该用户或该用户无评论");
     }
 
     /**
@@ -138,6 +146,7 @@ public class CommentController {
     )
     public RespBean deleteComment(int commentId) {
         if (iCommentServicel.selectComment(commentId) != null){
+            iReplyService.deleteAllReplyByCommentId(commentId);
             iCommentServicel.deleteComment(commentId);
             return RespBean.ok("删除成功");
         }
@@ -206,8 +215,8 @@ public class CommentController {
     }
     )
     public RespBean selectAllCommentByPostId(int commentPostId) {
-        if (iCommentServicel.selectAllCommentByPostID(commentPostId) != null){
-           List<CommentBean> list = iCommentServicel.selectAllCommentByPostID(commentPostId);
+        if (iCommentServicel.selectAllCommentByPostId(commentPostId) != null){
+           List<CommentBean> list = iCommentServicel.selectAllCommentByPostId(commentPostId);
             return RespBean.ok("查询成功",list);
         }
         return RespBean.error("查询失败，未找到该帖子");
@@ -263,6 +272,5 @@ public class CommentController {
     public RespBean selectAllComment() {
         List<CommentBean>list = iCommentServicel.selectAllComment();
             return RespBean.ok("查询成功",list);
-
     }
 }

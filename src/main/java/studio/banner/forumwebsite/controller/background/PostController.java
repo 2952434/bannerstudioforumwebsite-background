@@ -1,4 +1,5 @@
 package studio.banner.forumwebsite.controller.background;
+import com.sun.corba.se.impl.naming.cosnaming.NamingUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -9,9 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import studio.banner.forumwebsite.bean.CommentBean;
 import studio.banner.forumwebsite.bean.PostBean;
 import studio.banner.forumwebsite.bean.RespBean;
+import studio.banner.forumwebsite.service.ICommentService;
 import studio.banner.forumwebsite.service.IPostService;
+import studio.banner.forumwebsite.service.IReplyService;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -22,7 +26,7 @@ import java.util.Map;
  * Created with IntelliJ IDEA.
  * @Author: HYK
  * @Date: 2021/05/10/21:30
- * Despriction:帖子
+ * Despriction 帖子操作接口
  */
 
 @RestController
@@ -34,6 +38,10 @@ public class PostController {
     private static final Logger logger = LoggerFactory.getLogger(PostController.class);
     @Autowired
     protected IPostService iPostService;
+    @Autowired
+    protected ICommentService iCommentService;
+    @Autowired
+    protected IReplyService iReplyService;
 
     /**
      * 帖子接口
@@ -127,7 +135,7 @@ public class PostController {
             return RespBean.error(map);
         }
         iPostService.forwardPost(postBean);
-        return RespBean.ok("成功");
+        return RespBean.ok("转发成功");
     }
 
 
@@ -145,9 +153,17 @@ public class PostController {
     )
     public RespBean deletePost(int postId) {
         if (iPostService.deletePost(postId)) {
-            return RespBean.ok("成功");
+            if (iCommentService.selectAllCommentByPostId(postId) != null) {
+                List<CommentBean> list = iCommentService.selectAllCommentByPostId(postId);
+                for (int i = 0; i < list.size(); i++) {
+                    int commentId = list.get(i).getCommentId();
+                    iReplyService.deleteAllReplyByCommentId(commentId);
+                }
+                iCommentService.deleteAllCommnetByPostId(postId);
+                return RespBean.ok("删除成功");
+            }
         }
-        return RespBean.error("删除失败,为查询到该文章");
+        return RespBean.error("删除失败,未查询到该文章");
     }
 
     /**
@@ -159,14 +175,26 @@ public class PostController {
     @ApiOperation(value = "帖子批量删除", notes = "用户需存在", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postMemberId",
-                    value = "帖子发表者id", required = true, dataType = "String"),
+                    value = "用户id", required = true, dataType = "String"),
     }
     )
     public RespBean deleteAllPost(int postMemberId) {
-        if (iPostService.deleteAllPost(postMemberId)) {
-            return RespBean.ok("成功");
+        if (iPostService.selectAllPostById(postMemberId) != null) {
+            List<PostBean>List = iPostService.selectAllPostById(postMemberId);
+            for (int j = 0 ; j < List.size() ; j++){
+                if (iCommentService.selectAllCommentByPostId(List.get(j).getPostId()) != null) {
+                    List<CommentBean> list = iCommentService.selectAllCommentByPostId(List.get(j).getPostId());
+                    for (int i = 0; i < list.size(); i++) {
+                        int commentId = list.get(i).getCommentId();
+                        iReplyService.deleteAllReplyByCommentId(commentId);
+                    }
+                }
+            }
+            iPostService.deleteAllPost(postMemberId);
+            iCommentService.deleteAllCommentByMemberId(postMemberId);
+            return RespBean.ok("删除成功");
         }
-        return RespBean.error("查询失败,未查询到该用户或用户已无文章");
+        return RespBean.error("删除失败,未查询到该用户或用户已无文章");
     }
 
     /**
@@ -268,7 +296,7 @@ public class PostController {
             PostBean postBean = iPostService.selectPost(postId);
             return RespBean.ok("成功",postBean);
         }
-        return RespBean.error("查找失败，为查询到该帖子 ");
+        return RespBean.error("查找失败，未查询到该帖子 ");
     }
 
     /**
@@ -288,7 +316,7 @@ public class PostController {
             List<PostBean> list = iPostService.selectAllPostById(postMemberId);
             return RespBean.ok("成功",list);
         }
-        return RespBean.error("查找失败，为查询到该帖子 ");
+        return RespBean.error("查找失败，未查询到该帖子 ");
     }
     /**
      * 查询全部帖子接口
