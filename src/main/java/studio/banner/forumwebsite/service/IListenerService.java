@@ -10,8 +10,9 @@ import java.util.List;
  */
 public interface IListenerService {
     /**
-     * 查询所有用户
+     * 查询用户
+     * @param userNum
      * @return
      */
-    List<UserBean> selectAllUser();
+    List<UserBean> selectAllUser(Integer userNum);
 }

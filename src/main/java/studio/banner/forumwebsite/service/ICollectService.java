@@ -24,6 +24,12 @@ public interface ICollectService {
     boolean deleteCollect(Integer id);
 
     /**
+     * 清除用户收藏
+     * @param userid
+     * @return
+     */
+    boolean deleteCollectByUserId(Integer userid);
+    /**
      * 根据不同用户id查询收藏文章
      * @param userid
      * @return List

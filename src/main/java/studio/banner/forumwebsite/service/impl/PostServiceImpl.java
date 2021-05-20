@@ -127,14 +127,19 @@ public class PostServiceImpl implements IPostService {
         QueryWrapper<PostBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("post_member_id", postMemberId);
         List<PostBean> list = postMapper.selectList(queryWrapper);
-        return list;
+        if (list.size() != 0) {
+            return list;
+        }
+        return null;
     }
 
     @Override
     public List<PostBean> selectAllPost() {
-
         List<PostBean> list = postMapper.selectList(null);
-        return list;
+        if (list.size() != 0) {
+            return list;
+        }
+        return null;
     }
 }
 

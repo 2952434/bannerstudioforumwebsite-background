@@ -1,4 +1,5 @@
 package studio.banner.forumwebsite.bean;
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -7,32 +8,32 @@ import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import javax.validation.Valid;
+
 import javax.validation.constraints.NotNull;
+
 /**
  * Created with IntelliJ IDEA.
  *
  * @Author: HYK
  * @Date: 2021/05/17/11:56
- * @Description: 帖子实体类
+ * @Description: 回复实体类
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("tab_post")
-@ApiModel(value="帖子对象")
-public class PostBean {
+@TableName("tab_reply")
+@ApiModel("回复实体类")
+public class ReplyBean {
     @TableId(type = IdType.AUTO)
-    private Integer postId;
+    private Integer replyId;
     @TableField
-    @NotNull(message = "用户id不能为空")
-    private Integer postMemberId;
-    @NotNull(message = "帖子内容不能为空")
-    private String postContent;
-    @NotNull(message = "帖子创建时间不能为空")
-    private String postTime;
-    private Integer postPageview;
-    private Integer postCommentNumber;
-    private Integer postForward;
-    private Integer postLikeNumber;
+    private Integer commentId;
+    private Integer replyMemberId;
+    private Integer replyCommentMemberId;
+    @NotNull(message = "回复内容不能为空")
+    private String replyContent;
+    private Integer replyLikeNumber;
+    private String replyTime;
+
+
 }
