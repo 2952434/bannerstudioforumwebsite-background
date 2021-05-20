@@ -1,5 +1,6 @@
 package studio.banner.forumwebsite.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import studio.banner.forumwebsite.bean.UserBean;
@@ -16,9 +17,12 @@ import java.util.List;
 public class ListenerServiceImpl implements IListenerService {
     @Autowired
     private ListenerMapper listenerMapper;
+
     @Override
-    public List<UserBean> selectAllUser() {
-        List<UserBean> list = listenerMapper.selectList(null);
+    public List<UserBean> selectAllUser(Integer userNum) {
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("member_account_number",userNum);
+        List<UserBean> list  = listenerMapper.selectList(wrapper);
         return list;
     }
 }

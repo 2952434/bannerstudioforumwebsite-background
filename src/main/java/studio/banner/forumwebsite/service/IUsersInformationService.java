@@ -17,11 +17,13 @@ public interface IUsersInformationService {
      */
     boolean insertUsersInformation(UsersInformationBean usersInformationBean);
 
+
     /**
-     * 查询所有用户信息
-     * @return List
+     * 查询用户信息通过id
+     * @param id
+     * @return boolean
      */
-    List<UsersInformationBean> selectUsersInformation();
+    boolean selectUsersInformationById(Integer id);
 
     /**
      * 删除用户信息
@@ -32,7 +34,8 @@ public interface IUsersInformationService {
 
     /**
      * 更改用户信息
-     * @return
+     * @param usersInformationBean
+     * @return boolean
      */
     boolean updateUsersInformation(UsersInformationBean usersInformationBean);
 

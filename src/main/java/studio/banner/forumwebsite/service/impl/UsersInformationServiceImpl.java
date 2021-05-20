@@ -27,21 +27,32 @@ public class UsersInformationServiceImpl implements IUsersInformationService {
     }
 
     @Override
-    public List<UsersInformationBean> selectUsersInformation() {
-        List<UsersInformationBean> list = usersInformationMapper.selectList(null);
-        return list;
+    public boolean selectUsersInformationById(Integer id) {
+        QueryWrapper<UsersInformationBean> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id",id);
+        List list = usersInformationMapper.selectList(wrapper);
+        if (list.size() ==1 ){
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean deleteUsersInformation(Integer id) {
-        return usersInformationMapper.deleteById(id) == 1;
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("user_id",id);
+        return usersInformationMapper.delete(wrapper) == 1;
     }
 
     @Override
     public boolean updateUsersInformation(UsersInformationBean usersInformationBean) {
         QueryWrapper<UsersInformationBean> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id",usersInformationBean.getUserId());
-        return usersInformationMapper.update(usersInformationBean,wrapper) == 1;
+        if (usersInformationMapper.update(usersInformationBean,wrapper) != 0){
+            return true;
+        }else {
+            return false;
+        }
     }
 
 

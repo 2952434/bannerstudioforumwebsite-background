@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import studio.banner.forumwebsite.bean.RespBean;
-import studio.banner.forumwebsite.bean.UserBean;
 import studio.banner.forumwebsite.config.MyHttpSessionListener;
 import studio.banner.forumwebsite.service.impl.ListenerServiceImpl;
 
@@ -21,7 +20,7 @@ import javax.servlet.http.HttpSession;
  * @Date: 2021/5/13 22:02
  */
 @RestController
-@Api(tags = "统计在线人数", value = "CollectController")
+@Api(tags = "统计在线人数", value = "ListenerController")
 public class ListenerController {
     private static final Logger logger = LoggerFactory.getLogger(ListenerController.class);
     /**
@@ -29,18 +28,17 @@ public class ListenerController {
      */
     @Autowired
     private ListenerServiceImpl listenerService;
+
     @ApiOperation(value = "用户登录", notes = "用户对象不能为空", httpMethod = "POST")
     @PostMapping("/login")
     public RespBean getUser(Integer username, String password, HttpSession session) {
         session.setMaxInactiveInterval(60*30);
-        for (UserBean user: listenerService.selectAllUser()) {
-            if (username.equals(user.getMemberAccountNumber()) && password.equals(user.getMemberPassword())){
+            if ( password.equals(listenerService.selectAllUser(username).get(0).getMemberPassword())){
                 logger.info("用户【"+username+"】登陆开始！");
                 session.setAttribute("loginName",username);
                 logger.info("用户【"+username+"】登陆成功！");
                 return RespBean.ok("用户【"+username+"】登陆成功！");
             }
-        }
         logger.info("用户【"+username+"】登录失败！");
         return RespBean.error("用户【"+username+"】登录失败！");
     }

@@ -29,6 +29,17 @@ public class CollectServiceImpl implements ICollectService {
     }
 
     @Override
+    public boolean deleteCollectByUserId(Integer userid) {
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("clo_user_id",userid);
+        if (collectMapper.deleteById(userid) != 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
     public List<CollectBean> selectCollectByUserId(Integer userid) {
         QueryWrapper<CollectBean> wrapper = new QueryWrapper<>();
         wrapper.eq("clo_user_id",userid);
