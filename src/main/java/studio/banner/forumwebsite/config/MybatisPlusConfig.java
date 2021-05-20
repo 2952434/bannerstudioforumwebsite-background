@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
  * @Date: 2021/5/13 21:59
  */
 @Configuration
-@MapperScan("studio.banner.forumwebsite.mapper")
 public class MybatisPlusConfig {
     @Bean
     public ConfigurationCustomizer customizer(){
