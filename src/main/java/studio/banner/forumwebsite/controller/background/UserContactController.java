@@ -32,7 +32,7 @@ public class UserContactController {
     @ApiOperation(value = "新增关注", notes = "已关注过无法再次关注", httpMethod = "POST")
     @PostMapping("/insertContact")
     public RespBean insert(UserContactBean userContactBean) {
-        if (iUserContactService.contacted(userContactBean.getMemberFan(),userContactBean.getMemberStar()) == null) {
+        if (iUserContactService.contacted(userContactBean.getMemberFan(),userContactBean.getMemberStar()).size() == 0) {
             iUserContactService.insertContact(userContactBean);
             logger.info(userContactBean.getMemberFan() + "成功关注" + userContactBean.getMemberStar());
             return RespBean.ok(userContactBean.getMemberFan() + "成功关注" + userContactBean.getMemberStar());
@@ -67,7 +67,7 @@ public class UserContactController {
         }
     }
 
-    @ApiOperation(value = "查询是否存在关注关系", notes = "返回对象", httpMethod = "GET")
+    @ApiOperation(value = "查询是否存在关注关系", notes = "返回列表", httpMethod = "GET")
     @GetMapping("/selectContact")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberFan",
@@ -83,5 +83,66 @@ public class UserContactController {
         logger.info("不存在关注关系");
         return null;
         }
+
+    @ApiOperation(value = "根据用户Id查询其粉丝", notes = "返回列表", httpMethod = "GET")
+    @GetMapping("/selectFan")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "memberStar",
+                    value = "memberStar", required = true, dataType = "Integer"),
+    })
+    public List<UserContactBean> selectFan(Integer memberStar){
+        if (iUserContactService.fans(memberStar) != null) {
+            logger.info("存在关注关系");
+            return iUserContactService.fans(memberStar);
+        }
+        logger.info("不存在关注关系");
+        return null;
+    }
+
+    @ApiOperation(value = "根据用户Id查询其粉丝数", notes = "返回粉丝数", httpMethod = "GET")
+    @GetMapping("/selectFans")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "memberStar",
+                    value = "memberStar", required = true, dataType = "Integer"),
+    })
+    public Integer selectFans(Integer memberStar){
+        if (iUserContactService.fans(memberStar) != null) {
+            logger.info("存在关注关系");
+            return iUserContactService.fans(memberStar).size();
+        }
+        logger.info("粉丝数为0");
+        return 0;
+    }
+
+
+    @ApiOperation(value = "根据用户Id查询其关注的人", notes = "返回列表", httpMethod = "GET")
+    @GetMapping("/selectStar")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "memberFan",
+                    value = "memberFan", required = true, dataType = "Integer"),
+    })
+    public List<UserContactBean> selectStar(Integer memberFan){
+        if (iUserContactService.stars(memberFan) != null) {
+            logger.info("存在关注关系");
+            return iUserContactService.fans(memberFan);
+        }
+        logger.info("不存在关注关系");
+        return null;
+    }
+
+    @ApiOperation(value = "根据用户Id查询其关注的人数", notes = "返回关注的人数", httpMethod = "GET")
+    @GetMapping("/selectStars")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "memberFan",
+                    value = "memberFan", required = true, dataType = "Integer"),
+    })
+    public Integer selectStars(Integer memberFan){
+        if (iUserContactService.stars(memberFan) != null) {
+            logger.info("存在关注关系");
+            return iUserContactService.stars(memberFan).size();
+        }
+        logger.info("关注的人数为0");
+        return 0;
+    }
     }
 

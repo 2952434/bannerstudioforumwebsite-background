@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import studio.banner.forumwebsite.bean.PostBean;
 import studio.banner.forumwebsite.bean.UserContactBean;
 import studio.banner.forumwebsite.mapper.UserContactMapper;
+import studio.banner.forumwebsite.mapper.UserMsgMapper;
 import studio.banner.forumwebsite.service.IUserContactService;
 
 import java.util.List;
@@ -63,6 +64,32 @@ public class UserContactServiceImpl implements IUserContactService {
         QueryWrapper<UserContactBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("member_fan", memberFan)
                 .eq("member_star",memberStar);
+        List<UserContactBean> list = userContactMapper.selectList(queryWrapper);
+        return list;
+    }
+
+    /**
+     * 根据用户Id查询其粉丝
+     * @param memberStar
+     * @return list
+     */
+    @Override
+    public List<UserContactBean> fans(Integer memberStar) {
+        QueryWrapper<UserContactBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("member_star",memberStar);
+        List<UserContactBean> list = userContactMapper.selectList(queryWrapper);
+        return list;
+    }
+
+    /**
+     * 根据Id查询其关注的人
+     * @param memberFan
+     * @return list
+     */
+    @Override
+    public List<UserContactBean> stars(Integer memberFan){
+        QueryWrapper<UserContactBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("member_fan",memberFan);
         List<UserContactBean> list = userContactMapper.selectList(queryWrapper);
         return list;
     }

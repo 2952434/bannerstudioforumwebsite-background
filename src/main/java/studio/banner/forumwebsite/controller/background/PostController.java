@@ -1,5 +1,4 @@
 package studio.banner.forumwebsite.controller.background;
-import com.sun.corba.se.impl.naming.cosnaming.NamingUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

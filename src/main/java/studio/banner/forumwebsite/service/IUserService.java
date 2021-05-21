@@ -58,8 +58,16 @@ public interface IUserService {
      * @param newMemberPassword
      * @return boolean
      */
-
     boolean updateUserPassWord(Integer memberId, String memberPassword , String newMemberPassword);
+
+    /**
+     * 忘记密码，根据手机号修改密码
+     * @param memberAccountNumber
+     * @param memberPhone
+     * @param newMemberPassword
+     * @return boolean
+     */
+    boolean forgetPassWord(String memberAccountNumber,String memberPhone,String newMemberPassword);
 
     /**
      * 分页查询用户

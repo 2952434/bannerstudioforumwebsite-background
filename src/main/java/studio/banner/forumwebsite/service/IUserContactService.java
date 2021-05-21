@@ -30,4 +30,18 @@ public interface IUserContactService {
      * @return list
      */
     List<UserContactBean> contacted(Integer memberFan, Integer memberStar);
+
+    /**
+     * 根据用户Id查询其粉丝
+     * @param memberStar
+     * @return list
+     */
+    List<UserContactBean> fans(Integer memberStar);
+
+    /**
+     * 根据Id查询其关注的人
+     * @param memberFan
+     * @return list
+     */
+    List<UserContactBean> stars(Integer memberFan);
 }

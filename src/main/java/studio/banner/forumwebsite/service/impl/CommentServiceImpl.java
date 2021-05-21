@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import studio.banner.forumwebsite.bean.CommentBean;
 import studio.banner.forumwebsite.mapper.CommentMapper;
 import studio.banner.forumwebsite.service.ICommentService;
-import sun.util.resources.cldr.om.CalendarData_om_ET;
 
 import java.util.List;
 

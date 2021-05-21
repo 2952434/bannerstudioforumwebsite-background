@@ -115,6 +115,30 @@ public class UserServiceImpl implements IUserService {
         }
 
     /**
+     * 忘记密码，根据手机号修改密码
+     * @param memberAccountNumber
+     * @param memberPhone
+     * @param newMemberPassword
+     * @return boolean
+     */
+    @Override
+    public boolean forgetPassWord(String memberAccountNumber,String memberPhone,String newMemberPassword) {
+        UserBean user = new UserBean();
+        List<UserBean> list = new LambdaQueryChainWrapper<>(userMapper)
+                .eq(UserBean::getMemberAccountNumber,memberAccountNumber)
+                .eq(UserBean::getMemberPhone, memberPhone).list();
+        if (list.size()>0){
+            user.setMemberId(list.get(0).getMemberId());
+            user.setMemberPhone(memberPhone);
+            user.setMemberPassword(newMemberPassword);
+            int i = userMapper.updateById(user);
+            return i == 1;
+        }else{
+            return false;
+        }
+    }
+
+    /**
      * 根据账号查询用户
      * @param memberAccount  输入账号
      * @return  UserBean

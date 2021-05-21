@@ -32,6 +32,13 @@ public class UserController {
     public RespBean insert(UserBean userBean) {
         if (iUserService.insertUser(userBean)) {
             UserBean newUser = iUserService.selectUser(userBean.getMemberAccountNumber());
+
+            String phone = userBean.getMemberPhone();
+            String judge = "((\\d{11})|^((\\d{7,8})|(\\d{4}|\\d{3})-(\\d{7,8})|(\\d{4}|\\d{3})-(\\d{7,8})-(\\d{4}|\\d{3}|\\d{2}|\\d{1})|(\\d{7,8})-(\\d{4}|\\d{3}|\\d{2}|\\d{1}))$)";
+            if (!phone.matches(judge)) {
+                logger.error("电话号不符合要求");
+                return RespBean.error("电话号不符合要求");
+            }
             iUserMsgService.insertUserMsg(newUser.getMemberId(), null,null,0,null,null,0,0);
             logger.info("成员" + userBean.getMemberAccountNumber() + "添加成功");
             return RespBean.ok("成员" + userBean.getMemberAccountNumber() + "添加成功");
@@ -47,8 +54,7 @@ public class UserController {
         boolean hasUser = iUserService.selectUser(memberAccountNumber,memberPassword);
         if (hasUser == true){
             logger.info("查询成功");
-            return RespBean.ok("账号密码正确");
-        }else {
+            return RespBean.ok("账号密码正确");        }else {
             logger.error("查询失败");
             return RespBean.error("账号或密码错误");
         }
@@ -67,6 +73,24 @@ public class UserController {
     )
     public RespBean updateUserPassWord(Integer memberId,String memberPassword, String newMemberPassword) {
         if (iUserService.updateUserPassWord(memberId,memberPassword, newMemberPassword) == true) {
+            return RespBean.ok("成功");
+        }
+        return RespBean.error("密码更改失败");
+    }
+
+    @ApiOperation(value = "忘记密码", notes = "根据手机号更改密码")
+    @PutMapping("/forgetPassWord")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "memberAccountNumber",
+                    value = "用户账号", required = true, dataType = "int"),
+            @ApiImplicitParam(paramType = "query", name = "memberPhone",
+                    value = "用户手机号", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "newMemberPassword",
+                    value = "新密码", required = true, dataType = "String"),
+    }
+    )
+    public RespBean forgetPassWord(String memberAccountNumber,String memberPhone, String newMemberPassword) {
+        if (iUserService.forgetPassWord(memberAccountNumber,memberPhone,newMemberPassword)) {
             return RespBean.ok("成功");
         }
         return RespBean.error("密码更改失败");
