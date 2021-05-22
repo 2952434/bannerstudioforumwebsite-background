@@ -5,11 +5,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import studio.banner.forumwebsite.bean.RespBean;
+<<<<<<< HEAD
 import studio.banner.forumwebsite.config.QiNiuYunConfig;
 import studio.banner.forumwebsite.manager.QiNiuYunManager;
 
 import java.io.IOException;
 
+=======
+import studio.banner.forumwebsite.manager.QiNiuYunManager;
+
+>>>>>>> 136138baa1f3f22891032dd1faea5113453e431e
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,6 +27,7 @@ import java.io.IOException;
 public class QiNiuYunController {
     @Autowired
     private QiNiuYunManager qiNiuYunManager;
+<<<<<<< HEAD
 
     /**
      * 七牛云上传图片
@@ -33,10 +39,15 @@ public class QiNiuYunController {
     @PostMapping("/qiniu")
     public RespBean qiNiuYunUpload(@RequestParam("file") MultipartFile file,
                                  Model model) throws IOException {
+=======
+    @PostMapping("/qiniu")
+    public RespBean qiNiuYunUpload(@RequestParam("file") MultipartFile file,
+                                   Model model){
+>>>>>>> 136138baa1f3f22891032dd1faea5113453e431e
         String link = qiNiuYunManager.uploadImg(file);
         model.addAttribute("link",link);
         System.out.println(link);
-        return RespBean.ok("图片上传成功",link);
+        return RespBean.ok("上传图片成功",link);
     }
     @DeleteMapping("/delete")
     public RespBean qiNiuYunDelete(String imageAddress){
