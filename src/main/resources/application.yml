@@ -26,10 +26,19 @@ spring:
     com.baomidou.mybatisplus: error
 
 server:
-  port: 8080
+  port: 8082
+
+
+qiniu:
+  path: qtga4eaxm.hn-bkt.clouddn.com
+  accessKey: EeYNXo1hONmESybj2pe3YNBHO9Nar38Kf-QrbWEF
+  secretKey: lpiYGtDzQP3M0xNx--WyAposkw6KLWSXvWsod1aO
+  bucket: forumwebsite
 
 #配置日志
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   type-aliases-package: studio.banner.forumwebsite.bean
+
+

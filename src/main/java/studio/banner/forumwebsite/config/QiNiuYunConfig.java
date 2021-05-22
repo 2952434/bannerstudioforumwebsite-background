@@ -23,21 +23,19 @@ import java.io.FileInputStream;
 @Data
 @Component
 public class QiNiuYunConfig {
-    @Value("1UMawCZEuScLwWXPXX9IRz33HGMi-BXfXwGMuaZY")
+    @Value("${qiniu.accessKey}")
     private String accessKey;
-    @Value("w8pK83Y7RtghmtVFrAfhNE1EC1lvQJoE0C7Q8HHA")
+    @Value("${qiniu.secretKey}")
     private String secretKey;
-    /**
-     * 存储空间名称
-     */
-    @Value("")
+    @Value("${qiniu.bucket}")
     private String bucket;
-    /**
-     * 上传文件路径
-     */
-    @Value("")
-    private String localFilePath = "E:\\学习总结.png";
+    @Value("${qiniu.path}")
+    private String path;
+    private String localFilePath = "D:\\photos\\1.jpg";
     private String key = null;
+//    String fileName = "studio/wyf-study/qiniu.jpg";
+//    String domainOfBucket = "http://devtools.qiniu.com";
+
     public String uploadImgToQiNiu(FileInputStream file, String filename)  {
         // 构造一个带指定Zone对象的配置类，注意后面的zone各个地区不一样的
         Configuration cfg = new Configuration(Region.region2());
@@ -53,7 +51,8 @@ public class QiNiuYunConfig {
                 DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
 
                 // 这个returnPath是获得到的外链地址,通过这个地址可以直接打开图片
-                String returnPath="----"+putRet.key;
+//                String returnPath = getPath() + "/" + putRet.key;
+                String returnPath="http://qtga4eaxm.hn-bkt.clouddn.com/"+putRet.key;
                 return returnPath;
             } catch (QiniuException ex) {
                 Response r = ex.response;
@@ -61,6 +60,7 @@ public class QiNiuYunConfig {
                 try {
                     System.err.println(r.bodyString());
                 } catch (QiniuException ex2) {
+                    //ignore
                 }
             }
         } catch (Exception e) {
@@ -69,3 +69,4 @@ public class QiNiuYunConfig {
         return "";
     }
 }
+
