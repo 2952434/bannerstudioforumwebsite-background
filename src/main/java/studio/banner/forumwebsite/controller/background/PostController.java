@@ -1,4 +1,5 @@
 package studio.banner.forumwebsite.controller.background;
+import com.alibaba.fastjson.JSON;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -66,10 +67,12 @@ public class PostController {
             @ApiImplicitParam(paramType = "query", name = "postForward",
                     value = "帖子是否为转发，0为原创，其他数字为原创作者的id", required = false, dataType = "int"),
             @ApiImplicitParam(paramType = "query", name = "postLikeNumber",
-                    value = "帖子点赞数量", required = false, dataType = "int")
+                    value = "帖子点赞数量", required = false, dataType = "int"),
+            @ApiImplicitParam(paramType = "query", name = "postImageAddress",
+                    value = "帖子图片地址", required = false, dataType = "String")
     }
     )
-    public RespBean insertPost(@Valid PostBean postBean, BindingResult bindingResult) {
+    public Object insertPost(@Valid PostBean postBean, BindingResult bindingResult) {
 
         /**
          * 将@Valid鉴权的错误信息返给前端
@@ -87,7 +90,7 @@ public class PostController {
             return RespBean.error(map);
         }
         iPostService.insertPost(postBean);
-        return RespBean.ok("成功");
+        return JSON.toJSONString(RespBean.ok("成功"));
     }
 
     /**
@@ -114,7 +117,9 @@ public class PostController {
             @ApiImplicitParam(paramType = "query", name = "postForward",
                     value = "帖子是否为转发，0为原创，其他数字为原创作者的id", required = true, dataType = "int"),
             @ApiImplicitParam(paramType = "query", name = "postLikeNumber",
-                    value = "帖子点赞数量", required = false, dataType = "int")
+                    value = "帖子点赞数量", required = false, dataType = "int"),
+            @ApiImplicitParam(paramType = "query", name = "postImageAddress",
+                    value = "帖子图片地址", required = false, dataType = "String")
     }
 
     )
@@ -137,12 +142,12 @@ public class PostController {
         return RespBean.ok("转发成功");
     }
 
-
     /**
      *  帖子删除接口
      * @param postId
      * @return RespBean
      */
+    
     @DeleteMapping("/deletePost")
     @ApiOperation(value = "帖子删除", notes = "帖子需存在", httpMethod = "DELETE")
     @ApiImplicitParams({

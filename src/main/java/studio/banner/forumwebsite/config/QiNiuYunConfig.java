@@ -2,14 +2,18 @@ package studio.banner.forumwebsite.config;
 import com.google.gson.Gson;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
+import com.qiniu.storage.BucketManager;
 import com.qiniu.storage.Region;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import com.qiniu.storage.Configuration;
 import lombok.Data;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import studio.banner.forumwebsite.controller.background.PostController;
 
 import java.io.FileInputStream;
 /**
@@ -35,7 +39,7 @@ public class QiNiuYunConfig {
     private String key = null;
 //    String fileName = "studio/wyf-study/qiniu.jpg";
 //    String domainOfBucket = "http://devtools.qiniu.com";
-
+private static final Logger logger = LoggerFactory.getLogger(QiNiuYunConfig.class);
     public String uploadImgToQiNiu(FileInputStream file, String filename)  {
         // 构造一个带指定Zone对象的配置类，注意后面的zone各个地区不一样的
         Configuration cfg = new Configuration(Region.region2());
@@ -67,6 +71,23 @@ public class QiNiuYunConfig {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public boolean delete(String imageName) {
+        Configuration configuration = new Configuration(Region.region2());
+        Auth auth = Auth.create(accessKey,secretKey);
+        BucketManager bucketManager = new BucketManager(auth, configuration);
+        try {
+            if (imageName!=null){
+                bucketManager.delete(bucket,imageName);
+                return true;
+            }
+        } catch (QiniuException ex) {
+            //如果遇到异常，说明删除失败
+            logger.error(String.valueOf(ex.code()));
+            logger.error(ex.response.toString());
+        }
+        return false;
     }
 }
 

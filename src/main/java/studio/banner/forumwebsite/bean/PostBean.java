@@ -7,7 +7,6 @@ import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 /**
  * Created with IntelliJ IDEA.
@@ -35,4 +34,5 @@ public class PostBean {
     private Integer postCommentNumber;
     private Integer postForward;
     private Integer postLikeNumber;
+    private String postImageAddress;
 }

@@ -28,7 +28,6 @@ spring:
 server:
   port: 8082
 
-
 qiniu:
   path: qtga4eaxm.hn-bkt.clouddn.com
   accessKey: EeYNXo1hONmESybj2pe3YNBHO9Nar38Kf-QrbWEF
