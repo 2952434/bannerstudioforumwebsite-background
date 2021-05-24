@@ -2,10 +2,6 @@ package studio.banner.forumwebsite.manager;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-<<<<<<< HEAD
-import org.springframework.ui.Model;
-=======
->>>>>>> 136138baa1f3f22891032dd1faea5113453e431e
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import studio.banner.forumwebsite.config.QiNiuYunConfig;
@@ -23,7 +19,8 @@ public class QiNiuYunManager {
 
     @Autowired
     private QiNiuYunConfig qiNiuYunConfig;
-    public String uploadImg(@RequestParam("file") MultipartFile file){
+
+    public String uploadImg(@RequestParam("file") MultipartFile file) {
         String filename = file.getOriginalFilename();
         FileInputStream inputStream = null;
         try {
@@ -32,15 +29,8 @@ public class QiNiuYunManager {
             e.printStackTrace();
         }
         //为文件重命名：uuid+filename
-        filename = UUID.randomUUID()+ filename;
+        filename = UUID.randomUUID() + filename;
         String link = qiNiuYunConfig.uploadImgToQiNiu(inputStream, filename);
         return link;
     }
-<<<<<<< HEAD
-
-
 }
-
-=======
-}
->>>>>>> 136138baa1f3f22891032dd1faea5113453e431e

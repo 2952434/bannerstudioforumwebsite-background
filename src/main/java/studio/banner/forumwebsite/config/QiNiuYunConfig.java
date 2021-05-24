@@ -13,8 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import studio.banner.forumwebsite.controller.background.PostController;
-
 import java.io.FileInputStream;
 /**
  * Created with IntelliJ IDEA.
@@ -74,9 +72,11 @@ private static final Logger logger = LoggerFactory.getLogger(QiNiuYunConfig.clas
     }
 
     public boolean delete(String imageName) {
-        Configuration configuration = new Configuration(Region.region2());
-        Auth auth = Auth.create(accessKey,secretKey);
-        BucketManager bucketManager = new BucketManager(auth, configuration);
+        Configuration cfg = new Configuration(Region.region2());
+        cfg.useHttpsDomains = false;
+        // 生成密钥
+        Auth auth = Auth.create(accessKey, secretKey);
+        BucketManager bucketManager = new BucketManager(auth, cfg);
         try {
             if (imageName!=null){
                 bucketManager.delete(bucket,imageName);
