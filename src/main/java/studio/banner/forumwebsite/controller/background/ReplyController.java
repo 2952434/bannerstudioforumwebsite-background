@@ -1,4 +1,6 @@
 package studio.banner.forumwebsite.controller.background;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.sun.org.apache.regexp.internal.RE;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -109,7 +111,7 @@ public class ReplyController {
     }
     )
     public RespBean deleteAllCommentByMemberId(Integer replyMemberId) {
-        if (iReplyService.selectAllReplyByMemberId(replyMemberId) != null){
+        if (iReplyService.selectAllReplyByMemberId(replyMemberId, 1) != null){
             iReplyService.deleteAllReplyByMemberId(replyMemberId);
             return RespBean.ok("删除成功");
         }
@@ -129,7 +131,7 @@ public class ReplyController {
     }
     )
     public RespBean deleteAllCommentByCommentId(Integer commentId) {
-        if (iReplyService.selectAllReplyByCommentId(commentId) != null){
+        if (iReplyService.selectAllReplyByCommentId(commentId ,1) != null){
             iReplyService.deleteAllReplyByCommentId(commentId);
             return RespBean.ok("删除成功");
         }
@@ -189,14 +191,17 @@ public class ReplyController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "commentId",
                     value = "评论id", required = true, dataType = "int"),
+            @ApiImplicitParam(paramType = "query", name = "page",
+                    value = "分页查询页数", required = true, dataType = "int")
     }
     )
-    public RespBean selectAllReplyByCommentId(Integer commentId) {
-        if (iReplyService.selectAllReplyByCommentId(commentId) != null){
-            List<ReplyBean>list = iReplyService.selectAllReplyByCommentId(commentId);
+    public RespBean selectAllReplyByCommentId(Integer commentId, int page) {
+            IPage<ReplyBean> iPage = iReplyService.selectAllReplyByCommentId(commentId, page);
+            List<ReplyBean>list = iPage.getRecords();
+            if (list.size() != 0){
             return RespBean.ok("查询成功",list);
         }
-        return RespBean.error("查询失败，未找到该评论");
+        return RespBean.error("查询失败，未找到该评论或该评论下无此页");
     }
 
     /**
@@ -208,16 +213,19 @@ public class ReplyController {
     @ApiOperation(value = "根据用户id查找该用户下全部回复", notes = "用户需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "replyMemberId",
-                    value = "用户id", required = true, dataType = "int")
+                    value = "用户id", required = true, dataType = "int"),
+            @ApiImplicitParam(paramType = "query", name = "page",
+                    value = "分页查询页数", required = true, dataType = "int")
     }
     )
-    public RespBean selectAllReplyByMemberId(Integer replyMemberId) {
-        if (iReplyService.selectAllReplyByMemberId(replyMemberId) != null){
-            List<ReplyBean>list = iReplyService.selectAllReplyByMemberId(replyMemberId);
+    public RespBean selectAllReplyByMemberId(Integer replyMemberId ,int page) {
+            IPage<ReplyBean> iPage = iReplyService.selectAllReplyByCommentId(replyMemberId, page);
+            List<ReplyBean>list = iPage.getRecords();
+            if (list.size() != 0){
 
             return RespBean.ok("查询成功",list);
         }
-        return RespBean.error("查询失败，未找到该用户");
+        return RespBean.error("查询失败，未找到该用户或该用户评论下无此页");
     }
 
     /**

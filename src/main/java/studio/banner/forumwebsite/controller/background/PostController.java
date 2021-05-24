@@ -1,5 +1,6 @@
 package studio.banner.forumwebsite.controller.background;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -16,7 +17,6 @@ import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.service.ICommentService;
 import studio.banner.forumwebsite.service.IPostService;
 import studio.banner.forumwebsite.service.IReplyService;
-
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +45,7 @@ public class PostController {
 
     /**
      * 帖子接口
+     *
      * @param postBean
      * @param bindingResult
      * @return RespBean
@@ -95,6 +96,7 @@ public class PostController {
 
     /**
      * 帖子转发接口
+     *
      * @param postBean
      * @param bindingResult
      * @return RespBean
@@ -143,11 +145,12 @@ public class PostController {
     }
 
     /**
-     *  帖子删除接口
+     * 帖子删除接口
+     *
      * @param postId
      * @return RespBean
      */
-    
+
     @DeleteMapping("/deletePost")
     @ApiOperation(value = "帖子删除", notes = "帖子需存在", httpMethod = "DELETE")
     @ApiImplicitParams({
@@ -172,6 +175,7 @@ public class PostController {
 
     /**
      * 根据用户id清空该用户全部帖子
+     *
      * @param postMemberId
      * @return RespBean
      */
@@ -184,8 +188,8 @@ public class PostController {
     )
     public RespBean deleteAllPost(int postMemberId) {
         if (iPostService.selectAllPostById(postMemberId) != null) {
-            List<PostBean>List = iPostService.selectAllPostById(postMemberId);
-            for (int j = 0 ; j < List.size() ; j++){
+            List<PostBean> List = iPostService.selectAllPostById(postMemberId);
+            for (int j = 0; j < List.size(); j++) {
                 if (iCommentService.selectAllCommentByPostId(List.get(j).getPostId()) != null) {
                     List<CommentBean> list = iCommentService.selectAllCommentByPostId(List.get(j).getPostId());
                     for (int i = 0; i < list.size(); i++) {
@@ -203,6 +207,7 @@ public class PostController {
 
     /**
      * 帖子内容修改接口
+     *
      * @param postId
      * @param newContent
      * @return RespBean
@@ -226,6 +231,7 @@ public class PostController {
 
     /**
      * 更改帖子浏览量
+     *
      * @param postId
      * @return RespBean
      */
@@ -247,6 +253,7 @@ public class PostController {
 
     /**
      * 修改帖子评论量
+     *
      * @param postId
      * @return RespBean
      */
@@ -258,7 +265,7 @@ public class PostController {
     }
     )
     public RespBean udpatePostCommentNumber(int postId) {
-        if (iPostService.updatePostCommentNumber(postId)){
+        if (iPostService.updatePostCommentNumber(postId)) {
             return RespBean.ok("成功");
         }
         return RespBean.error("更改失败，未查询到改帖子");
@@ -266,6 +273,7 @@ public class PostController {
 
     /**
      * 修改帖子点赞量
+     *
      * @param postId
      * @return RespBean
      */
@@ -277,7 +285,7 @@ public class PostController {
     }
     )
     public RespBean udpatePostLikeNumber(int postId) {
-        if (iPostService.updatePostLikeNumber(postId)){
+        if (iPostService.updatePostLikeNumber(postId)) {
             return RespBean.ok("成功");
         }
         return RespBean.error("更改失败，未查询到改帖子");
@@ -285,6 +293,7 @@ public class PostController {
 
     /**
      * 根据帖子id查找帖子
+     *
      * @param postId
      * @return RespBean
      */
@@ -298,13 +307,14 @@ public class PostController {
     public RespBean selectPost(int postId) {
         if (iPostService.selectPost(postId) != null) {
             PostBean postBean = iPostService.selectPost(postId);
-            return RespBean.ok("成功",postBean);
+            return RespBean.ok("成功", postBean);
         }
         return RespBean.error("查找失败，未查询到该帖子 ");
     }
 
     /**
      * 根据用户id查询该用户所有帖子
+     *
      * @param postMemberId
      * @return RespBean
      */
@@ -318,18 +328,29 @@ public class PostController {
     public RespBean selectAllPostById(int postMemberId) {
         if (iPostService.selectAllPostById(postMemberId).size() != 0) {
             List<PostBean> list = iPostService.selectAllPostById(postMemberId);
-            return RespBean.ok("成功",list);
+            return RespBean.ok("成功", list);
         }
         return RespBean.error("查找失败，未查询到该帖子 ");
     }
+
     /**
      * 查询全部帖子接口
+     *
      * @return RespBean
      */
     @GetMapping("/selectAllPost")
     @ApiOperation(value = "查找所有帖子", notes = "帖子需存在", httpMethod = "GET")
-    public RespBean selectAllPost() {
-        List<PostBean>list = iPostService.selectAllPost();
-        return RespBean.ok("成功",list);
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "page",
+                    value = "分页查询页数", required = true, dataType = "int"),
+    }
+    )
+    public RespBean selectAllPost(int page) {
+            IPage<PostBean> iPage = iPostService.selectAllPost(page);
+            List<PostBean> list = iPage.getRecords();
+            if (list.size() != 0){
+            return RespBean.ok("查询成功", list);
+        }
+        return RespBean.error("查询失败，未找到该页数");
     }
 }

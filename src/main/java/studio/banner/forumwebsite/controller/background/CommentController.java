@@ -1,5 +1,6 @@
 package studio.banner.forumwebsite.controller.background;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -41,6 +42,7 @@ public class CommentController {
 
     /**
      * 评论增加接口
+     *
      * @param commentBean
      * @param bindingResult
      * @return RespBean
@@ -79,12 +81,13 @@ public class CommentController {
             }
             return RespBean.error(map);
         }
-       iCommentServicel.insertComment(commentBean);
+        iCommentServicel.insertComment(commentBean);
         return RespBean.ok("评论成功");
     }
 
     /**
      * 根据帖子id删除该帖子下全部评论接口
+     *
      * @param commentPostId
      * @return RespBean
      */
@@ -97,7 +100,7 @@ public class CommentController {
     }
     )
     public RespBean deleteAllCommentByPostId(int commentPostId) {
-        if (iCommentServicel.selectAllCommentByPostId(commentPostId) != null){
+        if (iCommentServicel.selectAllCommentByPostId(commentPostId) != null) {
             List<CommentBean> list = iCommentServicel.selectAllCommentByPostId(commentPostId);
             for (int i = 0; i < list.size(); i++) {
                 iReplyService.deleteAllReplyByCommentId(list.get(i).getCommentId());
@@ -110,6 +113,7 @@ public class CommentController {
 
     /**
      * 根据用户id删除该用户下全部评论
+     *
      * @param commentMemberId
      * @return RespBean
      */
@@ -121,8 +125,8 @@ public class CommentController {
     }
     )
     public RespBean deleteAllCommentByMemberId(int commentMemberId) {
-        if (iCommentServicel.selectAllCommentByMemberId(commentMemberId) != null){
-            List<CommentBean>list = iCommentServicel.selectAllCommentByMemberId(commentMemberId);
+        if (iCommentServicel.selectAllCommentByMemberId(commentMemberId) != null) {
+            List<CommentBean> list = iCommentServicel.selectAllCommentByMemberId(commentMemberId);
             for (int i = 0; i < list.size(); i++) {
                 iReplyService.deleteAllReplyByCommentId(list.get(i).getCommentId());
             }
@@ -134,6 +138,7 @@ public class CommentController {
 
     /**
      * 评论删除
+     *
      * @param commentId
      * @return RespBean
      */
@@ -145,7 +150,7 @@ public class CommentController {
     }
     )
     public RespBean deleteComment(int commentId) {
-        if (iCommentServicel.selectComment(commentId) != null){
+        if (iCommentServicel.selectComment(commentId) != null) {
             iReplyService.deleteAllReplyByCommentId(commentId);
             iCommentServicel.deleteComment(commentId);
             return RespBean.ok("删除成功");
@@ -155,6 +160,7 @@ public class CommentController {
 
     /**
      * 评论内容修改
+     *
      * @param commentId
      * @param newContent
      * @return RespBean
@@ -171,8 +177,8 @@ public class CommentController {
     }
     )
     public RespBean updateCommentContent(int commentId, String newContent) {
-        if (iCommentServicel.selectComment(commentId) != null){
-            iCommentServicel.updateCommentContent(commentId,newContent);
+        if (iCommentServicel.selectComment(commentId) != null) {
+            iCommentServicel.updateCommentContent(commentId, newContent);
             return RespBean.ok("修改成功");
         }
         return RespBean.error("修改失败，未找到该评论");
@@ -180,6 +186,7 @@ public class CommentController {
 
     /**
      * 评论点赞量修改
+     *
      * @param commentId
      * @return RespBean
      */
@@ -193,7 +200,7 @@ public class CommentController {
     }
     )
     public RespBean updateCommentLikeNumber(int commentId) {
-        if (iCommentServicel.selectComment(commentId) != null){
+        if (iCommentServicel.selectComment(commentId) != null) {
             iCommentServicel.updateCommentLikeNumber(commentId);
             return RespBean.ok("修改成功");
         }
@@ -202,6 +209,7 @@ public class CommentController {
 
     /**
      * 根据帖子id查询该帖子下全部评论
+     *
      * @param commentPostId
      * @return RespBean
      */
@@ -215,15 +223,16 @@ public class CommentController {
     }
     )
     public RespBean selectAllCommentByPostId(int commentPostId) {
-        if (iCommentServicel.selectAllCommentByPostId(commentPostId) != null){
-           List<CommentBean> list = iCommentServicel.selectAllCommentByPostId(commentPostId);
-            return RespBean.ok("查询成功",list);
+        if (iCommentServicel.selectAllCommentByPostId(commentPostId) != null) {
+            List<CommentBean> list = iCommentServicel.selectAllCommentByPostId(commentPostId);
+            return RespBean.ok("查询成功", list);
         }
         return RespBean.error("查询失败，未找到该帖子");
     }
 
     /**
      * 根据用户id查询该用户下全部评论
+     *
      * @param commentMemberId
      * @return RespBean
      */
@@ -236,15 +245,16 @@ public class CommentController {
     }
     )
     public RespBean selectAllCommentByMemberId(int commentMemberId) {
-        if (iCommentServicel.selectAllCommentByMemberId(commentMemberId) != null){
+        if (iCommentServicel.selectAllCommentByMemberId(commentMemberId) != null) {
             List<CommentBean> list = iCommentServicel.selectAllCommentByMemberId(commentMemberId);
-            return RespBean.ok("查询成功",list);
+            return RespBean.ok("查询成功", list);
         }
         return RespBean.error("查询失败，未找到该用户");
     }
 
     /**
      * 查询评论
+     *
      * @param commentId
      * @return RespBean
      */
@@ -257,20 +267,32 @@ public class CommentController {
     }
     )
     public RespBean selectComment(int commentId) {
-        if (iCommentServicel.selectComment(commentId) != null){
+        if (iCommentServicel.selectComment(commentId) != null) {
             CommentBean commentBean = iCommentServicel.selectComment(commentId);
-            return RespBean.ok("查询成功",commentBean);
+            return RespBean.ok("查询成功", commentBean);
         }
         return RespBean.error("查询失败，未找到该评论");
     }
+
     /**
      * 查询全部评论
+     *
      * @return RespBean
      */
     @GetMapping("/selectAllComment")
     @ApiOperation(value = "查询全部评论", notes = "评论需存在", httpMethod = "GET")
-    public RespBean selectAllComment() {
-        List<CommentBean>list = iCommentServicel.selectAllComment();
-            return RespBean.ok("查询成功",list);
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "page",
+                    value = "分页查询页数", required = true, dataType = "int")
+
+    }
+    )
+    public RespBean selectAllComment(int page) {
+        IPage<CommentBean> iPage = iCommentServicel.selectAllComment(page);
+        List<CommentBean> list = iPage.getRecords();
+        if (list.size() != 0) {
+            return RespBean.ok("查询成功", list);
+        }
+        return RespBean.error("查询失败，未找到该页数");
     }
 }

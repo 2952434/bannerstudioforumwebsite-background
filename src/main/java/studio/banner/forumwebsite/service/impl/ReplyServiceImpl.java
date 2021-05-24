@@ -1,8 +1,12 @@
 package studio.banner.forumwebsite.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import studio.banner.forumwebsite.bean.PostBean;
 import studio.banner.forumwebsite.bean.ReplyBean;
 import studio.banner.forumwebsite.mapper.ReplyMapper;
 import studio.banner.forumwebsite.service.IReplyService;
@@ -40,7 +44,7 @@ public class ReplyServiceImpl implements IReplyService {
 
     @Override
     public boolean deleteAllReplyByMemberId(Integer memberId) {
-        if (selectAllReplyByMemberId(memberId) != null){
+        if (selectAllReplyByMemberId(memberId,1) != null){
             UpdateWrapper<ReplyBean>updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("reply_member_id",memberId);
             replyMapper.delete(updateWrapper);
@@ -52,7 +56,7 @@ public class ReplyServiceImpl implements IReplyService {
     @Override
     public boolean deleteAllReplyByCommentId(Integer commentId) {
 
-        if (selectAllReplyByCommentId(commentId) != null){
+        if (selectAllReplyByCommentId(commentId ,1) != null){
             UpdateWrapper<ReplyBean>updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("comment_id",commentId);
             replyMapper.delete(updateWrapper);
@@ -85,22 +89,26 @@ public class ReplyServiceImpl implements IReplyService {
     }
 
     @Override
-    public List<ReplyBean> selectAllReplyByCommentId(Integer commenmtId) {
+    public IPage<ReplyBean> selectAllReplyByCommentId(Integer commenmtId, int page) {
         QueryWrapper<ReplyBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("comment_id",commenmtId);
-        if (replyMapper.selectList(queryWrapper).size() != 0){
-            return replyMapper.selectList(queryWrapper);
+        Page<ReplyBean> page1 = new Page<>(page,10);
+        IPage<ReplyBean> page2 = replyMapper.selectPage(page1,queryWrapper);
+        if (page2.getSize() != 0){
+            return page2;
         }
         return null;
     }
 
     @Override
-    public List<ReplyBean> selectAllReplyByMemberId(Integer memberId) {
+    public IPage<ReplyBean> selectAllReplyByMemberId(Integer memberId, int page) {
             QueryWrapper<ReplyBean>queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("reply_member_id",memberId);
-            if (replyMapper.selectList(queryWrapper).size() != 0){
-                return replyMapper.selectList(queryWrapper);
-            }
+        Page<ReplyBean> page1 = new Page<>(page,10);
+        IPage<ReplyBean> page2 = replyMapper.selectPage(page1,queryWrapper);
+        if (page2.getSize() != 0){
+            return page2;
+        }
         return null;
     }
 

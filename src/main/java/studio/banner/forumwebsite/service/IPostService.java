@@ -1,5 +1,6 @@
 package studio.banner.forumwebsite.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import studio.banner.forumwebsite.bean.PostBean;
 
 import java.util.List;
@@ -92,8 +93,8 @@ public interface IPostService {
     List<PostBean> selectAllPostById(int postMemberId);
 
     /**
-     * 查询所有帖子
+     * 分页查询所有帖子
      * @return List
      */
-    List<PostBean>selectAllPost();
+    IPage<PostBean> selectAllPost(int page);
 }
