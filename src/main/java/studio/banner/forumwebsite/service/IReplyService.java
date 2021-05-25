@@ -57,7 +57,7 @@ public interface IReplyService {
     /**
      * 根据评论id分页查询该评论下全部回复
      * @param commenmtId
-     * @return List
+     * @return IPage
      */
     IPage<ReplyBean> selectAllReplyByCommentId(Integer commenmtId , int page);
 

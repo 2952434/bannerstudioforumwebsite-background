@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import studio.banner.forumwebsite.bean.CommentBean;
 import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.service.ICommentService;
+import studio.banner.forumwebsite.service.IPostService;
 import studio.banner.forumwebsite.service.IReplyService;
 
 import javax.validation.Valid;
@@ -39,6 +40,8 @@ public class CommentController {
     protected ICommentService iCommentServicel;
     @Autowired
     protected IReplyService iReplyService;
+    @Autowired
+    protected IPostService iPostService;
 
     /**
      * 评论增加接口
@@ -81,8 +84,11 @@ public class CommentController {
             }
             return RespBean.error(map);
         }
-        iCommentServicel.insertComment(commentBean);
-        return RespBean.ok("评论成功");
+        if(iPostService.selectPost(commentBean.getCommentPostId()) != null) {
+            iCommentServicel.insertComment(commentBean);
+            return RespBean.ok("评论成功");
+        }
+        return RespBean.error("评论失败，未找到该帖子");
     }
 
     /**
@@ -227,7 +233,7 @@ public class CommentController {
             List<CommentBean> list = iCommentServicel.selectAllCommentByPostId(commentPostId);
             return RespBean.ok("查询成功", list);
         }
-        return RespBean.error("查询失败，未找到该帖子");
+        return RespBean.error("查询失败，未找到该帖子或该帖子下无评论");
     }
 
     /**
@@ -249,7 +255,7 @@ public class CommentController {
             List<CommentBean> list = iCommentServicel.selectAllCommentByMemberId(commentMemberId);
             return RespBean.ok("查询成功", list);
         }
-        return RespBean.error("查询失败，未找到该用户");
+        return RespBean.error("查询失败，未找到该用户或该用户下无评论");
     }
 
     /**

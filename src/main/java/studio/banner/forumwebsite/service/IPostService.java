@@ -94,7 +94,7 @@ public interface IPostService {
 
     /**
      * 分页查询所有帖子
-     * @return List
+     * @return IPage
      */
     IPage<PostBean> selectAllPost(int page);
 }

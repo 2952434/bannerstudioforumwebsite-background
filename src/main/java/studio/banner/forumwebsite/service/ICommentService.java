@@ -54,16 +54,16 @@ public interface ICommentService {
     boolean updateCommentLikeNumber(int commentId);
 
     /**
-     * 根据帖子id分页查找该帖子下全部评论
+     * 根据帖子id查找该帖子下全部评论
      * @param commentPostId
-     * @return IPage
+     * @return List
      */
    List<CommentBean> selectAllCommentByPostId(int commentPostId);
 
     /**
-     * 根据用户id分页查找该用户全部评论
+     * 根据用户id查找该用户全部评论
      * @param commentMemberId
-     * @return IPage
+     * @return List
      */
      List <CommentBean>selectAllCommentByMemberId(int commentMemberId);
 

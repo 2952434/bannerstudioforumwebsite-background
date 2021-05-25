@@ -13,6 +13,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import studio.banner.forumwebsite.bean.ReplyBean;
 import studio.banner.forumwebsite.bean.RespBean;
+import studio.banner.forumwebsite.service.ICommentService;
 import studio.banner.forumwebsite.service.IReplyService;
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -35,6 +36,8 @@ public class ReplyController {
     private static final Logger logger = LoggerFactory.getLogger(PostController.class);
     @Autowired
     protected IReplyService iReplyService;
+    @Autowired
+    protected ICommentService iCommentService;
 
     /**
      * 回复增加
@@ -79,8 +82,11 @@ public class ReplyController {
             }
             return RespBean.error(map);
         }
-        iReplyService.insertReply(replyBean);
-        return RespBean.ok("回复成功");
+        if (iCommentService.selectComment(replyBean.getCommentId()) != null) {
+            iReplyService.insertReply(replyBean);
+            return RespBean.ok("回复成功");
+        }
+        return RespBean.error("回复失败，未找到改评论");
     }
 
     /**
@@ -103,6 +109,12 @@ public class ReplyController {
         }
         return RespBean.error("删除失败，未找到该评论");
     }
+
+    /**
+     * 根据用户id删除该用户下全部回复
+     * @param replyMemberId
+     * @return RespBean
+     */
     @DeleteMapping("/deleteAllReplyByMemberId")
     @ApiOperation(value = "根据用户id删除该用户全部回复", notes = "用户需存在", httpMethod = "DELETE")
     @ApiImplicitParams({
@@ -111,7 +123,7 @@ public class ReplyController {
     }
     )
     public RespBean deleteAllCommentByMemberId(Integer replyMemberId) {
-        if (iReplyService.selectAllReplyByMemberId(replyMemberId, 1) != null){
+        if (iReplyService.selectAllReplyByMemberId(replyMemberId, 1).getRecords().size() != 0){
             iReplyService.deleteAllReplyByMemberId(replyMemberId);
             return RespBean.ok("删除成功");
         }
@@ -131,11 +143,11 @@ public class ReplyController {
     }
     )
     public RespBean deleteAllCommentByCommentId(Integer commentId) {
-        if (iReplyService.selectAllReplyByCommentId(commentId ,1) != null){
+        if (iReplyService.selectAllReplyByCommentId(commentId ,1).getRecords().size() != 0){
             iReplyService.deleteAllReplyByCommentId(commentId);
             return RespBean.ok("删除成功");
         }
-        return RespBean.error("删除失败，未找到该评论");
+        return RespBean.error("删除失败，未找到该评论或改评论下无评论可删除");
     }
 
     /**
@@ -219,7 +231,7 @@ public class ReplyController {
     }
     )
     public RespBean selectAllReplyByMemberId(Integer replyMemberId ,int page) {
-            IPage<ReplyBean> iPage = iReplyService.selectAllReplyByCommentId(replyMemberId, page);
+            IPage<ReplyBean> iPage = iReplyService.selectAllReplyByMemberId(replyMemberId, page);
             List<ReplyBean>list = iPage.getRecords();
             if (list.size() != 0){
 

@@ -26,7 +26,7 @@ spring:
     com.baomidou.mybatisplus: error
 
 server:
-  port: 8082
+  port: 8084
 
 qiniu:
   path: qtga4eaxm.hn-bkt.clouddn.com

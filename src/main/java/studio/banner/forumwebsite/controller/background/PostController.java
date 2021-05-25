@@ -91,7 +91,7 @@ public class PostController {
             return RespBean.error(map);
         }
         iPostService.insertPost(postBean);
-        return JSON.toJSONString(RespBean.ok("成功"));
+        return JSON.toJSONString(RespBean.ok("添加帖子成功"));
     }
 
     /**
@@ -166,9 +166,10 @@ public class PostController {
                     int commentId = list.get(i).getCommentId();
                     iReplyService.deleteAllReplyByCommentId(commentId);
                 }
-                iCommentService.deleteAllCommnetByPostId(postId);
-                return RespBean.ok("删除成功");
+
             }
+            iCommentService.deleteAllCommnetByPostId(postId);
+            return RespBean.ok("删除成功");
         }
         return RespBean.error("删除失败,未查询到该文章");
     }
@@ -224,7 +225,7 @@ public class PostController {
     )
     public RespBean udpatePostContent(int postId, String newContent) {
         if (iPostService.updatePostContent(postId, newContent)) {
-            return RespBean.ok("成功");
+            return RespBean.ok("更改成功");
         }
         return RespBean.error("更改失败，未查询到改帖子");
     }
@@ -246,7 +247,7 @@ public class PostController {
     )
     public RespBean udpatePostPageview(int postId) {
         if (iPostService.updatePostpageview(postId)) {
-            return RespBean.ok("成功");
+            return RespBean.ok("更改成功");
         }
         return RespBean.error("更改失败，未查询到改帖子");
     }
@@ -266,7 +267,7 @@ public class PostController {
     )
     public RespBean udpatePostCommentNumber(int postId) {
         if (iPostService.updatePostCommentNumber(postId)) {
-            return RespBean.ok("成功");
+            return RespBean.ok("更改成功");
         }
         return RespBean.error("更改失败，未查询到改帖子");
     }
@@ -286,7 +287,7 @@ public class PostController {
     )
     public RespBean udpatePostLikeNumber(int postId) {
         if (iPostService.updatePostLikeNumber(postId)) {
-            return RespBean.ok("成功");
+            return RespBean.ok("更改成功");
         }
         return RespBean.error("更改失败，未查询到改帖子");
     }
@@ -307,9 +308,9 @@ public class PostController {
     public RespBean selectPost(int postId) {
         if (iPostService.selectPost(postId) != null) {
             PostBean postBean = iPostService.selectPost(postId);
-            return RespBean.ok("成功", postBean);
+            return RespBean.ok("查找成功", postBean);
         }
-        return RespBean.error("查找失败，未查询到该帖子 ");
+        return RespBean.error("查找失败，未查询到该帖子");
     }
 
     /**
@@ -326,11 +327,11 @@ public class PostController {
     }
     )
     public RespBean selectAllPostById(int postMemberId) {
-        if (iPostService.selectAllPostById(postMemberId).size() != 0) {
+        if (iPostService.selectAllPostById(postMemberId) != null) {
             List<PostBean> list = iPostService.selectAllPostById(postMemberId);
-            return RespBean.ok("成功", list);
+            return RespBean.ok("查找成功", list);
         }
-        return RespBean.error("查找失败，未查询到该帖子 ");
+        return RespBean.error("查找失败，未查询到该用户或该用户无帖子");
     }
 
     /**

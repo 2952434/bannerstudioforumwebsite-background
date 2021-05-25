@@ -36,17 +36,15 @@ public class PostServiceImpl implements IPostService {
     @Override
     public boolean forwardPost(PostBean postBean){
         postMapper.insert(postBean);
-        return false;
+        return true;
     }
 
     @Override
     public boolean deletePost(int postId) {
         if (postMapper.selectById(postId) != null) {
             postMapper.deleteById(postId);
-            System.out.println("删除成功");
             return true;
         }
-        System.out.println("删除失败,未查到改篇帖子");
         return false;
     }
 

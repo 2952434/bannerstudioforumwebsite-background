@@ -44,7 +44,7 @@ public class ReplyServiceImpl implements IReplyService {
 
     @Override
     public boolean deleteAllReplyByMemberId(Integer memberId) {
-        if (selectAllReplyByMemberId(memberId,1) != null){
+        if (selectAllReplyByMemberId(memberId,1).getRecords().size() != 0){
             UpdateWrapper<ReplyBean>updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("reply_member_id",memberId);
             replyMapper.delete(updateWrapper);
