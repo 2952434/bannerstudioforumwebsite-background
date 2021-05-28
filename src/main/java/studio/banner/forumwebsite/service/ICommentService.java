@@ -1,4 +1,5 @@
 package studio.banner.forumwebsite.service;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import studio.banner.forumwebsite.bean.CommentBean;
 import java.util.List;
 
@@ -55,29 +56,29 @@ public interface ICommentService {
     /**
      * 根据帖子id查找该帖子下全部评论
      * @param commentPostId
-     * @return boolean
+     * @return List
      */
-    List<CommentBean> selectAllCommentByPostId(int commentPostId);
+   List<CommentBean> selectAllCommentByPostId(int commentPostId);
 
     /**
      * 根据用户id查找该用户全部评论
      * @param commentMemberId
-     * @return boolean
+     * @return List
      */
      List <CommentBean>selectAllCommentByMemberId(int commentMemberId);
 
     /**
      * 根据评论id查找该评论
      * @param commentId
-     * @return boolean
+     * @return CommentBean
      */
     CommentBean selectComment(int commentId);
 
     /**
-     * 查询全部评论
-     * @return
+     * 分页查询全部评论
+     * @return IPage
      */
-    List<CommentBean> selectAllComment();
+    IPage<CommentBean> selectAllComment(int page);
 
 
 }

@@ -1,4 +1,6 @@
 package studio.banner.forumwebsite.controller.background;
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -15,7 +17,7 @@ import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.service.ICommentService;
 import studio.banner.forumwebsite.service.IPostService;
 import studio.banner.forumwebsite.service.IReplyService;
-
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +46,7 @@ public class PostController {
 
     /**
      * 帖子接口
+     *
      * @param postBean
      * @param bindingResult
      * @return RespBean
@@ -54,7 +57,7 @@ public class PostController {
             @ApiImplicitParam(paramType = "query", name = "postId",
                     value = "帖子id", required = false, dataType = "int"),
             @ApiImplicitParam(paramType = "query", name = "postMemberId",
-                    value = "帖子发表者id", required = true, dataType = "String"),
+                    value = "帖子发表者id", required = true, dataType = "int"),
             @ApiImplicitParam(paramType = "query", name = "postContent",
                     value = "帖子内容", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "postPageview",
@@ -66,10 +69,12 @@ public class PostController {
             @ApiImplicitParam(paramType = "query", name = "postForward",
                     value = "帖子是否为转发，0为原创，其他数字为原创作者的id", required = false, dataType = "int"),
             @ApiImplicitParam(paramType = "query", name = "postLikeNumber",
-                    value = "帖子点赞数量", required = false, dataType = "int")
+                    value = "帖子点赞数量", required = false, dataType = "int"),
+            @ApiImplicitParam(paramType = "query", name = "postImageAddress",
+                    value = "帖子图片地址", required = false, dataType = "String")
     }
     )
-    public RespBean insertPost(@Valid PostBean postBean, BindingResult bindingResult) {
+    public Object insertPost(@Valid PostBean postBean, BindingResult bindingResult) {
 
         /**
          * 将@Valid鉴权的错误信息返给前端
@@ -87,62 +92,48 @@ public class PostController {
             return RespBean.error(map);
         }
         iPostService.insertPost(postBean);
-        return RespBean.ok("成功");
+        return JSON.toJSONString(RespBean.ok("添加帖子成功"));
     }
 
     /**
      * 帖子转发接口
-     * @param postBean
-     * @param bindingResult
+     *
+     * @param postTime
+     * @param postForwardMemberId
+     * @param postId
      * @return RespBean
      */
     @PostMapping("/forwardPost")
     @ApiOperation(value = "帖子转发", notes = "帖子需存在", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
-                    value = "帖子id", required = false, dataType = "int"),
-            @ApiImplicitParam(paramType = "query", name = "postMemberId",
-                    value = "帖子发表者id", required = true, dataType = "String"),
-            @ApiImplicitParam(paramType = "query", name = "postContent",
-                    value = "帖子内容", required = true, dataType = "String"),
-            @ApiImplicitParam(paramType = "query", name = "postPageview",
-                    value = "帖子浏览量", required = false, dataType = "int"),
-            @ApiImplicitParam(paramType = "query", name = "postCommentNumber",
-                    value = "帖子评论量", required = false, dataType = "int"),
+                    value = "原帖子id", required = true, dataType = "int"),
+            @ApiImplicitParam(paramType = "query", name = "postForwardMemberId",
+                    value = "转发帖子者id", required = true, dataType = "int"),
             @ApiImplicitParam(paramType = "query", name = "postTime",
-                    value = "帖子创建时间", required = true, dataType = "String"),
-            @ApiImplicitParam(paramType = "query", name = "postForward",
-                    value = "帖子是否为转发，0为原创，其他数字为原创作者的id", required = true, dataType = "int"),
-            @ApiImplicitParam(paramType = "query", name = "postLikeNumber",
-                    value = "帖子点赞数量", required = false, dataType = "int")
+                    value = "帖子转发时间", required = true, dataType = "String"),
     }
 
     )
-    public RespBean forwardPost(@Valid PostBean postBean, BindingResult bindingResult) {
-        /**
-         * 将@Valid鉴权的错误信息返给前端
-         */
-        if (bindingResult.hasErrors()) {
-            Map<String, Object> map = new HashMap<>(999);
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            logger.error("转发失败！");
-            for (FieldError error : errors) {
-                logger.error("错误的字段名：" + error.getField());
-                logger.error("错误信息：" + error.getDefaultMessage());
-                map.put(error.getField(), error.getDefaultMessage());
-            }
-            return RespBean.error(map);
+    public RespBean forwardPost(int postId,int postForwardMemberId, String postTime) {
+        if (iPostService.selectPost(postId) != null) {
+            PostBean postBean1 = iPostService.selectPost(postId);
+            String postContent = postBean1.getPostContent();
+            String imageAddress = postBean1.getPostImageAddress();
+            int postForward = postBean1.getPostMemberId();
+            PostBean postBean = new PostBean(0, postForwardMemberId, postContent, postTime, null, null, postForward, null, imageAddress);
+            iPostService.insertPost(postBean);
+            return RespBean.ok("转发成功");
         }
-        iPostService.forwardPost(postBean);
-        return RespBean.ok("转发成功");
+        return RespBean.error("转发失败，为查询到原帖子");
     }
-
-
     /**
-     *  帖子删除接口
+     * 帖子删除接口
+     *
      * @param postId
      * @return RespBean
      */
+
     @DeleteMapping("/deletePost")
     @ApiOperation(value = "帖子删除", notes = "帖子需存在", httpMethod = "DELETE")
     @ApiImplicitParams({
@@ -158,15 +149,17 @@ public class PostController {
                     int commentId = list.get(i).getCommentId();
                     iReplyService.deleteAllReplyByCommentId(commentId);
                 }
-                iCommentService.deleteAllCommnetByPostId(postId);
-                return RespBean.ok("删除成功");
+
             }
+            iCommentService.deleteAllCommnetByPostId(postId);
+            return RespBean.ok("删除成功");
         }
         return RespBean.error("删除失败,未查询到该文章");
     }
 
     /**
      * 根据用户id清空该用户全部帖子
+     *
      * @param postMemberId
      * @return RespBean
      */
@@ -179,8 +172,8 @@ public class PostController {
     )
     public RespBean deleteAllPost(int postMemberId) {
         if (iPostService.selectAllPostById(postMemberId) != null) {
-            List<PostBean>List = iPostService.selectAllPostById(postMemberId);
-            for (int j = 0 ; j < List.size() ; j++){
+            List<PostBean> List = iPostService.selectAllPostById(postMemberId);
+            for (int j = 0; j < List.size(); j++) {
                 if (iCommentService.selectAllCommentByPostId(List.get(j).getPostId()) != null) {
                     List<CommentBean> list = iCommentService.selectAllCommentByPostId(List.get(j).getPostId());
                     for (int i = 0; i < list.size(); i++) {
@@ -198,6 +191,7 @@ public class PostController {
 
     /**
      * 帖子内容修改接口
+     *
      * @param postId
      * @param newContent
      * @return RespBean
@@ -214,13 +208,14 @@ public class PostController {
     )
     public RespBean udpatePostContent(int postId, String newContent) {
         if (iPostService.updatePostContent(postId, newContent)) {
-            return RespBean.ok("成功");
+            return RespBean.ok("更改成功");
         }
         return RespBean.error("更改失败，未查询到改帖子");
     }
 
     /**
      * 更改帖子浏览量
+     *
      * @param postId
      * @return RespBean
      */
@@ -235,13 +230,14 @@ public class PostController {
     )
     public RespBean udpatePostPageview(int postId) {
         if (iPostService.updatePostpageview(postId)) {
-            return RespBean.ok("成功");
+            return RespBean.ok("更改成功");
         }
         return RespBean.error("更改失败，未查询到改帖子");
     }
 
     /**
      * 修改帖子评论量
+     *
      * @param postId
      * @return RespBean
      */
@@ -253,14 +249,15 @@ public class PostController {
     }
     )
     public RespBean udpatePostCommentNumber(int postId) {
-        if (iPostService.updatePostCommentNumber(postId)){
-            return RespBean.ok("成功");
+        if (iPostService.updatePostCommentNumber(postId)) {
+            return RespBean.ok("更改成功");
         }
         return RespBean.error("更改失败，未查询到改帖子");
     }
 
     /**
      * 修改帖子点赞量
+     *
      * @param postId
      * @return RespBean
      */
@@ -272,14 +269,15 @@ public class PostController {
     }
     )
     public RespBean udpatePostLikeNumber(int postId) {
-        if (iPostService.updatePostLikeNumber(postId)){
-            return RespBean.ok("成功");
+        if (iPostService.updatePostLikeNumber(postId)) {
+            return RespBean.ok("更改成功");
         }
         return RespBean.error("更改失败，未查询到改帖子");
     }
 
     /**
      * 根据帖子id查找帖子
+     *
      * @param postId
      * @return RespBean
      */
@@ -293,13 +291,14 @@ public class PostController {
     public RespBean selectPost(int postId) {
         if (iPostService.selectPost(postId) != null) {
             PostBean postBean = iPostService.selectPost(postId);
-            return RespBean.ok("成功",postBean);
+            return RespBean.ok("查找成功", postBean);
         }
-        return RespBean.error("查找失败，未查询到该帖子 ");
+        return RespBean.error("查找失败，未查询到该帖子");
     }
 
     /**
      * 根据用户id查询该用户所有帖子
+     *
      * @param postMemberId
      * @return RespBean
      */
@@ -311,20 +310,31 @@ public class PostController {
     }
     )
     public RespBean selectAllPostById(int postMemberId) {
-        if (iPostService.selectAllPostById(postMemberId).size() != 0) {
+        if (iPostService.selectAllPostById(postMemberId) != null) {
             List<PostBean> list = iPostService.selectAllPostById(postMemberId);
-            return RespBean.ok("成功",list);
+            return RespBean.ok("查找成功", list);
         }
-        return RespBean.error("查找失败，未查询到该帖子 ");
+        return RespBean.error("查找失败，未查询到该用户或该用户无帖子");
     }
+
     /**
      * 查询全部帖子接口
+     *
      * @return RespBean
      */
     @GetMapping("/selectAllPost")
     @ApiOperation(value = "查找所有帖子", notes = "帖子需存在", httpMethod = "GET")
-    public RespBean selectAllPost() {
-        List<PostBean>list = iPostService.selectAllPost();
-        return RespBean.ok("成功",list);
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "page",
+                    value = "分页查询页数", required = true, dataType = "int"),
+    }
+    )
+    public RespBean selectAllPost(int page) {
+            IPage<PostBean> iPage = iPostService.selectAllPost(page);
+            List<PostBean> list = iPage.getRecords();
+            if (list.size() != 0){
+            return RespBean.ok("查询成功", list);
+        }
+        return RespBean.error("查询失败，未找到该页数");
     }
 }

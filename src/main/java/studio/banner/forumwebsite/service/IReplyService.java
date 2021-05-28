@@ -1,4 +1,5 @@
 package studio.banner.forumwebsite.service;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import studio.banner.forumwebsite.bean.ReplyBean;
 
 import java.util.List;
@@ -54,18 +55,18 @@ public interface IReplyService {
     boolean updateReplyLikeNumber(Integer replyId);
 
     /**
-     * 根据评论id查询该评论下全部回复
+     * 根据评论id分页查询该评论下全部回复
      * @param commenmtId
-     * @return List
+     * @return IPage
      */
-    List<ReplyBean> selectAllReplyByCommentId(Integer commenmtId);
+    IPage<ReplyBean> selectAllReplyByCommentId(Integer commenmtId , int page);
 
     /**
-     * 根据用户id查询该用户下全部回复
+     * 根据用户分页查询该用户下全部回复
      * @param memberId
-     * @return List
+     * @return IPage
      */
-    List<ReplyBean> selectAllReplyByMemberId(Integer memberId);
+    IPage<ReplyBean> selectAllReplyByMemberId(Integer memberId, int page);
 
     /**
      * 根据回复id查询

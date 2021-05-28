@@ -2,6 +2,8 @@ package studio.banner.forumwebsite.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import studio.banner.forumwebsite.bean.PostBean;
@@ -34,17 +36,15 @@ public class PostServiceImpl implements IPostService {
     @Override
     public boolean forwardPost(PostBean postBean){
         postMapper.insert(postBean);
-        return false;
+        return true;
     }
 
     @Override
     public boolean deletePost(int postId) {
         if (postMapper.selectById(postId) != null) {
             postMapper.deleteById(postId);
-            System.out.println("删除成功");
             return true;
         }
-        System.out.println("删除失败,未查到改篇帖子");
         return false;
     }
 
@@ -107,15 +107,6 @@ public class PostServiceImpl implements IPostService {
         return false;
     }
 
-//    public boolean updatePost(int postId) {
-//        if (postMapper.selectById(postId) != null) {
-//            UpdateWrapper<PostBean> updateWrapper = new UpdateWrapper<PostBean>();
-//            updateWrapper.eq("post_id", postId).set("post_like_number", 111);
-//            postMapper.update(null, updateWrapper);
-//            return true;
-//        }
-//        return false;
-//    }
 
     @Override
     public PostBean selectPost(int postId) {
@@ -134,10 +125,11 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
-    public List<PostBean> selectAllPost() {
-        List<PostBean> list = postMapper.selectList(null);
-        if (list.size() != 0) {
-            return list;
+    public IPage<PostBean> selectAllPost(int page) {
+        Page<PostBean> page1 = new Page<>(page,10);
+        IPage<PostBean> page2 = postMapper.selectPage(page1,null);
+        if (page2.getSize() != 0) {
+            return page2;
         }
         return null;
     }

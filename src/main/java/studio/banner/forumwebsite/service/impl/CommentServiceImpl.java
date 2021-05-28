@@ -1,6 +1,8 @@
 package studio.banner.forumwebsite.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import studio.banner.forumwebsite.bean.CommentBean;
@@ -115,7 +117,9 @@ public class CommentServiceImpl implements ICommentService{
     }
 
     @Override
-    public List<CommentBean> selectAllComment() {
-        return commentMapper.selectList(null);
+    public IPage<CommentBean> selectAllComment(int page) {
+        Page <CommentBean> page1 = new Page<>(page,10);
+        IPage <CommentBean> page2 = commentMapper.selectPage(page1, null);
+        return page2;
     }
 }

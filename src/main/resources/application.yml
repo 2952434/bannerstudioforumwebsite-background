@@ -35,8 +35,7 @@ spring:
         socketFactoryClass: javax.net.ssl.SSLSocketFactory
       debug: true
 server:
-  port: 8082
-
+  port: 8084
 
 qiniu:
   path: qtga4eaxm.hn-bkt.clouddn.com

@@ -30,13 +30,13 @@ class ForumApplicationTests {
         IReplyService iReplyService;
         @Test
         void updatePost() {
-            SimpleDateFormat bjSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");     // 北京
-            bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));  // 设置北京时区
-            Date date = new Date();
-            iReplyService.insertReply(new ReplyBean(1, 2, 2, 2,"太牛了！！！",0,bjSdf.format(date)));
-            System.out.println(iReplyService.selectAllReplyByCommentId(1));
-            iReplyService.updateReplyLikeNumber(1);
-           // iReplyService.deleteAllReplyByMemberId(1);
+//            SimpleDateFormat bjSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");     // 北京
+//            bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));  // 设置北京时区
+//            Date date = new Date();
+//            iReplyService.insertReply(new ReplyBean(1, 2, 2, 2,"太牛了！！！",0,bjSdf.format(date)));
+//            System.out.println(iReplyService.selectAllReplyByCommentId(1));
+//            iReplyService.updateReplyLikeNumber(1);
+//           // iReplyService.deleteAllReplyByMemberId(1);
 //    public void testFileUpload() {
 //        //构造一个带指定Zone对象的配置类
 //        Configuration cfg = new Configuration(Zone.zone0());
