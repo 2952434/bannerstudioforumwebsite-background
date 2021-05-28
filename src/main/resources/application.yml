@@ -24,7 +24,16 @@ spring:
     studio.banner.forumwebsite: debug
     org.springfromework.web: info
     com.baomidou.mybatisplus: error
-
+  mail:
+    host: smtp.qq.com
+    port: 587
+    username: 2952434583@qq.com
+    password: spmkmsoighssdhdd
+    default-encoding: UTF-8
+    properties:
+      smtp:
+        socketFactoryClass: javax.net.ssl.SSLSocketFactory
+      debug: true
 server:
   port: 8082
 

@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import studio.banner.forumwebsite.bean.UserBean;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * @Author: Ljx
  * @Date: 2021/5/7 15:25
@@ -18,25 +20,25 @@ public interface IUserService {
 
     /**
      * 注册时查询是否已存在该账号
-     * @param memberAccountNumber
+     * @param memberPhone
      * @return boolean
      */
-    boolean selectAccount(Integer memberAccountNumber);
+    boolean selectAccount(String memberPhone);
 
     /**
      * 根据用户账号返回用户
-     * @param memberAccount
+     * @param memberPhone
      * @return boolean
      */
-    UserBean selectUser(Integer memberAccount);
+    UserBean selectUser(String memberPhone);
 
     /**
      * 登陆时查询是否存在该账号与对应密码
-     * @param memberAccountNumber
+     * @param memberPhone
      * @param memberPassword
      * @return boolean
      */
-    boolean selectUser(Integer memberAccountNumber,String memberPassword);
+    boolean selectUser(String memberPhone,String memberPassword);
 
     /**
      * 删除用户
@@ -56,22 +58,26 @@ public interface IUserService {
      * @param memberId
      * @param memberPassword
      * @param newMemberPassword
+     * @param repeatPassword
      * @return boolean
      */
-    boolean updateUserPassWord(Integer memberId, String memberPassword , String newMemberPassword);
+    boolean updateUserPassWord(Integer memberId, String memberPassword, String newMemberPassword,String repeatPassword);
 
     /**
-     * 忘记密码，根据手机号修改密码
-     * @param memberAccountNumber
+     * 忘记密码，根据邮箱修改密码
      * @param memberPhone
+     * @param memberMail
+     * @param code
      * @param newMemberPassword
+     * @param repeatPassword
      * @return boolean
      */
-    boolean forgetPassWord(String memberAccountNumber,String memberPhone,String newMemberPassword);
+    boolean forgetPassWord(String memberPhone,String memberMail,String code,String newMemberPassword,String repeatPassword);
 
     /**
      * 分页查询用户
      * @return UserBean
      */
     IPage<UserBean> selectUser();
+    boolean sendMail(String email, HttpSession session);
 }

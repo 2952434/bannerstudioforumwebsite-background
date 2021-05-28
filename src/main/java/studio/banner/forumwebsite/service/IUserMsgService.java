@@ -54,4 +54,5 @@ public interface IUserMsgService {
      * @return boolean
      */
     boolean updateUserHead(Integer memberId,String memberHead);
+
 }

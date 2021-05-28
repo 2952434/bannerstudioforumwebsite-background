@@ -25,7 +25,7 @@ import lombok.experimental.Accessors;
 public class UserBean {
     @TableId(type = IdType.AUTO)
     private Integer memberId;
-    private Integer memberAccountNumber;
-    private String memberPassword;
     private String memberPhone;
+    private String memberPassword;
+    private String memberMail;
 }
