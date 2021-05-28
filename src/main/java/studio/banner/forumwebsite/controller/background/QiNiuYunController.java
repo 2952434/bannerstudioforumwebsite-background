@@ -4,16 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.config.QiNiuYunConfig;
 import studio.banner.forumwebsite.manager.QiNiuYunManager;
 
 import java.io.IOException;
-<<<<<<< HEAD
 
-
-=======
->>>>>>> f411588d9a883a91d17700e331f33bfb8f0e9c56
 /**
  * Created with IntelliJ IDEA.
  * @Author: HYK
@@ -25,8 +22,6 @@ import java.io.IOException;
 public class QiNiuYunController {
     @Autowired
     private QiNiuYunManager qiNiuYunManager;
-<<<<<<< HEAD
-=======
     /**
      * 七牛云上传图片
      * @param file
@@ -34,25 +29,22 @@ public class QiNiuYunController {
      * @return RespBean
      * @throws IOException
      */
->>>>>>> f411588d9a883a91d17700e331f33bfb8f0e9c56
     @PostMapping("/qiniu")
     public RespBean qiNiuYunUpload(@RequestParam("file") MultipartFile file,
                                  Model model) throws IOException {
         String link = qiNiuYunManager.uploadImg(file);
         model.addAttribute("link",link);
         System.out.println(link);
-<<<<<<< HEAD
-        return RespBean.ok("图片上传成功");
-    }
-    @GetMapping("/test")
-    public  ModelAndView qiniutest(){
-        ModelAndView modelAndView=new ModelAndView();
-        modelAndView.setViewName("upload");
-        return modelAndView;
-    }
-=======
         return RespBean.ok("上传图片成功",link);
     }
+
+//    @GetMapping("/test")
+//    public  ModelAndView qiniutest(){
+//        ModelAndView modelAndView=new ModelAndView();
+//        modelAndView.setViewName("upload");
+//        return modelAndView;
+//    }
+
     @DeleteMapping("/delete")
     public RespBean qiNiuYunDelete(String imageAddress){
         QiNiuYunConfig config = new QiNiuYunConfig();
@@ -61,7 +53,5 @@ public class QiNiuYunController {
         }
         return RespBean.error("删除失败");
     }
-
->>>>>>> f411588d9a883a91d17700e331f33bfb8f0e9c56
 
 }
