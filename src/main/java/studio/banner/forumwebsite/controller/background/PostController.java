@@ -17,6 +17,7 @@ import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.service.ICommentService;
 import studio.banner.forumwebsite.service.IPostService;
 import studio.banner.forumwebsite.service.IReplyService;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +57,7 @@ public class PostController {
             @ApiImplicitParam(paramType = "query", name = "postId",
                     value = "帖子id", required = false, dataType = "int"),
             @ApiImplicitParam(paramType = "query", name = "postMemberId",
-                    value = "帖子发表者id", required = true, dataType = "String"),
+                    value = "帖子发表者id", required = true, dataType = "int"),
             @ApiImplicitParam(paramType = "query", name = "postContent",
                     value = "帖子内容", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "postPageview",
@@ -97,53 +98,35 @@ public class PostController {
     /**
      * 帖子转发接口
      *
-     * @param postBean
-     * @param bindingResult
+     * @param postTime
+     * @param postForwardMemberId
+     * @param postId
      * @return RespBean
      */
     @PostMapping("/forwardPost")
     @ApiOperation(value = "帖子转发", notes = "帖子需存在", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
-                    value = "帖子id", required = false, dataType = "int"),
-            @ApiImplicitParam(paramType = "query", name = "postMemberId",
-                    value = "帖子发表者id", required = true, dataType = "String"),
-            @ApiImplicitParam(paramType = "query", name = "postContent",
-                    value = "帖子内容", required = true, dataType = "String"),
-            @ApiImplicitParam(paramType = "query", name = "postPageview",
-                    value = "帖子浏览量", required = false, dataType = "int"),
-            @ApiImplicitParam(paramType = "query", name = "postCommentNumber",
-                    value = "帖子评论量", required = false, dataType = "int"),
+                    value = "原帖子id", required = true, dataType = "int"),
+            @ApiImplicitParam(paramType = "query", name = "postForwardMemberId",
+                    value = "转发帖子者id", required = true, dataType = "int"),
             @ApiImplicitParam(paramType = "query", name = "postTime",
-                    value = "帖子创建时间", required = true, dataType = "String"),
-            @ApiImplicitParam(paramType = "query", name = "postForward",
-                    value = "帖子是否为转发，0为原创，其他数字为原创作者的id", required = true, dataType = "int"),
-            @ApiImplicitParam(paramType = "query", name = "postLikeNumber",
-                    value = "帖子点赞数量", required = false, dataType = "int"),
-            @ApiImplicitParam(paramType = "query", name = "postImageAddress",
-                    value = "帖子图片地址", required = false, dataType = "String")
+                    value = "帖子转发时间", required = true, dataType = "String"),
     }
 
     )
-    public RespBean forwardPost(@Valid PostBean postBean, BindingResult bindingResult) {
-        /**
-         * 将@Valid鉴权的错误信息返给前端
-         */
-        if (bindingResult.hasErrors()) {
-            Map<String, Object> map = new HashMap<>(999);
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            logger.error("转发失败！");
-            for (FieldError error : errors) {
-                logger.error("错误的字段名：" + error.getField());
-                logger.error("错误信息：" + error.getDefaultMessage());
-                map.put(error.getField(), error.getDefaultMessage());
-            }
-            return RespBean.error(map);
+    public RespBean forwardPost(int postId,int postForwardMemberId, String postTime) {
+        if (iPostService.selectPost(postId) != null) {
+            PostBean postBean1 = iPostService.selectPost(postId);
+            String postContent = postBean1.getPostContent();
+            String imageAddress = postBean1.getPostImageAddress();
+            int postForward = postBean1.getPostMemberId();
+            PostBean postBean = new PostBean(0, postForwardMemberId, postContent, postTime, null, null, postForward, null, imageAddress);
+            iPostService.insertPost(postBean);
+            return RespBean.ok("转发成功");
         }
-        iPostService.forwardPost(postBean);
-        return RespBean.ok("转发成功");
+        return RespBean.error("转发失败，为查询到原帖子");
     }
-
     /**
      * 帖子删除接口
      *
