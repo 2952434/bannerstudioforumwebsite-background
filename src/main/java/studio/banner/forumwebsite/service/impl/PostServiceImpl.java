@@ -61,6 +61,17 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
+    public boolean updatePostTitle(int postId ,String newTitle) {
+        if(selectPost(postId) != null){
+            UpdateWrapper<PostBean> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("post_id",postId).set("post_title", newTitle);
+            postMapper.update(null,updateWrapper);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public boolean updatePostContent(int postId , String newContent) {
         if(selectPost(postId) != null){
             UpdateWrapper<PostBean> updateWrapper = new UpdateWrapper<>();

@@ -42,6 +42,14 @@ public interface IPostService {
 
     boolean deleteAllPost(int postMemberId);
 
+    /**
+     * 根据帖子id更改帖子标题
+     * @param postId
+     * @return boolean
+     */
+
+    boolean updatePostTitle(int postId, String newTitle);
+
 
     /**
      * 根据帖子id更改帖子内容

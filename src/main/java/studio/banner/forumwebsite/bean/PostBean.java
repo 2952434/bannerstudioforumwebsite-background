@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 /**
  * Created with IntelliJ IDEA.
@@ -24,8 +26,11 @@ public class PostBean {
     @TableId(type = IdType.AUTO)
     private Integer postId;
     @TableField
+    @Valid
     @NotNull(message = "用户id不能为空")
     private Integer postMemberId;
+    @NotNull(message = "帖子文章不能为空")
+    private String postTitle;
     @NotNull(message = "帖子内容不能为空")
     private String postContent;
     @NotNull(message = "帖子创建时间不能为空")

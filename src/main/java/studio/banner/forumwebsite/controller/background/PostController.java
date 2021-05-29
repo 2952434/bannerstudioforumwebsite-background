@@ -17,7 +17,6 @@ import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.service.ICommentService;
 import studio.banner.forumwebsite.service.IPostService;
 import studio.banner.forumwebsite.service.IReplyService;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +44,7 @@ public class PostController {
     protected IReplyService iReplyService;
 
     /**
-     * 帖子接口
+     * 帖子增加接口
      *
      * @param postBean
      * @param bindingResult
@@ -58,8 +57,10 @@ public class PostController {
                     value = "帖子id", required = false, dataType = "int"),
             @ApiImplicitParam(paramType = "query", name = "postMemberId",
                     value = "帖子发表者id", required = true, dataType = "int"),
+            @ApiImplicitParam(paramType = "query", name = "postTitle",
+                    value = "帖子标题2-20字之间", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "postContent",
-                    value = "帖子内容", required = true, dataType = "String"),
+                    value = "帖子内容<10000字", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "postPageview",
                     value = "帖子浏览量", required = false, dataType = "int"),
             @ApiImplicitParam(paramType = "query", name = "postCommentNumber",
@@ -91,8 +92,15 @@ public class PostController {
             }
             return RespBean.error(map);
         }
-        iPostService.insertPost(postBean);
-        return JSON.toJSONString(RespBean.ok("添加帖子成功"));
+        String judge1 = "^.{5,20}$";
+        String judge2 = "^.{1,10000}$";
+        if (postBean.getPostTitle().matches(judge1)) {
+            if (postBean.getPostContent().matches(judge2)) {
+                iPostService.insertPost(postBean);
+                return JSON.toJSONString(RespBean.ok("添加帖子成功"));
+            }
+        }
+            return JSON.toJSONString(RespBean.error("添加帖子失败,帖子内容有误"));
     }
 
     /**
@@ -121,15 +129,15 @@ public class PostController {
             String postContent = postBean1.getPostContent();
             String imageAddress = postBean1.getPostImageAddress();
             int postForward = postBean1.getPostMemberId();
-            PostBean postBean = new PostBean(0, postForwardMemberId, postContent, postTime, null, null, postForward, null, imageAddress);
+            String postTitle = postBean1.getPostTitle();
+            PostBean postBean = new PostBean(0, postForwardMemberId, postTitle, postContent, postTime, null, null, postForward, null, imageAddress);
             iPostService.insertPost(postBean);
             return RespBean.ok("转发成功");
         }
-        return RespBean.error("转发失败，为查询到原帖子");
+        return RespBean.error("转发失败，未查询到原帖子");
     }
     /**
      * 帖子删除接口
-     *
      * @param postId
      * @return RespBean
      */
@@ -190,6 +198,35 @@ public class PostController {
     }
 
     /**
+     * 根据帖子id修改帖子标题
+     * @param postId
+     * @param newTitle
+     * @return RespBean
+     */
+    @PutMapping("/updatePostTitle")
+    @ApiOperation(value = "帖子标题修改", notes = "帖子需存在,标题长度需在5-20个字符之间", httpMethod = "PUT")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "postId",
+                    value = "帖子id", required = true, dataType = "int"),
+            @ApiImplicitParam(paramType = "query", name = "newTitle",
+                    value = "帖子新标题", required = true, dataType = "String"),
+
+    }
+    )
+    public RespBean udpatePostTitle(int postId, String newTitle) {
+        if (iPostService.selectPost(postId) != null) {
+            String judge = "^.{5,20}$";
+            if (newTitle.matches(judge)){
+                iPostService.updatePostTitle(postId,newTitle);
+                return RespBean.ok("更改成功");
+            }
+           return RespBean.error("更改失败,标题不符合规则");
+        }
+        return RespBean.error("更改失败，未查询到改帖子");
+    }
+
+
+    /**
      * 帖子内容修改接口
      *
      * @param postId
@@ -197,7 +234,7 @@ public class PostController {
      * @return RespBean
      */
     @PutMapping("/updatePostContent")
-    @ApiOperation(value = "帖子内容修改", notes = "帖子需存在", httpMethod = "PUT")
+    @ApiOperation(value = "帖子内容修改", notes = "帖子需存在,帖子内容需小于10000字", httpMethod = "PUT")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
                     value = "帖子id", required = true, dataType = "int"),
@@ -207,8 +244,13 @@ public class PostController {
     }
     )
     public RespBean udpatePostContent(int postId, String newContent) {
-        if (iPostService.updatePostContent(postId, newContent)) {
-            return RespBean.ok("更改成功");
+        if (iPostService.selectPost(postId) != null) {
+            String judge = "^.{1,10000}$";
+            if (newContent.matches(judge)){
+                iPostService.updatePostTitle(postId,newContent);
+                return RespBean.ok("更改成功");
+            }
+            return RespBean.error("更改失败,内容不符合规则");
         }
         return RespBean.error("更改失败，未查询到改帖子");
     }

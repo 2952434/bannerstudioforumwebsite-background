@@ -83,8 +83,13 @@ public class ReplyController {
             return RespBean.error(map);
         }
         if (iCommentService.selectComment(replyBean.getCommentId()) != null) {
-            iReplyService.insertReply(replyBean);
-            return RespBean.ok("回复成功");
+            String judge = "^.{2,100}$";
+
+            if (replyBean.getReplyContent().matches(judge)) {
+                iReplyService.insertReply(replyBean);
+                return RespBean.ok("回复成功");
+            }
+            return RespBean.error("回复失败，回复内容不符合标准");
         }
         return RespBean.error("回复失败，未找到改评论");
     }
@@ -166,9 +171,13 @@ public class ReplyController {
     }
     )
     public RespBean updateCommentContent(Integer replyId, String newContent) {
-        if (iReplyService.selectReply(replyId) != null){
-            iReplyService.updateReplyContent(replyId,newContent);
-            return RespBean.ok("修改成功");
+        if (iReplyService.selectReply(replyId) != null) {
+            String judge = "^.{2,100}$";
+            if (newContent.matches(judge)) {
+                iReplyService.updateReplyContent(replyId, newContent);
+                return RespBean.ok("修改成功");
+            }
+            RespBean.error("修改失败,回复内容不符合标准");
         }
         return RespBean.error("修改失败，未找到该回复");
     }
