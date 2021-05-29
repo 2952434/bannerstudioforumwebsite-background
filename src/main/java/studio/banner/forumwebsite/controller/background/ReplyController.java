@@ -1,6 +1,5 @@
 package studio.banner.forumwebsite.controller.background;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.sun.org.apache.regexp.internal.RE;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

@@ -114,12 +114,14 @@ public class UserController {
                     value = "重复密码", required = true, dataType = "String"),
     }
     )
-    public RespBean forgetPassWord(String memberPhone,String memberMail,String code,String newMemberPassword,String repeatPassword) {
+    public RespBean forgetPassWord(String memberPhone,String memberMail,String code,HttpSession session,String newMemberPassword,String repeatPassword) {
         if (newMemberPassword.equals(repeatPassword)) {
-
-            if (iUserService.forgetPassWord(memberPhone,memberMail,code,newMemberPassword,repeatPassword)){
-            return RespBean.ok("密码重置成功");}
-            return RespBean.error("密码重置失败");
+            if (code == session.getAttribute("code")) {
+                if (iUserService.forgetPassWord(memberPhone, memberMail, code,newMemberPassword, repeatPassword)) {
+                    return RespBean.ok("密码重置成功");
+                }
+                return RespBean.error("密码重置失败");
+            }
         }
         return RespBean.error("两次输入的密码不一致");
     }

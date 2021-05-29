@@ -10,6 +10,7 @@ import studio.banner.forumwebsite.config.QiNiuYunConfig;
 import studio.banner.forumwebsite.manager.QiNiuYunManager;
 
 import java.io.IOException;
+
 /**
  * Created with IntelliJ IDEA.
  * @Author: HYK
@@ -21,10 +22,8 @@ import java.io.IOException;
 public class QiNiuYunController {
     @Autowired
     private QiNiuYunManager qiNiuYunManager;
-
     /**
      * 七牛云上传图片
-     *
      * @param file
      * @param model
      * @return RespBean
@@ -34,24 +33,25 @@ public class QiNiuYunController {
     public RespBean qiNiuYunUpload(@RequestParam("file") MultipartFile file,
                                    Model model) throws IOException {
         String link = qiNiuYunManager.uploadImg(file);
-        model.addAttribute("link", link);
+        model.addAttribute("link",link);
         System.out.println(link);
-        return RespBean.ok("图片上传成功",link);
+        return RespBean.ok("上传图片成功",link);
     }
 
 //    @GetMapping("/test")
-//    public ModelAndView qiniutest() {
-//        ModelAndView modelAndView = new ModelAndView();
+//    public  ModelAndView qiniutest(){
+//        ModelAndView modelAndView=new ModelAndView();
 //        modelAndView.setViewName("upload");
 //        return modelAndView;
 //    }
 
     @DeleteMapping("/delete")
-    public RespBean qiNiuYunDelete(String imageAddress) {
+    public RespBean qiNiuYunDelete(String imageAddress){
         QiNiuYunConfig config = new QiNiuYunConfig();
-        if (config.delete(imageAddress) == true) {
+        if (config.delete(imageAddress) == true){
             return RespBean.ok("删除成功");
         }
         return RespBean.error("删除失败");
     }
+
 }
