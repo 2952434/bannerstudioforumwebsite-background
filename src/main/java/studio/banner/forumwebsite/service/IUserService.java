@@ -69,10 +69,9 @@ public interface IUserService {
      * @param memberMail
      * @param code
      * @param newMemberPassword
-     * @param repeatPassword
      * @return boolean
      */
-    boolean forgetPassWord(String memberPhone,String memberMail,String code,String newMemberPassword,String repeatPassword);
+    boolean forgetPassWord(String memberPhone,String memberMail,String code,String newMemberPassword);
 
     /**
      * 分页查询用户
