@@ -131,11 +131,10 @@ public class UserServiceImpl implements IUserService {
      * @param memberMail
      * @param code
      * @param newMemberPassword
-     * @param repeatPassword
      * @return boolean
      */
     @Override
-    public boolean forgetPassWord(String memberPhone,String memberMail,String code,String newMemberPassword,String repeatPassword) {
+    public boolean forgetPassWord(String memberPhone,String memberMail,String code,String newMemberPassword) {
         UserBean user = new UserBean();
         List<UserBean> list = new LambdaQueryChainWrapper<>(userMapper)
                 .eq(UserBean::getMemberPhone,memberPhone)
