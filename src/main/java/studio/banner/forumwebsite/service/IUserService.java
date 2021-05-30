@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import studio.banner.forumwebsite.bean.UserBean;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * @Author: Ljx
@@ -38,7 +39,7 @@ public interface IUserService {
      * @param memberPassword
      * @return boolean
      */
-    boolean selectUser(String memberPhone,String memberPassword);
+    List<UserBean> selectUser(String memberPhone, String memberPassword);
 
     /**
      * 删除用户

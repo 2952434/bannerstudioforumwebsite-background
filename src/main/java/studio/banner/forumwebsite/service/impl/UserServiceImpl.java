@@ -67,17 +67,12 @@ public class UserServiceImpl implements IUserService {
      * @return  boolean
      */
     @Override
-    public boolean selectUser(String MemberPhone,String memberPassword) {
+    public List<UserBean> selectUser(String MemberPhone,String memberPassword) {
         QueryWrapper<UserBean> wrapper = new QueryWrapper<>();
         wrapper.eq("member_phone",MemberPhone)
                 .eq("member_password",memberPassword);
-        List User = userMapper.selectList(wrapper);
-        if (User.size() ==1){
-            return true;
-        }
-        else {
-            return false;
-        }
+        List<UserBean> User = userMapper.selectList(wrapper);
+        return User;
     }
 
     /**

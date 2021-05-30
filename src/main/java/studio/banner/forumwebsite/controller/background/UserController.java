@@ -17,6 +17,7 @@ import studio.banner.forumwebsite.service.IUserService;
 
 import javax.servlet.http.HttpSession;
 import java.net.ServerSocket;
+import java.util.List;
 
 /**
  * @Author: Ljx
@@ -69,10 +70,11 @@ public class UserController {
     @ApiOperation(value = "登录用户", notes = "查询要登陆的账号是否存在")
     @GetMapping("/selectUser")
     public RespBean select(String memberPhone,String memberPassword){
-        boolean hasUser = iUserService.selectUser(memberPhone,memberPassword);
-        if (hasUser == true){
+        List<UserBean> hasUser = iUserService.selectUser(memberPhone,memberPassword);
+        if (hasUser.size()!=0){
             logger.info("查询成功");
-            return RespBean.ok("账号密码正确");        }else {
+            return RespBean.ok("账号密码正确",hasUser);
+        }else {
             logger.error("查询失败");
             return RespBean.error("账号或密码错误");
         }
