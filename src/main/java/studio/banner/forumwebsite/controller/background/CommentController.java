@@ -62,7 +62,7 @@ public class CommentController {
             @ApiImplicitParam(paramType = "query", name = "commentLikeNumber",
                     value = "评论点赞数量", required = false, dataType = "int"),
             @ApiImplicitParam(paramType = "query", name = "commentContent",
-                    value = "评论内容", required = true, dataType = "String"),
+                    value = "评论内容2-100字之间", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "commentTime",
                     value = "评论时间", required = true, dataType = "String")
     }
@@ -85,8 +85,12 @@ public class CommentController {
             return RespBean.error(map);
         }
         if(iPostService.selectPost(commentBean.getCommentPostId()) != null) {
-            iCommentServicel.insertComment(commentBean);
-            return RespBean.ok("评论成功");
+            String judge = "^.{2,100}$";
+            if (commentBean.getCommentContent().matches(judge)) {
+                iCommentServicel.insertComment(commentBean);
+                return RespBean.ok("评论成功");
+            }
+            return RespBean.error("评论失败，评论内容不符合标准");
         }
         return RespBean.error("评论失败，未找到该帖子");
     }
@@ -178,14 +182,18 @@ public class CommentController {
             @ApiImplicitParam(paramType = "query", name = "commentId",
                     value = "评论id", required = true, dataType = "int"),
             @ApiImplicitParam(paramType = "query", name = "newContent",
-                    value = "新评论内容", required = true, dataType = "String")
+                    value = "新评论内容2-100字之间", required = true, dataType = "String")
 
     }
     )
     public RespBean updateCommentContent(int commentId, String newContent) {
         if (iCommentServicel.selectComment(commentId) != null) {
-            iCommentServicel.updateCommentContent(commentId, newContent);
-            return RespBean.ok("修改成功");
+            String judge = "^.{2,100}$";
+            if (newContent.matches(judge)) {
+                iCommentServicel.updateCommentContent(commentId, newContent);
+                return RespBean.ok("修改成功");
+            }
+            return RespBean.error("修改失败,评论内容不符合标准");
         }
         return RespBean.error("修改失败，未找到该评论");
     }

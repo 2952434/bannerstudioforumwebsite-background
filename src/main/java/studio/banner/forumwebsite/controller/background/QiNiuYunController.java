@@ -31,7 +31,7 @@ public class QiNiuYunController {
      */
     @PostMapping("/qiniu")
     public RespBean qiNiuYunUpload(@RequestParam("file") MultipartFile file,
-                                 Model model) throws IOException {
+                                   Model model) throws IOException {
         String link = qiNiuYunManager.uploadImg(file);
         model.addAttribute("link",link);
         System.out.println(link);
