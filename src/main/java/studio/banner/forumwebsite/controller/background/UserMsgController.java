@@ -100,4 +100,20 @@ public class UserMsgController {
         }
         return RespBean.error("头像修改失败");
     }
+
+
+    @ApiOperation(value = "根据Id查询用户信息", notes = "同时更新关注人数和粉丝人数")
+    @PutMapping("/selectUserMsg")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "memberId",
+                    value = "用户Id", required = true, dataType = "int")
+    }
+    )
+    public RespBean selectUserMsg(Integer memberId) {
+        if (iUserMsgService.selectUserMsg(memberId)!=null) {
+            return RespBean.ok("用户信息查询成功");
+        }
+        return RespBean.error("用户信息查询失败");
+    }
+
 }

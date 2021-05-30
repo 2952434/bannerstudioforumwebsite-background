@@ -55,4 +55,11 @@ public interface IUserMsgService {
      */
     boolean updateUserHead(Integer memberId,String memberHead);
 
+
+    /**
+     * 根据Id查询用户信息
+     * @param memberId
+     * @return UserMsgBean
+     */
+    UserMsgBean selectUserMsg(Integer memberId);
 }

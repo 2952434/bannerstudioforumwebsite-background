@@ -172,10 +172,7 @@ public class UserServiceImpl implements IUserService {
         String code = sendMail.sendSimpleMail(email);
         session.setAttribute("code",code);
         System.out.println(code);
-        QueryWrapper<UserBean> wrapper = new QueryWrapper<>();
-        wrapper.inSql("member_id","select member_id from tab_member where member_mail= "+"\""+email+"\"");
-        UserBean user = userMapper.selectOne(wrapper);
-        session.setAttribute("password",user.getMemberPassword());
+
         return code != null;
 
     }

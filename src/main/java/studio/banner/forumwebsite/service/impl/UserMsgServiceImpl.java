@@ -31,6 +31,8 @@ public class UserMsgServiceImpl implements IUserMsgService {
 
     @Autowired
     private UserMsgMapper userMsgMapper;
+    @Autowired
+    private UserContactMapper userContactMapper;
 
     /**
      * 注册账户时调用，初始化用户信息表
@@ -75,8 +77,6 @@ public class UserMsgServiceImpl implements IUserMsgService {
         }
     }
 
-    @Autowired
-    private UserMsgMapper userMsgMapperSex;
     /**
      * 根据用户Id更改性别
      * @param memberId
@@ -139,5 +139,24 @@ public class UserMsgServiceImpl implements IUserMsgService {
         }else{
             return false;
         }
+    }
+
+    @Override
+    public UserMsgBean selectUserMsg(Integer memberId) {
+        QueryWrapper<UserContactBean> wrapper1 = new QueryWrapper<>();
+        wrapper1.eq("member_star",memberId);
+        Integer stared = userContactMapper.selectCount(wrapper1);
+        System.out.println("粉丝数******"+stared+"******");
+        QueryWrapper<UserContactBean> wrapper2 = new QueryWrapper<>();
+        wrapper2.eq("member_fan",memberId);
+        Integer faned = userContactMapper.selectCount(wrapper2);
+        System.out.println("关注数******"+faned+"******");
+        UpdateWrapper<UserMsgBean> wrapper3 = new UpdateWrapper<>();
+        wrapper3.eq("member_id",memberId).set("member_fans",stared).set("member_attention",faned);
+        userMsgMapper.update(null,wrapper3);
+        System.out.println("更新成功");
+        QueryWrapper<UserMsgBean> wrapper4 = new QueryWrapper<>();
+        wrapper4.eq("member_id",memberId);
+        return userMsgMapper.selectOne(wrapper4);
     }
 }

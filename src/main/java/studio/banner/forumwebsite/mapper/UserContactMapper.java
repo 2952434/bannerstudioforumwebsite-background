@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import studio.banner.forumwebsite.bean.UserContactBean;
 
 /**
- * @Author: Mo
+ * @Author: ljh
  * @Date: 2021/5/18 18:11
  */
 @Repository

@@ -28,7 +28,7 @@ public interface IUserService {
     /**
      * 根据用户账号返回用户
      * @param memberPhone
-     * @return boolean
+     * @return UserBean
      */
     UserBean selectUser(String memberPhone);
 
