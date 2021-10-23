@@ -111,7 +111,7 @@ public class UserMsgController {
     )
     public RespBean selectUserMsg(Integer memberId) {
         if (iUserMsgService.selectUserMsg(memberId)!=null) {
-            return RespBean.ok("用户信息查询成功");
+            return RespBean.ok(iUserMsgService.selectUserMsg(memberId));
         }
         return RespBean.error("用户信息查询失败");
     }

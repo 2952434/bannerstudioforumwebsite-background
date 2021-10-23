@@ -4,9 +4,9 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://47.100.51.223:3306/forum?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true
+      url: jdbc:mysql://localhost/forum?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true
       username: root
-      password: why19991009
+      password: asd.123
       filter: stat
       initial-size: 1
       min-idle: 1
@@ -24,6 +24,8 @@ spring:
     studio.banner.forumwebsite: debug
     org.springfromework.web: info
     com.baomidou.mybatisplus: error
+
+#  邮箱
   mail:
     host: smtp.qq.com
     port: 587
@@ -37,11 +39,13 @@ spring:
 server:
   port: 8084
 
-qiniu:
-  path: qtga4eaxm.hn-bkt.clouddn.com
-  accessKey: EeYNXo1hONmESybj2pe3YNBHO9Nar38Kf-QrbWEF
-  secretKey: lpiYGtDzQP3M0xNx--WyAposkw6KLWSXvWsod1aO
-  bucket: forumwebsite
+# 七牛云
+oss:
+  qiniu:
+    path: qtga4eaxm.hn-bkt.clouddn.com
+    accessKey: EeYNXo1hONmESybj2pe3YNBHO9Nar38Kf-QrbWEF
+    secretKey: lpiYGtDzQP3M0xNx--WyAposkw6KLWSXvWsod1aO
+    bucket: forumwebsite
 
 #配置日志
 mybatis-plus:

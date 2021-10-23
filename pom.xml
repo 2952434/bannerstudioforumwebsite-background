@@ -16,7 +16,7 @@
     </properties>
 
     <dependencies>
-        <!--JSR303校验-->
+        <!--validation 校验-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
@@ -32,12 +32,6 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>3.4.2</version>
         </dependency>
-        <!--mybatis plus 逆向工程-->
-        <!--        <dependency>-->
-        <!--            <groupId>com.baomidou</groupId>-->
-        <!--            <artifactId>mybatis-plus-generator</artifactId>-->
-        <!--            <version>3.4.2</version>-->
-        <!--        </dependency>-->
         <!--热部署-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -75,12 +69,6 @@
             <artifactId>knife4j-spring-boot-starter</artifactId>
             <version>3.0.2</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.thymeleaf.extras</groupId>-->
-<!--            <artifactId>thymeleaf-extras-springsecurity5</artifactId>-->
-<!--            <version>3.0.4.RELEASE</version>-->
-<!--        </dependency>-->
-        <!--Junit-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -92,16 +80,18 @@
                 </exclusion>
             </exclusions>
         </dependency>
+<!--        aop切面编程-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
-
+<!--        七牛云-->
         <dependency>
             <groupId>com.qiniu</groupId>
             <artifactId>qiniu-java-sdk</artifactId>
             <version>[7.4.0, 7.4.99]</version>
         </dependency>
+<!--        fastjson-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>

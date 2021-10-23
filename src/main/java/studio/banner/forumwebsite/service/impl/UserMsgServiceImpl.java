@@ -19,6 +19,7 @@ import studio.banner.forumwebsite.service.IUserMsgService;
 import studio.banner.forumwebsite.service.IUserService;
 
 import javax.management.monitor.StringMonitor;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -64,13 +65,13 @@ public class UserMsgServiceImpl implements IUserMsgService {
      */
     @Override
     public boolean updateUserName(Integer memberId,String memberName) {
-        UserMsgBean userMsg = new UserMsgBean();
-        List<UserMsgBean> list = new LambdaQueryChainWrapper<>(userMsgMapper)
-                .eq(UserMsgBean::getMemberId, memberId).list();
-        if (list.size()>0){
-            userMsg.setMemberId(memberId);
-            userMsg.setMemberName(memberName);
-            int i = userMsgMapper.updateById(userMsg);
+        QueryWrapper<UserMsgBean> wrapper = new QueryWrapper<>();
+        wrapper.eq("member_id",memberId);
+        UserMsgBean userMsgBean = userMsgMapper.selectOne(wrapper);
+        if (userMsgBean.getMemberId().equals(memberId)){
+            UpdateWrapper<UserMsgBean> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("member_id",memberId).set("member_name",memberName);
+            int i = userMsgMapper.update(null,updateWrapper);
             return i == 1;
         }else{
             return false;
@@ -85,14 +86,13 @@ public class UserMsgServiceImpl implements IUserMsgService {
      */
     @Override
     public boolean updateUserSex(Integer memberId, String memberSex) {
-        UserMsgBean userMsgSex = new UserMsgBean();
-        List<UserMsgBean> list = new LambdaQueryChainWrapper<>(userMsgMapper)
-                .eq(UserMsgBean::getMemberId, memberId).list();
-        if (list.size()!=0){
-            logger.info(userMsgSex.toString());
-            userMsgSex.setMemberId(memberId);
-            userMsgSex.setMemberSex(memberSex);
-            int i = userMsgMapper.updateById(userMsgSex);
+        QueryWrapper<UserMsgBean> wrapper = new QueryWrapper<>();
+        wrapper.eq("member_id",memberId);
+        UserMsgBean userMsgBean = userMsgMapper.selectOne(wrapper);
+        if (userMsgBean.getMemberId().equals(memberId)){
+            UpdateWrapper<UserMsgBean> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("member_id",memberId).set("member_sex",memberSex);
+            int i = userMsgMapper.update(null,updateWrapper);
             return i == 1;
         }else{
             return false;
@@ -107,13 +107,13 @@ public class UserMsgServiceImpl implements IUserMsgService {
      */
     @Override
     public boolean updateUserAge(Integer memberId, Integer memberAge) {
-        UserMsgBean userMsg = new UserMsgBean();
-        List<UserMsgBean> list = new LambdaQueryChainWrapper<>(userMsgMapper)
-                .eq(UserMsgBean::getMemberId, memberId).list();
-        if (list.size()>0){
-            userMsg.setMemberId(memberId);
-            userMsg.setMemberAge(memberAge);
-            int i = userMsgMapper.updateById(userMsg);
+        QueryWrapper<UserMsgBean> wrapper = new QueryWrapper<>();
+        wrapper.eq("member_id",memberId);
+        UserMsgBean userMsgBean = userMsgMapper.selectOne(wrapper);
+        if (userMsgBean.getMemberId().equals(memberId)){
+            UpdateWrapper<UserMsgBean> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("member_id",memberId).set("member_age",memberAge);
+            int i = userMsgMapper.update(null,updateWrapper);
             return i == 1;
         }else{
             return false;
@@ -128,13 +128,13 @@ public class UserMsgServiceImpl implements IUserMsgService {
      */
     @Override
     public boolean updateUserHead(Integer memberId, String memberHead) {
-        UserMsgBean userMsg = new UserMsgBean();
-        List<UserMsgBean> list = new LambdaQueryChainWrapper<>(userMsgMapper)
-                .eq(UserMsgBean::getMemberId, memberId).list();
-        if (list.size()>0){
-            userMsg.setMemberId(memberId);
-            userMsg.setMemberHead(memberHead);
-            int i = userMsgMapper.updateById(userMsg);
+        QueryWrapper<UserMsgBean> wrapper = new QueryWrapper<>();
+        wrapper.eq("member_id",memberId);
+        UserMsgBean userMsgBean = userMsgMapper.selectOne(wrapper);
+        if (userMsgBean.getMemberId().equals(memberId)){
+            UpdateWrapper<UserMsgBean> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("member_id",memberId).set("member_head",memberHead);
+            int i = userMsgMapper.update(null,updateWrapper);
             return i == 1;
         }else{
             return false;
@@ -146,15 +146,12 @@ public class UserMsgServiceImpl implements IUserMsgService {
         QueryWrapper<UserContactBean> wrapper1 = new QueryWrapper<>();
         wrapper1.eq("member_star",memberId);
         Integer stared = userContactMapper.selectCount(wrapper1);
-        System.out.println("粉丝数******"+stared+"******");
         QueryWrapper<UserContactBean> wrapper2 = new QueryWrapper<>();
         wrapper2.eq("member_fan",memberId);
         Integer faned = userContactMapper.selectCount(wrapper2);
-        System.out.println("关注数******"+faned+"******");
         UpdateWrapper<UserMsgBean> wrapper3 = new UpdateWrapper<>();
         wrapper3.eq("member_id",memberId).set("member_fans",stared).set("member_attention",faned);
         userMsgMapper.update(null,wrapper3);
-        System.out.println("更新成功");
         QueryWrapper<UserMsgBean> wrapper4 = new QueryWrapper<>();
         wrapper4.eq("member_id",memberId);
         return userMsgMapper.selectOne(wrapper4);

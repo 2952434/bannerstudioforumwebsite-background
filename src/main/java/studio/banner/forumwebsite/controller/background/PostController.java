@@ -247,7 +247,7 @@ public class PostController {
         if (iPostService.selectPost(postId) != null) {
             String judge = "^.{1,10000}$";
             if (newContent.matches(judge)){
-                iPostService.updatePostTitle(postId,newContent);
+                iPostService.updatePostContent(postId,newContent);
                 return RespBean.ok("更改成功");
             }
             return RespBean.error("更改失败,内容不符合规则");

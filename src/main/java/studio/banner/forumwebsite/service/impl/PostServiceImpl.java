@@ -87,7 +87,7 @@ public class PostServiceImpl implements IPostService {
         if (selectPost(postId) != null){
             PostBean postBean = selectPost(postId);
             UpdateWrapper<PostBean> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("post_id",postId).set("post_pageview",postBean.getPostPageview()+1);
+            updateWrapper.eq("post_id",postId).set("post_page_view",postBean.getPostPageView()+1);
             postMapper.update(null,updateWrapper);
             return true;
         }
@@ -98,8 +98,9 @@ public class PostServiceImpl implements IPostService {
     public boolean updatePostCommentNumber(int postId) {
         if (selectPost(postId) != null){
             PostBean postBean = selectPost(postId);
+            System.out.println(postBean);
             UpdateWrapper<PostBean> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("post_id",postId).set("post_comment_number",postBean.getPostPageview()+1);
+            updateWrapper.eq("post_id",postId).set("post_comment_number",postBean.getPostCommentNumber()+1);
             postMapper.update(null,updateWrapper);
             return true;
         }

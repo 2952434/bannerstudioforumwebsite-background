@@ -35,7 +35,7 @@ public class PostBean {
     private String postContent;
     @NotNull(message = "帖子创建时间不能为空")
     private String postTime;
-    private Integer postPageview;
+    private Integer postPageView;
     private Integer postCommentNumber;
     private Integer postForward;
     private Integer postLikeNumber;
