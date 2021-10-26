@@ -83,13 +83,13 @@ public class UserController {
     @PutMapping("/updateUserPassWord")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberId",
-                    value = "用户Id", required = true, dataType = "int"),
+                    value = "用户Id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "memberPassword",
-                    value = "原用户密码", required = true, dataType = "String"),
+                    value = "原用户密码", required = true, dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "newMemberPassword",
-                    value = "新密码", required = true, dataType = "String"),
+                    value = "新密码", required = true, dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "repeatPassword",
-                    value = "重复密码", required = true, dataType = "String"),
+                    value = "重复密码", required = true, dataTypeClass = String.class),
     }
     )
     public RespBean updateUserPassWord(Integer memberId, String memberPassword, String newMemberPassword, String repeatPassword) {
@@ -111,13 +111,13 @@ public class UserController {
     @PutMapping("/forgetPassWord")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberPhone",
-                    value = "用户账号(注册所用手机号)", required = true, dataType = "int"),
+                    value = "用户账号(注册所用手机号)", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "code",
-                    value = "验证码", required = true, dataType = "int"),
+                    value = "验证码", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "memberMail",
-                    value = "用户邮箱", required = true, dataType = "String"),
+                    value = "用户邮箱", required = true, dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "newMemberPassword",
-                    value = "新密码", required = true, dataType = "String"),
+                    value = "新密码", required = true, dataTypeClass = String.class),
     }
     )
     public RespBean forgetPassWord(String memberPhone,String memberMail,String code,HttpSession session,String newMemberPassword) {
@@ -152,7 +152,7 @@ public class UserController {
     @DeleteMapping("/deleteUser")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "id",
-                    value = "id", required = true, dataType = "Integer"),
+                    value = "id", required = true, dataTypeClass = Integer.class),
     })
     public RespBean deleteUser(Integer id){
         if (id!=null){
@@ -173,9 +173,9 @@ public class UserController {
     @ApiOperation(value = "发送验证码", notes = "邮箱不能为空", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "email",
-                    value = "邮箱", required = true, dataType = "String"),
+                    value = "邮箱", required = true, dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "memberId",
-                    value = "用户id", required = true, dataType = "int")
+                    value = "用户id", required = true, dataTypeClass = Integer.class)
     })
     public RespBean sendEmail(String email,HttpSession session){
         String mail = email;

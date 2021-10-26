@@ -54,25 +54,25 @@ public class PostController {
     @ApiOperation(value = "帖子增加", notes = "帖子内容不能为空", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
-                    value = "帖子id", required = false, dataType = "int"),
+                    value = "帖子id", required = false, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "postMemberId",
-                    value = "帖子发表者id", required = true, dataType = "int"),
+                    value = "帖子发表者id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "postTitle",
-                    value = "帖子标题2-20字之间", required = true, dataType = "String"),
+                    value = "帖子标题2-20字之间", required = true, dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "postContent",
-                    value = "帖子内容<10000字", required = true, dataType = "String"),
+                    value = "帖子内容<10000字", required = true, dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "postPageview",
-                    value = "帖子浏览量", required = false, dataType = "int"),
+                    value = "帖子浏览量", required = false, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "postCommentNumber",
-                    value = "帖子评论量", required = false, dataType = "int"),
+                    value = "帖子评论量", required = false, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "postTime",
-                    value = "帖子创建时间", required = true, dataType = "String"),
+                    value = "帖子创建时间", required = true,dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "postForward",
-                    value = "帖子是否为转发，0为原创，其他数字为原创作者的id", required = false, dataType = "int"),
+                    value = "帖子是否为转发，0为原创，其他数字为原创作者的id", required = false, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "postLikeNumber",
-                    value = "帖子点赞数量", required = false, dataType = "int"),
+                    value = "帖子点赞数量", required = false, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "postImageAddress",
-                    value = "帖子图片地址", required = false, dataType = "String")
+                    value = "帖子图片地址", required = false, dataTypeClass = String.class)
     }
     )
     public Object insertPost(@Valid PostBean postBean, BindingResult bindingResult) {
@@ -115,11 +115,11 @@ public class PostController {
     @ApiOperation(value = "帖子转发", notes = "帖子需存在", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
-                    value = "原帖子id", required = true, dataType = "int"),
+                    value = "原帖子id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "postForwardMemberId",
-                    value = "转发帖子者id", required = true, dataType = "int"),
+                    value = "转发帖子者id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "postTime",
-                    value = "帖子转发时间", required = true, dataType = "String"),
+                    value = "帖子转发时间", required = true, dataTypeClass = String.class),
     }
 
     )
@@ -146,7 +146,7 @@ public class PostController {
     @ApiOperation(value = "帖子删除", notes = "帖子需存在", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
-                    value = "帖子id", required = true, dataType = "int"),
+                    value = "帖子id", required = true, dataTypeClass = Integer.class),
     }
     )
     public RespBean deletePost(int postId) {
@@ -175,7 +175,7 @@ public class PostController {
     @ApiOperation(value = "帖子批量删除", notes = "用户需存在", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postMemberId",
-                    value = "用户id", required = true, dataType = "String"),
+                    value = "用户id", required = true, dataTypeClass = String.class),
     }
     )
     public RespBean deleteAllPost(int postMemberId) {
@@ -207,9 +207,9 @@ public class PostController {
     @ApiOperation(value = "帖子标题修改", notes = "帖子需存在,标题长度需在5-20个字符之间", httpMethod = "PUT")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
-                    value = "帖子id", required = true, dataType = "int"),
+                    value = "帖子id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "newTitle",
-                    value = "帖子新标题", required = true, dataType = "String"),
+                    value = "帖子新标题", required = true, dataTypeClass = String.class),
 
     }
     )
@@ -237,9 +237,9 @@ public class PostController {
     @ApiOperation(value = "帖子内容修改", notes = "帖子需存在,帖子内容需小于10000字", httpMethod = "PUT")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
-                    value = "帖子id", required = true, dataType = "int"),
+                    value = "帖子id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "newContent",
-                    value = "帖子新内容", required = true, dataType = "String"),
+                    value = "帖子新内容", required = true, dataTypeClass = String.class),
 
     }
     )
@@ -265,7 +265,7 @@ public class PostController {
     @ApiOperation(value = "帖子浏览量修改", notes = "帖子需存在", httpMethod = "PUT")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
-                    value = "帖子id", required = true, dataType = "int"),
+                    value = "帖子id", required = true, dataTypeClass = Integer.class),
 
     }
 
@@ -287,7 +287,7 @@ public class PostController {
     @ApiOperation(value = "帖子评论量修改", notes = "帖子需存在", httpMethod = "PUT")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
-                    value = "帖子id", required = true, dataType = "int"),
+                    value = "帖子id", required = true, dataTypeClass = Integer.class),
     }
     )
     public RespBean udpatePostCommentNumber(int postId) {
@@ -307,7 +307,7 @@ public class PostController {
     @ApiOperation(value = "帖子点赞量修改", notes = "帖子需存在", httpMethod = "PUT")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
-                    value = "帖子id", required = true, dataType = "int"),
+                    value = "帖子id", required = true, dataTypeClass = Integer.class),
     }
     )
     public RespBean udpatePostLikeNumber(int postId) {
@@ -327,7 +327,7 @@ public class PostController {
     @ApiOperation(value = "帖子查找", notes = "帖子需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
-                    value = "帖子id", required = true, dataType = "int"),
+                    value = "帖子id", required = true, dataTypeClass = Integer.class),
     }
     )
     public RespBean selectPost(int postId) {
@@ -348,7 +348,7 @@ public class PostController {
     @ApiOperation(value = "查询某用户所有帖子", notes = "帖子需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postMemberId",
-                    value = "用户id", required = true, dataType = "int"),
+                    value = "用户id", required = true, dataTypeClass = Integer.class),
     }
     )
     public RespBean selectAllPostById(int postMemberId) {
@@ -368,7 +368,7 @@ public class PostController {
     @ApiOperation(value = "查找所有帖子", notes = "帖子需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "page",
-                    value = "分页查询页数", required = true, dataType = "int"),
+                    value = "分页查询页数", required = true, dataTypeClass = Integer.class),
     }
     )
     public RespBean selectAllPost(int page) {

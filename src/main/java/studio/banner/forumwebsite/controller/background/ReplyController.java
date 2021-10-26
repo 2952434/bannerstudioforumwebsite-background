@@ -49,19 +49,19 @@ public class ReplyController {
     @ApiOperation(value = "回复增加", notes = "回复内容不能为空", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "replyId",
-                    value = "回复id", required = false, dataType = "int"),
+                    value = "回复id", required = false, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "commentId",
-                    value = "评论id", required = true, dataType = "int"),
+                    value = "评论id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "replyMemberId",
-                    value = "回复发表者id", required = true, dataType = "int"),
+                    value = "回复发表者id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "replyCommentMemberId",
-                    value = "被回复者id", required = true, dataType = "int"),
+                    value = "被回复者id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "replyLikeNumber",
-                    value = "回复点赞数量", required = false, dataType = "int"),
+                    value = "回复点赞数量", required = false, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "replyTime",
-                    value = "回复时间", required = true, dataType = "String"),
+                    value = "回复时间", required = true, dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "replyContent",
-                    value = "回复内容", required = true, dataType = "String")
+                    value = "回复内容", required = true, dataTypeClass = String.class)
     }
     )
     public RespBean insertComment(@Valid ReplyBean replyBean, BindingResult bindingResult) {
@@ -103,7 +103,7 @@ public class ReplyController {
     @ApiOperation(value = "回复删除", notes = "回复需存在", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "replyId",
-                    value = "回复id", required = true, dataType = "int"),
+                    value = "回复id", required = true, dataTypeClass = Integer.class),
     }
     )
     public RespBean deleteComment(Integer replyId) {
@@ -123,7 +123,7 @@ public class ReplyController {
     @ApiOperation(value = "根据用户id删除该用户全部回复", notes = "用户需存在", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "replyMemberId",
-                    value = "用户id", required = true, dataType = "int"),
+                    value = "用户id", required = true, dataTypeClass = Integer.class),
     }
     )
     public RespBean deleteAllCommentByMemberId(Integer replyMemberId) {
@@ -143,7 +143,7 @@ public class ReplyController {
     @ApiOperation(value = "根据评论id删除该评论下全部回复", notes = "评论需存在", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "commentId",
-                    value = "评论id", required = true, dataType = "int"),
+                    value = "评论id", required = true, dataTypeClass = Integer.class),
     }
     )
     public RespBean deleteAllCommentByCommentId(Integer commentId) {
@@ -164,9 +164,9 @@ public class ReplyController {
     @ApiOperation(value = "回复内容修改", notes = "回复需存在", httpMethod = "PUT")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "replyId",
-                    value = "回复id", required = true, dataType = "int"),
+                    value = "回复id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "newContent",
-                    value = "回复新内容", required = true, dataType = "String")
+                    value = "回复新内容", required = true, dataTypeClass = String.class)
     }
     )
     public RespBean updateCommentContent(Integer replyId, String newContent) {
@@ -190,7 +190,7 @@ public class ReplyController {
     @ApiOperation(value = "回复点赞量修改", notes = "回复需存在", httpMethod = "PUT")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "replyId",
-                    value = "回复id", required = true, dataType = "int"),
+                    value = "回复id", required = true, dataTypeClass = Integer.class),
     }
     )
     public RespBean updateCommentLikeNumber(Integer replyId) {
@@ -210,9 +210,9 @@ public class ReplyController {
     @ApiOperation(value = "根据评论id查找该评论下全部回复", notes = "评论需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "commentId",
-                    value = "评论id", required = true, dataType = "int"),
+                    value = "评论id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "page",
-                    value = "分页查询页数", required = true, dataType = "int")
+                    value = "分页查询页数", required = true, dataTypeClass = Integer.class)
     }
     )
     public RespBean selectAllReplyByCommentId(Integer commentId, int page) {
@@ -233,9 +233,9 @@ public class ReplyController {
     @ApiOperation(value = "根据用户id查找该用户下全部回复", notes = "用户需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "replyMemberId",
-                    value = "用户id", required = true, dataType = "int"),
+                    value = "用户id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "page",
-                    value = "分页查询页数", required = true, dataType = "int")
+                    value = "分页查询页数", required = true, dataTypeClass = Integer.class)
     }
     )
     public RespBean selectAllReplyByMemberId(Integer replyMemberId ,int page) {
@@ -257,7 +257,7 @@ public class ReplyController {
     @ApiOperation(value = "根据回复id查询回复", notes = "回复需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "replyId",
-                    value = "回复id", required = true, dataType = "int")
+                    value = "回复id", required = true, dataTypeClass = Integer.class)
     }
     )
     public RespBean selectReply(Integer replyId) {

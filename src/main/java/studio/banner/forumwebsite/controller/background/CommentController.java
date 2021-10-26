@@ -54,17 +54,17 @@ public class CommentController {
     @ApiOperation(value = "评论增加", notes = "评论内容不能为空", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "commentId",
-                    value = "评论id", required = false, dataType = "int"),
+                    value = "评论id", required = false, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "commentPostId",
-                    value = "帖子id", required = true, dataType = "int"),
+                    value = "帖子id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "commentMemberId",
-                    value = "评论发表者id", required = true, dataType = "int"),
+                    value = "评论发表者id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "commentLikeNumber",
-                    value = "评论点赞数量", required = false, dataType = "int"),
+                    value = "评论点赞数量", required = false, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "commentContent",
-                    value = "评论内容2-100字之间", required = true, dataType = "String"),
+                    value = "评论内容2-100字之间", required = true,dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "commentTime",
-                    value = "评论时间", required = true, dataType = "String")
+                    value = "评论时间", required = true, dataTypeClass = String.class)
     }
     )
     public RespBean insertComment(@Valid CommentBean commentBean, BindingResult bindingResult) {
@@ -106,7 +106,7 @@ public class CommentController {
     @ApiOperation(value = "根据帖子id删除该帖子下全部评论", notes = "帖子需存在", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "commentPostId",
-                    value = "评帖子id", required = true, dataType = "int"),
+                    value = "评帖子id", required = true, dataTypeClass = Integer.class),
     }
     )
     public RespBean deleteAllCommentByPostId(int commentPostId) {
@@ -131,7 +131,7 @@ public class CommentController {
     @ApiOperation(value = "根据用户id删除该用户下全部评论", notes = "用户需存在", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "commentMemberId",
-                    value = "用户id", required = true, dataType = "int"),
+                    value = "用户id", required = true, dataTypeClass = Integer.class),
     }
     )
     public RespBean deleteAllCommentByMemberId(int commentMemberId) {
@@ -156,7 +156,7 @@ public class CommentController {
     @ApiOperation(value = "评论删除", notes = "评论需存在", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "commentId",
-                    value = "评论id", required = true, dataType = "int"),
+                    value = "评论id", required = true, dataTypeClass = Integer.class),
     }
     )
     public RespBean deleteComment(int commentId) {
@@ -180,9 +180,9 @@ public class CommentController {
     @ApiOperation(value = "评论内容修改", notes = "评论需存在", httpMethod = "PUT")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "commentId",
-                    value = "评论id", required = true, dataType = "int"),
+                    value = "评论id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "newContent",
-                    value = "新评论内容2-100字之间", required = true, dataType = "String")
+                    value = "新评论内容2-100字之间", required = true, dataTypeClass = String.class)
 
     }
     )
@@ -209,7 +209,7 @@ public class CommentController {
     @ApiOperation(value = "评论点赞量修改", notes = "评论需存在", httpMethod = "PUT")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "commentId",
-                    value = "评论id", required = true, dataType = "int"),
+                    value = "评论id", required = true, dataTypeClass = Integer.class),
 
     }
     )
@@ -232,7 +232,7 @@ public class CommentController {
     @ApiOperation(value = "根据帖子id查询该帖子下全部评论", notes = "帖子需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "commentPostId",
-                    value = "帖子id", required = true, dataType = "int")
+                    value = "帖子id", required = true, dataTypeClass = Integer.class)
 
     }
     )
@@ -254,7 +254,7 @@ public class CommentController {
     @ApiOperation(value = "根据用户id查询该用户下全部评论", notes = "用户需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "commentMemberId",
-                    value = "用户id", required = true, dataType = "int")
+                    value = "用户id", required = true, dataTypeClass = Integer.class)
 
     }
     )
@@ -276,7 +276,7 @@ public class CommentController {
     @ApiOperation(value = "查询评论", notes = "评论需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "commentId",
-                    value = "评论id", required = true, dataType = "int")
+                    value = "评论id", required = true, dataTypeClass = Integer.class)
 
     }
     )
@@ -297,7 +297,7 @@ public class CommentController {
     @ApiOperation(value = "查询全部评论", notes = "评论需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "page",
-                    value = "分页查询页数", required = true, dataType = "int")
+                    value = "分页查询页数", required = true,dataTypeClass = Integer.class)
 
     }
     )

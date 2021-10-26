@@ -41,9 +41,9 @@ public class UserMsgController {
     @PutMapping("/updateUserName")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberId",
-                    value = "用户Id", required = true, dataType = "int"),
+                    value = "用户Id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "memberName",
-                    value = "新昵称", required = true, dataType = "String"),
+                    value = "新昵称", required = true, dataTypeClass = Integer.class),
     }
     )
     public RespBean updateUserName(Integer memberId,String memberName) {
@@ -57,9 +57,9 @@ public class UserMsgController {
     @PutMapping("/updateUserSex")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberId",
-                    value = "用户Id", required = true, dataType = "int"),
+                    value = "用户Id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "memberSex",
-                    value = "性别", required = true, dataType = "String"),
+                    value = "性别", required = true, dataTypeClass = String.class),
     }
     )
     public RespBean updateUserSex(Integer memberId,String memberSex) {
@@ -73,9 +73,9 @@ public class UserMsgController {
     @PutMapping("/updateUserAge")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberId",
-                    value = "用户Id", required = true, dataType = "int"),
+                    value = "用户Id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "memberAge",
-                    value = "年龄", required = true, dataType = "int"),
+                    value = "年龄", required = true, dataTypeClass = Integer.class),
     }
     )
     public RespBean updateUserAge(Integer memberId,Integer memberAge) {
@@ -89,9 +89,9 @@ public class UserMsgController {
     @PutMapping("/updateUserHead")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberId",
-                    value = "用户Id", required = true, dataType = "int"),
+                    value = "用户Id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "memberHead",
-                    value = "新的头像地址值", required = true, dataType = "String"),
+                    value = "新的头像地址值", required = true, dataTypeClass = String.class),
     }
     )
     public RespBean updateUserHead(Integer memberId,String memberHead) {
@@ -106,7 +106,7 @@ public class UserMsgController {
     @PutMapping("/selectUserMsg")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberId",
-                    value = "用户Id", required = true, dataType = "int")
+                    value = "用户Id", required = true, dataTypeClass = Integer.class)
     }
     )
     public RespBean selectUserMsg(Integer memberId) {

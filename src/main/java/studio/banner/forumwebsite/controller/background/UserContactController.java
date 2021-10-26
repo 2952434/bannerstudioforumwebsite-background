@@ -46,9 +46,9 @@ public class UserContactController {
     @DeleteMapping("/deleteContact")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberFan",
-                    value = "memberFan", required = true, dataType = "Integer"),
+                    value = "memberFan", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "memberStar",
-                    value = "memberStar", required = true, dataType = "Integer"),
+                    value = "memberStar", required = true, dataTypeClass = Integer.class),
     })
     public RespBean deleteContact(Integer memberFan,Integer memberStar){
         if (iUserContactService.contacted(memberFan,memberStar).size() != 0){
@@ -71,9 +71,9 @@ public class UserContactController {
     @GetMapping("/selectContact")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberFan",
-                    value = "memberFan", required = true, dataType = "Integer"),
+                    value = "memberFan", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "memberStar",
-                    value = "memberStar", required = true, dataType = "Integer"),
+                    value = "memberStar", required = true, dataTypeClass = Integer.class),
     })
     public List<UserContactBean> selectContact(Integer memberFan, Integer memberStar){
         if (iUserContactService.contacted(memberFan,memberStar) != null) {
@@ -88,7 +88,7 @@ public class UserContactController {
     @GetMapping("/selectFan")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberStar",
-                    value = "memberStar", required = true, dataType = "Integer"),
+                    value = "memberStar", required = true, dataTypeClass = Integer.class),
     })
     public List<UserContactBean> selectFan(Integer memberStar){
         if (iUserContactService.fans(memberStar) != null) {
@@ -103,7 +103,7 @@ public class UserContactController {
     @GetMapping("/selectFans")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberStar",
-                    value = "memberStar", required = true, dataType = "Integer"),
+                    value = "memberStar", required = true, dataTypeClass = Integer.class),
     })
     public Integer selectFans(Integer memberStar){
         if (iUserContactService.fans(memberStar) != null) {
@@ -119,7 +119,7 @@ public class UserContactController {
     @GetMapping("/selectStar")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberFan",
-                    value = "memberFan", required = true, dataType = "Integer"),
+                    value = "memberFan", required = true, dataTypeClass = Integer.class),
     })
     public List<UserContactBean> selectStar(Integer memberFan){
         if (iUserContactService.stars(memberFan) != null) {
@@ -134,7 +134,7 @@ public class UserContactController {
     @GetMapping("/selectStars")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberFan",
-                    value = "memberFan", required = true, dataType = "Integer"),
+                    value = "memberFan", required = true, dataTypeClass = Integer.class),
     })
     public Integer selectStars(Integer memberFan){
         if (iUserContactService.stars(memberFan) != null) {

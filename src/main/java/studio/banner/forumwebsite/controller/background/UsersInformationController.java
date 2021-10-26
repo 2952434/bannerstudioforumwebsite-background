@@ -34,25 +34,25 @@ public class UsersInformationController {
     private IUsersInformationService iUsersInformationService;
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query",name = "usersName",
-                    value = "用户姓名",required = true,dataType = "String"),
+                    value = "用户姓名",required = true, dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query",name = "usersDirection",
-                    value = "用户方向",required = false,dataType = "String"),
+                    value = "用户方向",required = false,dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query",name = "usersPhone",
-                    value = "用户手机号",required = false,dataType = "String"),
+                    value = "用户手机号",required = false,dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query",name = "usersQQ",
-                    value = "用户QQ号",required = false,dataType = "String"),
+                    value = "用户QQ号",required = false,dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query",name = "usersWeChat",
-                    value = "用户微信号",required = false,dataType = "String"),
+                    value = "用户微信号",required = false,dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query",name = "usersCompany",
-                    value = "用户公司",required = false,dataType = "String"),
+                    value = "用户公司",required = false,dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query",name = "usersWork",
-                    value = "用户工作岗位",required = false,dataType = "String"),
+                    value = "用户工作岗位",required = false,dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query",name = "usersAddress",
-                    value = "公司名称",required = false,dataType = "String"),
+                    value = "公司名称",required = false,dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query",name = "usersPay",
-                    value = "薪资",required = false,dataType = "int"),
+                    value = "薪资",required = false,dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query",name = "userId",
-                    value = "用户id",required = true,dataType = "int")
+                    value = "用户id",required = true,dataTypeClass = Integer.class)
     })
     @ApiOperation(value = "增加用户信息", notes = "用户姓名不能为空",httpMethod = "POST")
     @PostMapping("/insertUsersInformation")
@@ -83,7 +83,7 @@ public class UsersInformationController {
         return RespBean.error("添加用户信息失败");
     }
     @ApiImplicitParam(paramType = "query",name = "id",
-    value = "用户id",required = true,dataType = "int")
+    value = "用户id",required = true,dataTypeClass = Integer.class)
     @ApiOperation(value = "删除用户信息", notes = "id与userID相等时删除",httpMethod = "DELETE")
     @DeleteMapping("/deleteUsersInformation")
     public RespBean deleteUsersInformation(Integer id){
@@ -100,25 +100,25 @@ public class UsersInformationController {
     @ApiOperation(value = "用户信息更改",notes = "用户不能为空",httpMethod = "PUT")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query",name = "usersName",
-            value = "用户姓名",required = true,dataType = "String"),
+            value = "用户姓名",required = true,dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query",name = "usersDirection",
-            value = "用户方向",required = false,dataType = "String"),
+            value = "用户方向",required = false,dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query",name = "usersPhone",
-            value = "用户手机号",required = false,dataType = "String"),
+            value = "用户手机号",required = false,dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query",name = "usersQQ",
-            value = "用户QQ号",required = false,dataType = "String"),
+            value = "用户QQ号",required = false,dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query",name = "usersWeChat",
-            value = "用户微信号",required = false,dataType = "String"),
+            value = "用户微信号",required = false,dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query",name = "usersCompany",
-            value = "用户公司",required = false,dataType = "String"),
+            value = "用户公司",required = false,dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query",name = "usersWork",
-            value = "用户工作岗位",required = false,dataType = "String"),
+            value = "用户工作岗位",required = false,dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query",name = "usersAddress",
-            value = "公司名称",required = false,dataType = "String"),
+            value = "公司名称",required = false,dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query",name = "usersPay",
-            value = "薪资",required = false,dataType = "int"),
+            value = "薪资",required = false,dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query",name = "userId",
-            value = "用户id",required = true,dataType = "int")
+            value = "用户id",required = true,dataTypeClass = Integer.class)
     })
     public RespBean updateUsersInformation(@Valid UsersInformationBean usersInformationBean, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
@@ -143,7 +143,7 @@ public class UsersInformationController {
     }
 
     @ApiImplicitParam(paramType = "query",name = "page",
-    value = "查询页数",required = true,dataType = "int")
+    value = "查询页数",required = true,dataTypeClass = Integer.class)
     @ApiOperation(value = "分页查询",notes = "页数不为空",httpMethod = "GET")
     @GetMapping("/pageUsersInformation")
     public RespBean pageUsersInformation(Integer page){

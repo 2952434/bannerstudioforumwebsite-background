@@ -26,8 +26,8 @@ public class AdminController {
     private AdminServiceImpl adminService;
 
     @ApiImplicitParam(paramType = "query",name = "page",
-            value = "查询的页数",required = true,dataType = "int")
-    @ApiOperation(value = "查询所有用户",notes = "页数不为空",httpMethod = "ET")
+            value = "查询的页数",required = true,dataTypeClass = Integer.class)
+    @ApiOperation(value = "查询所有用户",notes = "页数不为空",httpMethod = "GET")
     @GetMapping("/selectAllUser")
     public RespBean selectAllUser(int page){
         Page<UserBean> page1 = adminService.selectAllUser(page);
@@ -35,7 +35,7 @@ public class AdminController {
     }
 
     @ApiImplicitParam(paramType = "query",name = "uid",
-            value = "用户id",required = true,dataType = "int")
+            value = "用户id",required = true,dataTypeClass = Integer.class)
     @ApiOperation(value = "删除用户",notes = "用户id不能为空",httpMethod = "DELETE")
     @DeleteMapping("/deleteUserById")
     public RespBean deleteUserById(int uid){

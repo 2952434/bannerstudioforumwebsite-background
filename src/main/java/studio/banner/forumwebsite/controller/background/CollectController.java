@@ -30,13 +30,13 @@ public class CollectController {
     private ICollectService iCollectService;
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query",name = "colId",
-            value = "帖子收藏id",required = false,dataType = "int"),
+            value = "帖子收藏id",required = false,dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query",name = "colArtId",
-            value = "帖子id",required = true,dataType = "int"),
+            value = "帖子id",required = true,dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query",name = "colArtTit",
-            value = "帖子标题",required = true,dataType = "String"),
+            value = "帖子标题",required = true,dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query",name = "cloUserId",
-            value = "用户id",required = true,dataType = "int")
+            value = "用户id",required = true,dataTypeClass = Integer.class)
 
     })
 
@@ -58,7 +58,7 @@ public class CollectController {
         }
     }
     @ApiImplicitParam(paramType = "query",name = "id",
-            value = "帖子收藏id",required = true,dataType = "int")
+            value = "帖子收藏id",required = true,dataTypeClass = Integer.class)
     @ApiOperation(value = "删除收藏", notes = "id不能为空", httpMethod = "DELETE")
     @DeleteMapping("/deleteCollect")
     public RespBean delete(Integer id){
@@ -72,7 +72,7 @@ public class CollectController {
     }
 
     @ApiImplicitParam(paramType = "query",name = "userid",
-            value = "用户id",required = true,dataType = "int")
+            value = "用户id",required = true,dataTypeClass = Integer.class)
     @ApiOperation(value = "清除用户收藏", notes = "用户id不能为空", httpMethod = "DELETE")
     @DeleteMapping("/deleteAll")
     public RespBean deleteAll(Integer userid){
@@ -86,7 +86,7 @@ public class CollectController {
     }
 
     @ApiImplicitParam(paramType = "query",name = "userid",
-            value = "用户id",required = true,dataType = "int")
+            value = "用户id",required = true,dataTypeClass = Integer.class)
     @ApiOperation(value = "查询收藏内容", notes = "", httpMethod = "GET")
     @GetMapping ("/selectCollect")
     public RespBean select(Integer userid){
