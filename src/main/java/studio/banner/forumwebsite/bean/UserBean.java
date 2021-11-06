@@ -16,8 +16,6 @@ import lombok.experimental.Accessors;
  */
 
 @Data
-@Accessors(chain = true)
-@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("tab_member")
@@ -28,4 +26,6 @@ public class UserBean {
     private String memberPhone;
     private String memberPassword;
     private String memberMail;
+    private int memberAdmin;
+    private String memberCode;
 }

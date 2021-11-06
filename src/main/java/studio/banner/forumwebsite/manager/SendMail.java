@@ -33,5 +33,27 @@ public class SendMail {
         javaMailSender.send(message);
         return code;
     }
+
+    public boolean sendBlessMail(String email,String content){
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setSubject("生日快乐");
+        message.setFrom("2952434583@qq.com");
+        message.setTo(email);
+        message.setSentDate(new Date());
+        message.setText(content);
+        javaMailSender.send(message);
+        return true;
+    }
+
+    public boolean automaticMail(String email,String username){
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setSubject(username+"生日快乐");
+        message.setFrom("2952434583@qq.com");
+        message.setTo(email);
+        message.setSentDate(new Date());
+        message.setText("今天是您的生日，祝您生日快乐！！！");
+        javaMailSender.send(message);
+        return true;
+    }
 }
     

@@ -4,14 +4,18 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import lombok.Data;
+import org.apache.catalina.User;
 import org.apache.ibatis.javassist.bytecode.stackmap.BasicBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import studio.banner.forumwebsite.bean.UserBean;
 import studio.banner.forumwebsite.bean.UserContactBean;
 import studio.banner.forumwebsite.bean.UserMsgBean;
+import studio.banner.forumwebsite.manager.SendMail;
 import studio.banner.forumwebsite.mapper.UserContactMapper;
 import studio.banner.forumwebsite.mapper.UserMapper;
 import studio.banner.forumwebsite.mapper.UserMsgMapper;
@@ -19,8 +23,11 @@ import studio.banner.forumwebsite.service.IUserMsgService;
 import studio.banner.forumwebsite.service.IUserService;
 
 import javax.management.monitor.StringMonitor;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * @Author: Mo
@@ -34,27 +41,22 @@ public class UserMsgServiceImpl implements IUserMsgService {
     private UserMsgMapper userMsgMapper;
     @Autowired
     private UserContactMapper userContactMapper;
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    private SendMail sendMail;
 
     /**
      * 注册账户时调用，初始化用户信息表
-     * @param  memberId;
-     * @param  memberName;
-     * @param  memberSex;
-     * @param  memberAge;
-     * @param  memberTime;
-     * @param  memberHead;
-     * @param  memberFans;
-     * @param  memberAttention;
      * @return boolean
      */
     @Override
-    public boolean insertUserMsg(Integer memberId, String memberName,String memberSex,Integer memberAge,String memberTime,String memberHead,Integer memberFans,Integer memberAttention) {
-        if (memberId != null){
-            UserMsgBean userMsgBean =new UserMsgBean(memberId,memberName,memberSex,memberAge,memberTime,memberHead,memberFans,memberAttention);
-            userMsgMapper.insert(userMsgBean);
+    public boolean insertUserMsg(UserMsgBean userMsgBean) {
+        int i = userMsgMapper.insert(userMsgBean);
+        if (i == 1){
             return true;
         }
-            return false;
+        return false;
     }
 
     /**
@@ -155,5 +157,72 @@ public class UserMsgServiceImpl implements IUserMsgService {
         QueryWrapper<UserMsgBean> wrapper4 = new QueryWrapper<>();
         wrapper4.eq("member_id",memberId);
         return userMsgMapper.selectOne(wrapper4);
+    }
+
+    @Override
+    public boolean selectBirthdayById(Integer id) {
+//        获得当前时间
+        SimpleDateFormat bjSdf = new SimpleDateFormat("yyyy-MM-dd");
+        bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+        Date date = new Date();
+        String time = bjSdf.format(date);
+        String[] split1 = time.split("-");
+//        获取数据库生日
+        QueryWrapper<UserMsgBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("member_id",id);
+        UserMsgBean userMsgBean = userMsgMapper.selectOne(queryWrapper);
+        String birthday = bjSdf.format(userMsgBean.getMemberBirthday());
+        String[] split = birthday.split("-");
+        if (split[1].equals(split1[1])&&split[2].equals(split1[2])){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public List<UserMsgBean> selectBirthday(Integer memberId) {
+//        获得当前时间
+        SimpleDateFormat bjSdf = new SimpleDateFormat("yyyy-MM-dd");
+        bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+        Date date = new Date();
+        String time = bjSdf.format(date);
+        String[] split = time.split("-");
+        String time01 = split[1]+"-"+split[2];
+        QueryWrapper<UserMsgBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("member_birthday",time01);
+        List<UserMsgBean> list = userMsgMapper.selectList(queryWrapper);
+        list.removeIf(userMsgBean -> userMsgBean.getMemberId().equals(memberId));
+        return list;
+    }
+
+
+    @Override
+    public boolean blessUserBirthday(Integer memberId ,String content) {
+        UserBean userBean = userMapper.selectById(memberId);
+        String memberMail = userBean.getMemberMail();
+        boolean b = sendMail.sendBlessMail(memberMail, content);
+        return b;
+    }
+
+
+    @Override
+    @Scheduled(cron="0 0 1 * * ?")
+    public void automaticSentMail() {
+        //        获得当前时间
+        SimpleDateFormat bjSdf = new SimpleDateFormat("yyyy-MM-dd");
+        bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+        Date date = new Date();
+        String time = bjSdf.format(date);
+        String[] split = time.split("-");
+        String time01 = split[1]+"-"+split[2];
+        QueryWrapper<UserMsgBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("member_birthday",time01);
+        List<UserMsgBean> list = userMsgMapper.selectList(queryWrapper);
+        if (list.size()!=0){
+            for (int i = 0; i < list.size(); i++) {
+                UserBean userBean = userMapper.selectById(list.get(i).getMemberId());
+                sendMail.automaticMail(userBean.getMemberMail(),list.get(i).getMemberName());
+            }
+        }
     }
 }

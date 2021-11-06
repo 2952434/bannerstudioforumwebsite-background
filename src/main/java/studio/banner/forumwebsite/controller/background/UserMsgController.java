@@ -4,14 +4,20 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.bean.UserBean;
 import studio.banner.forumwebsite.bean.UserMsgBean;
 import studio.banner.forumwebsite.service.IUserMsgService;
+
+import java.util.Date;
+import java.util.List;
+
 /**
  * @Author: Mo
  * @Date: 2021/5/17 17:54
@@ -27,13 +33,20 @@ public class UserMsgController {
 
     @ApiOperation(value = "初始化用户信息", notes = "用户默认信息都为空", httpMethod = "POST")
     @PostMapping("/insertUserMsg")
-    public RespBean insert(Integer memberId, String memberName,String memberSex,Integer memberAge,String memberTime,String memberHead,Integer memberFans,Integer memberAttention) {
-        if (iUserMsgService.insertUserMsg(memberId,memberName,memberSex,memberAge,memberTime,memberHead,memberFans,memberAttention)) {
-            logger.info("Id为" + memberId + "的用户数据初始化成功");
-            return RespBean.ok("Id为" + memberId + "的用户数据初始化成功");
-        } else {
-            logger.info("Id为" + memberId + "的用户数据初始化失败");
-            return RespBean.error("Id为" + memberId + "的用户数据初始化失败");
+    @ApiImplicitParam(paramType = "query",name = "memberBirthday",
+            value = "格式必须为xxxx-xx-xx",required = false,dataTypeClass = Date.class)
+    public RespBean insert(UserMsgBean userMsgBean) {
+
+        try {
+            if (iUserMsgService.insertUserMsg(userMsgBean)) {
+                logger.info("Id为" + userMsgBean.getMemberId() + "的用户数据初始化成功");
+                return RespBean.ok("Id为" + userMsgBean.getMemberId() + "的用户数据初始化成功");
+            } else {
+                logger.info("Id为" + userMsgBean.getMemberId() + "的用户数据初始化失败");
+                return RespBean.error("Id为" + userMsgBean.getMemberId() + "的用户数据初始化失败");
+            }
+        }catch (IllegalArgumentException e){
+            return RespBean.error("日期格式错误！！！");
         }
     }
 
@@ -116,4 +129,47 @@ public class UserMsgController {
         return RespBean.error("用户信息查询失败");
     }
 
+    @ApiOperation(value = "根据用户id查询生日")
+    @GetMapping("/selectUserBirthdayById")
+    @ApiImplicitParam(paramType = "query", name = "id",
+            value = "用户id",required = true,dataTypeClass = Integer.class)
+    public RespBean selectUserBirthdayById(Integer id){
+        boolean birthdayById = iUserMsgService.selectBirthdayById(id);
+        if (birthdayById){
+            return RespBean.ok("今天是您的生日，生日快乐！！！！");
+        }
+        return null;
+    }
+
+
+    @GetMapping("/selectUserBirthday")
+    @ApiOperation(value = "查询过生日的人")
+    @ApiImplicitParam(paramType = "query", name = "memberId",
+            value = "用户id",required = true,dataTypeClass = Integer.class)
+    public RespBean selectUserBirthday(Integer memberId){
+        List<UserMsgBean> list = iUserMsgService.selectBirthday(memberId);
+        if (list.size()!=0){
+            return RespBean.ok("今天生日的人为：" +list);
+        }else {
+            return RespBean.ok("今天没人过生日！！！");
+        }
+    }
+
+    @PostMapping("/blessUserBirthday")
+    @ApiOperation(value = "祝福过生日的人")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query",name="memberId",
+            value = "过生日人的id",required = true,dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query",name="content",
+            value = "祝福内容",required = true,dataTypeClass = String.class)
+    })
+    public RespBean blessUserBirthday(Integer memberId,String content){
+        boolean b = iUserMsgService.blessUserBirthday(memberId, content);
+        if (b){
+            return RespBean.ok("邮件发送成功！！！");
+        }else {
+            return RespBean.error("邮件发送失败！！！");
+        }
+    }
+    
 }

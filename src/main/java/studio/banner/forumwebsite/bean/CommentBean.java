@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.rmi.MarshalException;

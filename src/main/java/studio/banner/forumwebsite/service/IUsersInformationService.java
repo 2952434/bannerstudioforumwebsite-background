@@ -46,4 +46,11 @@ public interface IUsersInformationService {
      */
     IPage<UsersInformationBean> selectUsersInformationBeanPage(Integer page);
 
+    /**
+     * 模糊查询用户
+     * @param page 第几页
+     * @param dim 模糊查询字段
+     * @return
+     */
+    IPage<UsersInformationBean> selectUserInformationDimPage(Integer page, String dim);
 }

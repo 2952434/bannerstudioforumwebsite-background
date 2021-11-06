@@ -25,7 +25,6 @@ import java.util.List;
 @RestController
 @Api(tags = "用户接口", value = "UserController")
 public class UserController {
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     protected IUserService iUserService;
@@ -36,34 +35,27 @@ public class UserController {
     @PostMapping("/insertUser")
     public RespBean insert(UserBean userBean) {
         if (iUserService.selectAccount(userBean.getMemberPhone())) {
-            UserBean newUser = iUserService.selectUser(userBean.getMemberPhone());
             String phone = userBean.getMemberPhone();
             String judge1 = "(^[+]{0,1}(\\d){1,3}[ ]?([-]?((\\d)|[ ]){1,12})+$)";
             if (!phone.matches(judge1)){
-                    logger.error("手机号不符合要求");
-                    return RespBean.error("手机号不符合要求");
+                return RespBean.error("手机号不符合要求");
             }
             String mail = userBean.getMemberMail();
-            System.out.println(userBean.getMemberMail()+"*****************");
             String judge2 = "(^[A-Za-z\\d]+([-_.][A-Za-z\\d]+)*@([A-Za-z\\d]+[-.])+[A-Za-z\\d]{2,4}$)";
             if (!mail.matches(judge2)) {
-                logger.error("邮箱不符合要求");
                 return RespBean.error("邮箱不符合要求");
             }
             String pass = userBean.getMemberPassword();
             String judge3 = "(^[a-zA-Z]\\w{5,17}$)";
             if (!pass.matches(judge3)) {
-                logger.error("密码不符合要求(以字母开头，长度在6~18之间，只能包含字母、数字和下划线)");
                 return RespBean.error("密码不符合要求(以字母开头，长度在6~18之间，只能包含字母、数字和下划线)");
             }
             if (iUserService.insertUser(userBean)) {
-                logger.info("成员" + userBean.getMemberPhone() + "添加成功");
+                return RespBean.ok("成员" + userBean.getMemberPhone() + "添加成功");
             }
-            return RespBean.ok("成员" + userBean.getMemberPhone() + "添加成功");
-        } else {
-            logger.info("成员" + userBean.getMemberPhone() + "添加失败");
-            return RespBean.error("成员" + userBean.getMemberPhone() + "添加失败");
         }
+        return RespBean.error("成员" + userBean.getMemberPhone() + "添加失败");
+
     }
 
     @ApiOperation(value = "登录用户", notes = "查询要登陆的账号是否存在")
@@ -71,10 +63,8 @@ public class UserController {
     public RespBean select(String memberPhone,String memberPassword){
         List<UserBean> hasUser = iUserService.selectUser(memberPhone,memberPassword);
         if (hasUser.size()!=0){
-            logger.info("查询成功");
             return RespBean.ok("账号密码正确",hasUser);
         }else {
-            logger.error("查询失败");
             return RespBean.error("账号或密码错误");
         }
     }
@@ -96,14 +86,11 @@ public class UserController {
         String pass = newMemberPassword;
         String judge = "(^[a-zA-Z]\\w{5,17}$)";
         if (!pass.matches(judge)) {
-            logger.error("密码不符合要求(以字母开头，长度在6~18之间，只能包含字母、数字和下划线)");
             return RespBean.error("密码不符合要求(以字母开头，长度在6~18之间，只能包含字母、数字和下划线)");
         }
         if (iUserService.updateUserPassWord(memberId,memberPassword, newMemberPassword,repeatPassword) == true) {
-            logger.info("密码修改成功");
             return RespBean.ok("密码修改成功");
         }
-        logger.info("密码修改失败");
         return RespBean.error("密码更改失败");
     }
 
@@ -120,33 +107,33 @@ public class UserController {
                     value = "新密码", required = true, dataTypeClass = String.class),
     }
     )
-    public RespBean forgetPassWord(String memberPhone,String memberMail,String code,HttpSession session,String newMemberPassword) {
+    public RespBean forgetPassWord(String memberPhone,String memberMail,String code,String newMemberPassword) {
         String phone = memberPhone;
         String judge1 = "(^[+]{0,1}(\\d){1,3}[ ]?([-]?((\\d)|[ ]){1,12})+$)";
         if (!phone.matches(judge1)){
-            logger.error("请输入正确的手机号");
             return RespBean.error("请输入正确的手机号");
         }
         String mail = memberMail;
         String judge2 = "(^[A-Za-z\\d]+([-_.][A-Za-z\\d]+)*@([A-Za-z\\d]+[-.])+[A-Za-z\\d]{2,4}$)";
         if (!mail.matches(judge2)) {
-            logger.error("请输入有效的邮箱");
             return RespBean.error("请输入有效的邮箱");
         }
         String pass = newMemberPassword;
         String judge3 = "(^[a-zA-Z]\\w{5,17}$)";
         if (!pass.matches(judge3)) {
-            logger.error("密码不符合要求(以字母开头，长度在6~18之间，只能包含字母、数字和下划线)");
             return RespBean.error("密码不符合要求(以字母开头，长度在6~18之间，只能包含字母、数字和下划线)");
         }
-            if (session.getAttribute("code").equals(code)) {
-                if (iUserService.forgetPassWord(memberPhone, memberMail, code,newMemberPassword)) {
-                    return RespBean.ok("密码重置成功");
-                }
-                return RespBean.error("密码重置失败"+" "+code+"=/="+session.getAttribute("code"));
+        if (iUserService.selectUser(memberPhone).getMemberCode()==null){
+            return RespBean.error("验证码错误");
+        }
+        if (iUserService.selectUser(memberPhone).getMemberCode().equals(code)) {
+            if (iUserService.forgetPassWord(memberPhone, memberMail, code,newMemberPassword)) {
+                return RespBean.ok("密码重置成功");
             }
-            return RespBean.error("验证码错误"+"   "+code+"=/="+session.getAttribute("code"));
-            }
+            return RespBean.error("密码重置失败");
+        }
+        return RespBean.error("验证码错误");
+    }
 
     @ApiOperation(value = "注销用户", notes = "根据Id删除用户", httpMethod = "DELETE")
     @DeleteMapping("/deleteUser")
@@ -158,14 +145,11 @@ public class UserController {
         if (id!=null){
             boolean judgment = iUserService.deleteUser(id);
             if (judgment){
-                logger.info("删除成功");
                 return RespBean.ok("删除成功");
             }else {
-                logger.error("删除失败");
                 return RespBean.error("删除失败");
             }
         }else{
-            logger.error("删除失败");
             return RespBean.error("id为空，删除失败");
         }
     }
@@ -174,24 +158,20 @@ public class UserController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "email",
                     value = "邮箱", required = true, dataTypeClass = String.class),
-            @ApiImplicitParam(paramType = "query", name = "memberId",
-                    value = "用户id", required = true, dataTypeClass = Integer.class)
+            @ApiImplicitParam(paramType = "query", name = "phone",
+                    value = "用户手机号", required = true, dataTypeClass = String.class)
     })
-    public RespBean sendEmail(String email,HttpSession session){
+    public RespBean sendEmail(String email,String phone){
         String mail = email;
         String judge = "(^[A-Za-z\\d]+([-_.][A-Za-z\\d]+)*@([A-Za-z\\d]+[-.])+[A-Za-z\\d]{2,4}$)";
         if (!mail.matches(judge)) {
-            logger.error("请输入有效的邮箱");
             return RespBean.error("请输入有效的邮箱");
         }
-        boolean judgment = iUserService.sendMail(email,session);
-        if (judgment){
-            String returnCode = (String) session.getAttribute("code");
-            logger.info("发送验证码成功"+session);
-            return RespBean.ok("发送验证码成功",returnCode);
+        List<UserBean> list = iUserService.sendMail(email,phone);
+        if (list.size()!=0){
+            return RespBean.ok("发送验证码成功");
         }else{
-            logger.error("发送验证码失败");
-            return RespBean.error("发送验证码失败");
+            return RespBean.error("邮箱输入错误，发送验证码失败");
         }
     }
 }

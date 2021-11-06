@@ -1,8 +1,11 @@
 package studio.banner.forumwebsite.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import lombok.Data;
 import org.springframework.stereotype.Service;
 import studio.banner.forumwebsite.bean.UserMsgBean;
+
+import java.util.List;
 
 /**
  * @Author: ljh
@@ -11,17 +14,9 @@ import studio.banner.forumwebsite.bean.UserMsgBean;
 public interface IUserMsgService {
     /**
      * 新增用户信息
-     * @param  memberId;
-     * @param  memberName;
-     * @param  memberSex;
-     * @param  memberAge;
-     * @param  memberTime;
-     * @param  memberHead;
-     * @param  memberFans;
-     * @param  memberAttention;
      * @return boolean
      */
-    boolean insertUserMsg(Integer memberId, String memberName,String memberSex,Integer memberAge,String memberTime,String memberHead,Integer memberFans,Integer memberAttention);
+    boolean insertUserMsg(UserMsgBean userMsgBean);
 
     /**
      * 根据Id更改用户昵称
@@ -62,4 +57,32 @@ public interface IUserMsgService {
      * @return UserMsgBean
      */
     UserMsgBean selectUserMsg(Integer memberId);
+
+
+    /**
+     * 根据用户id查询用户生日
+     * @param id 用户id
+     * @return boolean
+     */
+    boolean selectBirthdayById(Integer id);
+
+    /**
+     * 查询过生日的人
+     * @return List
+     * @param memberId 用户id
+     */
+    List<UserMsgBean> selectBirthday(Integer memberId);
+
+    /**
+     * 通过邮箱祝福过生日的人
+     * @param content 祝福内容
+     * @param memberId 被祝福人的id
+     * @return boolean
+     */
+    boolean blessUserBirthday(Integer memberId,String content);
+
+    /**
+     * 系统每天早上0点自动监测过生日的人并发送祝福邮件
+     */
+    void automaticSentMail();
 }

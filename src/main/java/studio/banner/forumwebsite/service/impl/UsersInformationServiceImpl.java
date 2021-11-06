@@ -63,5 +63,22 @@ public class UsersInformationServiceImpl implements IUsersInformationService {
         return page2;
     }
 
+    @Override
+    public IPage<UsersInformationBean> selectUserInformationDimPage(Integer page, String dim) {
+        Page<UsersInformationBean> page1 = new Page<>(page,10);
+        QueryWrapper<UsersInformationBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("users_name",dim)
+                .or().like("users_direction",dim)
+                .or().like("users_phone",dim)
+                .or().like("users_qq",dim)
+                .or().like("users_wechat",dim)
+                .or().like("users_company",dim)
+                .or().like("users_work",dim)
+                .or().like("users_address",dim)
+                .or().like("users_pay",dim);
+        IPage<UsersInformationBean> iPage = usersInformationMapper.selectPage(page1,queryWrapper);
+        return iPage;
+    }
+
 
 }

@@ -1,6 +1,7 @@
 package studio.banner.forumwebsite.controller.background;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.api.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -378,5 +379,28 @@ public class PostController {
             return RespBean.ok("查询成功", list);
         }
         return RespBean.error("查询失败，未找到该页数");
+    }
+
+    @GetMapping("/selectDimPost")
+    @ApiOperation(value = "模糊查询帖子",httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query",name = "page",
+            value = "模糊分页查询页数",required = true,dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query",name = "dim",
+            value = "模糊查询字段",required = true,dataTypeClass = String.class)
+    })
+    public RespBean selectDimPost(int page,String dim){
+        IPage<PostBean> iPage = iPostService.selectDimPost(page, dim);
+        List<PostBean> list = iPage.getRecords();
+        if (list.size()!=0){
+            return RespBean.ok("查询成功",list);
+        }else {
+            IPage<PostBean> iPage1 = iPostService.selectAllPost(page);
+            List<PostBean> list1 = iPage1.getRecords();
+            if (list1.size() != 0) {
+                return RespBean.ok(list1);
+            }
+        }
+        return RespBean.error("未查询到相关内容");
     }
 }

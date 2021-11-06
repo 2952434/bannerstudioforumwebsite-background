@@ -161,4 +161,24 @@ public class UsersInformationController {
         logger.error("分页查询失败");
         return RespBean.error("分页查询失败");
     }
+
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query",name = "page",
+                    value = "查询页数",required = true,dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query",name = "dim",
+                    value = "模糊查询字段",required = true,dataTypeClass = String.class)
+    })
+    @ApiOperation(value = "模糊分页查询",notes = "页数和查询内容不为空",httpMethod = "GET")
+    @GetMapping("/selectInformationDim")
+    public RespBean selectInformationDim(Integer page,String dim){
+
+        IPage<UsersInformationBean> iPage = iUsersInformationService.selectUserInformationDimPage(page, dim);
+        List<UsersInformationBean> records = iPage.getRecords();
+        if (records.size()!=0){
+            return RespBean.ok("查询成功",records);
+        }else {
+            return RespBean.error("无查询内容");
+        }
+    }
 }

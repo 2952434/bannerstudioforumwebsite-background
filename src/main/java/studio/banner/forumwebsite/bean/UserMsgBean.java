@@ -1,11 +1,13 @@
 package studio.banner.forumwebsite.bean;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import lombok.*;
-import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
 
 /**
  * @Author: ljh
@@ -13,8 +15,6 @@ import lombok.experimental.Accessors;
  */
 
 @Data
-@Accessors(chain = true)
-@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("tab_member_information")
@@ -29,4 +29,7 @@ public class UserMsgBean {
     private String memberHead;
     private Integer memberFans;
     private Integer memberAttention;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JSONField(format= "yyyy-MM-dd")
+    private Date memberBirthday;
     }

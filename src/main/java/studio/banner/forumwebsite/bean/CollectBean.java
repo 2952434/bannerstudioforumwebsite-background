@@ -16,8 +16,6 @@ import lombok.experimental.Accessors;
  * @Date: 2021/5/13 21:56
  */
 @Data
-@Accessors(chain = true)
-@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("tab_collect")

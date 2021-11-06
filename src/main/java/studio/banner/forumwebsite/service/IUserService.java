@@ -1,6 +1,5 @@
 package studio.banner.forumwebsite.service;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import studio.banner.forumwebsite.bean.UserBean;
 
@@ -79,5 +78,15 @@ public interface IUserService {
      * @return UserBean
      */
     IPage<UserBean> selectUser();
-    boolean sendMail(String email, HttpSession session);
+
+    /**
+     * 发送验证码
+     * @param email
+     * @param phone
+     * @return
+     */
+    List<UserBean> sendMail(String email,String phone);
+
+
+
 }

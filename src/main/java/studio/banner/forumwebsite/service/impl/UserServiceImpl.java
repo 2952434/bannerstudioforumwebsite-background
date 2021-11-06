@@ -33,6 +33,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public boolean insertUser(UserBean userBean) {
         if (selectAccount(userBean.getMemberPhone())==true){
+            userBean.setMemberAdmin(0);
             userMapper.insert(userBean);
             return true;
         }
@@ -88,6 +89,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public boolean updateUser() {
+
         return false;
     }
 
@@ -163,12 +165,16 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public boolean sendMail(String email, HttpSession session) {
+    public List<UserBean> sendMail(String email,String phone) {
         String code = sendMail.sendSimpleMail(email);
-        session.setAttribute("code",code);
-        System.out.println(code);
-
-        return code != null;
+        QueryWrapper<UserBean> queryWrapper= new QueryWrapper<>();
+        queryWrapper.eq("member_phone",phone).eq("member_mail",email);
+        List<UserBean> list = userMapper.selectList(queryWrapper);
+        if (list.size()==1){
+            list.get(0).setMemberCode(code);
+            userMapper.update(list.get(0),queryWrapper);
+        }
+        return list;
 
     }
 

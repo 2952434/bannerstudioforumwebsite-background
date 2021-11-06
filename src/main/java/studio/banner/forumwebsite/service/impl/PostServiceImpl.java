@@ -145,5 +145,16 @@ public class PostServiceImpl implements IPostService {
         }
         return null;
     }
+
+    @Override
+    public IPage<PostBean> selectDimPost(int page, String dim) {
+        Page<PostBean> Page01 = new Page<>(page, 10);
+        QueryWrapper<PostBean> query = new QueryWrapper<>();
+        query.like("post_title",dim)
+                .or()
+                .like("post_content",dim);
+        IPage<PostBean> page1 =postMapper.selectPage(Page01,query);
+        return page1;
+    }
 }
 

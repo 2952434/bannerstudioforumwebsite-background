@@ -3,6 +3,7 @@ package studio.banner.forumwebsite.controller.background;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,4 +46,23 @@ public class AdminController {
             return RespBean.error("删除用户失败");
         }
     }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query",name = "phone",
+                    value = "手机号",required = true,dataTypeClass = String.class),
+            @ApiImplicitParam(paramType = "query",name = "passWord",
+                    value = "密码",required = true,dataTypeClass = String.class)
+    })
+    @ApiOperation(value = "管理员登录",notes = "账号密码不能为空",httpMethod = "GET")
+    @GetMapping("/loginAdmin")
+    public RespBean loginAdmin(String phone,String passWord){
+        boolean b = adminService.loginAdmin(phone, passWord);
+        System.out.println(b);
+        if (b){
+            return RespBean.ok("登录成功。");
+        }else {
+            return RespBean.error("您不是管理员登录失败");
+        }
+    }
+
 }

@@ -102,7 +102,16 @@ public interface IPostService {
 
     /**
      * 分页查询所有帖子
+     * @param page
      * @return IPage
      */
     IPage<PostBean> selectAllPost(int page);
+
+    /**
+     * 模糊查询帖子和作者
+     * @param page 第几页
+     * @param dim 查询字段
+     * @return
+     */
+    IPage<PostBean> selectDimPost(int page,String dim);
 }
