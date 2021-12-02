@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -402,5 +404,20 @@ public class PostController {
             }
         }
         return RespBean.error("未查询到相关内容");
+    }
+
+
+//    @GetMapping("/add")
+//    @ApiOperation(value = "RedisTest",httpMethod = "GET")
+//    public RespBean s(){
+//        Set<ZSetOperations.TypedTuple<String>> s = iPostService.addRedis();
+//        return RespBean.ok(s);
+//    }
+
+    @GetMapping("/selectPostRank")
+    @ApiOperation(value = "帖子排行榜查询",httpMethod = "GET")
+    public RespBean selectPostRank(){
+        Set<ZSetOperations.TypedTuple<String>> rank = iPostService.selectPostRank();
+        return RespBean.ok(rank);
     }
 }

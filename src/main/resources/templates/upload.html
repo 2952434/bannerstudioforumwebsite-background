@@ -6,12 +6,15 @@
     <title>上传文件</title>
 </head>
 <body>
-<form action="/qiniu" method="post" enctype="multipart/form-data">
+<form action="http://localhost:8084/upload" method="post" enctype="multipart/form-data">
     <label>上传图片</label>
     <input type="file" name="file"/>
     <input type="submit" value="上传"/>
-    <p>回显图片:</p>
-    <img th:src="${link}"/>
+</form>
+<form action="http://localhost:8084/delete" method="get" enctype="multipart/form-data">
+    <label>删除图片</label>
+    <input type="text" name="fileName"/>
+    <input type="submit" value="删除"/>
 </form>
 </body>
 </html>

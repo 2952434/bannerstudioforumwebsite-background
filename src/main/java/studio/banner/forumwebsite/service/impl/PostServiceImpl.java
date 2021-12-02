@@ -1,16 +1,24 @@
 package studio.banner.forumwebsite.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.DefaultTypedTuple;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import studio.banner.forumwebsite.bean.PostBean;
 import studio.banner.forumwebsite.mapper.PostMapper;
 import studio.banner.forumwebsite.service.IPostService;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,6 +31,11 @@ import java.util.List;
 public class PostServiceImpl implements IPostService {
     @Autowired
     protected PostMapper postMapper;
+
+    @Autowired
+    private RedisTemplate<String,String> redisTemplate;
+
+    public static final String POST_RANK = "post_rank";
 
     @Override
     public boolean insertPost(PostBean postBean) {
@@ -42,6 +55,9 @@ public class PostServiceImpl implements IPostService {
     @Override
     public boolean deletePost(int postId) {
         if (postMapper.selectById(postId) != null) {
+            PostBean postBean = selectPost(postId);
+            String key = postBean.getPostTitle()+","+postBean.getPostId();
+            redisTemplate.opsForZSet().remove(POST_RANK,key);
             postMapper.deleteById(postId);
             return true;
         }
@@ -63,6 +79,11 @@ public class PostServiceImpl implements IPostService {
     @Override
     public boolean updatePostTitle(int postId ,String newTitle) {
         if(selectPost(postId) != null){
+            PostBean postBean = selectPost(postId);
+            String key = postBean.getPostTitle()+","+postBean.getPostId();
+            redisTemplate.opsForZSet().remove(POST_RANK,key);
+            String newKey = newTitle+","+postBean.getPostId();
+            redisTemplate.opsForZSet().add(POST_RANK,newKey,postBean.getPostPageView());
             UpdateWrapper<PostBean> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("post_id",postId).set("post_title", newTitle);
             postMapper.update(null,updateWrapper);
@@ -86,7 +107,9 @@ public class PostServiceImpl implements IPostService {
     public boolean updatePostpageview(int postId) {
         if (selectPost(postId) != null){
             PostBean postBean = selectPost(postId);
+            String key = postBean.getPostTitle()+","+postBean.getPostId();
             UpdateWrapper<PostBean> updateWrapper = new UpdateWrapper<>();
+            redisTemplate.opsForZSet().incrementScore(POST_RANK,key,1);
             updateWrapper.eq("post_id",postId).set("post_page_view",postBean.getPostPageView()+1);
             postMapper.update(null,updateWrapper);
             return true;
@@ -156,5 +179,50 @@ public class PostServiceImpl implements IPostService {
         IPage<PostBean> page1 =postMapper.selectPage(Page01,query);
         return page1;
     }
+
+
+//    @Override
+//    public Set<ZSetOperations.TypedTuple<String>> addRedis() {
+//        redisTemplate.opsForZSet().removeRangeByScore(POST_RANK,0,1000000);
+//        QueryWrapper<PostBean> queryWrapper = new QueryWrapper();
+//        queryWrapper.select("post_id","post_title","post_page_view");
+//        List<PostBean> list = postMapper.selectList(queryWrapper);
+//        Set<ZSetOperations.TypedTuple<String>> tuples = new HashSet<>();
+//        if(CollectionUtils.isNotEmpty(list)){
+//            for (PostBean postBean: list) {
+//                String key = postBean.getPostTitle()+","+postBean.getPostId();
+//                DefaultTypedTuple<String> tuple = new DefaultTypedTuple<>(key, (double) postBean.getPostPageView());
+//                tuples.add(tuple);
+//            }
+//        }
+//        redisTemplate.opsForZSet().add(POST_RANK, tuples);
+//        Set<ZSetOperations.TypedTuple<String>> rangeWithScores = redisTemplate.opsForZSet().reverseRangeWithScores(POST_RANK, 0, 10);
+//        return rangeWithScores;
+//    }
+
+    @Override
+    @Scheduled(cron="0 0 1 * * ?")
+    public void updateRedisPostRank() {
+        redisTemplate.opsForZSet().removeRangeByScore(POST_RANK,0,1000000);
+        QueryWrapper<PostBean> queryWrapper = new QueryWrapper();
+        queryWrapper.select("post_id","post_title","post_page_view");
+        List<PostBean> list = postMapper.selectList(queryWrapper);
+        Set<ZSetOperations.TypedTuple<String>> tuples = new HashSet<>();
+        if(CollectionUtils.isNotEmpty(list)){
+            for (PostBean postBean: list) {
+                String key = postBean.getPostTitle()+","+postBean.getPostId();
+                DefaultTypedTuple<String> tuple = new DefaultTypedTuple<>(key, (double) postBean.getPostPageView());
+                tuples.add(tuple);
+            }
+        }
+        redisTemplate.opsForZSet().add(POST_RANK, tuples);
+    }
+
+    @Override
+    public Set<ZSetOperations.TypedTuple<String>> selectPostRank() {
+        Set<ZSetOperations.TypedTuple<String>> rangeWithScores = redisTemplate.opsForZSet().reverseRangeWithScores(POST_RANK, 0, 10);
+        return rangeWithScores;
+    }
+
 }
 

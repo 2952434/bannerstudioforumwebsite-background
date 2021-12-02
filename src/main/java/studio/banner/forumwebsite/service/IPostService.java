@@ -1,9 +1,11 @@
 package studio.banner.forumwebsite.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.springframework.data.redis.core.ZSetOperations;
 import studio.banner.forumwebsite.bean.PostBean;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -114,4 +116,23 @@ public interface IPostService {
      * @return
      */
     IPage<PostBean> selectDimPost(int page,String dim);
+
+//    /**
+//     * 将数据库中的帖子导入到Redis中
+//     *
+//     * @return
+//     */
+//    Set<ZSetOperations.TypedTuple<String>> addRedis();
+
+    /**
+     * 每天早上1点自动更新Redis数据库中的帖子排名
+     */
+    void updateRedisPostRank();
+
+    /**
+     * 帖子排行榜查询
+     * @return
+     */
+    Set<ZSetOperations.TypedTuple<String>> selectPostRank();
+
 }

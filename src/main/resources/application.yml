@@ -24,8 +24,26 @@ spring:
     studio.banner.forumwebsite: debug
     org.springfromework.web: info
     com.baomidou.mybatisplus: error
+  # 上传文件大小
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+  #redis
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    password:
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+    timeout: 0
 
-#  邮箱
+  #  邮箱
   mail:
     host: smtp.qq.com
     port: 587
@@ -39,13 +57,15 @@ spring:
 server:
   port: 8084
 
-# 七牛云
-oss:
-  qiniu:
-    path: qtga4eaxm.hn-bkt.clouddn.com
-    accessKey: EeYNXo1hONmESybj2pe3YNBHO9Nar38Kf-QrbWEF
-    secretKey: lpiYGtDzQP3M0xNx--WyAposkw6KLWSXvWsod1aO
-    bucket: forumwebsite
+# 腾讯云地址
+qcloud:
+  path: https://ljxlwyq-1308186257.cos.ap-beijing.myqcloud.com
+  bucketName: ljxlwyq-1308186257
+  secretId: AKIDQjsreDYfXEk14sTpvlNjsoW3NSK0ThhT
+  secretKey: bx41kFVWIq9F8oFRO8ex2tWu53nIbgW6
+  region: ap-beijing
+  prefix: /images/
+
 
 #配置日志
 mybatis-plus:
