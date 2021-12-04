@@ -32,45 +32,49 @@ public class ListenerController {
     @ApiOperation(value = "用户登录", notes = "用户对象不能为空", httpMethod = "POST")
     @PostMapping("/login")
     public RespBean getUser(Integer username, String password, HttpSession session) {
-        session.setMaxInactiveInterval(60*30);
-            if ( password.equals(listenerService.selectAllUser(username).get(0).getMemberPassword())){
-                logger.info("用户【"+username+"】登陆开始！");
-                session.setAttribute("loginName",username);
-                logger.info("用户【"+username+"】登陆成功！");
-                return RespBean.ok("用户【"+username+"】登陆成功！");
-            }
-        logger.info("用户【"+username+"】登录失败！");
-        return RespBean.error("用户【"+username+"】登录失败！");
+        session.setMaxInactiveInterval(60 * 30);
+        if (password.equals(listenerService.selectAllUser(username).get(0).getMemberPassword())) {
+            logger.info("用户【" + username + "】登陆开始！");
+            session.setAttribute("loginName", username);
+            logger.info("用户【" + username + "】登陆成功！");
+            return RespBean.ok("用户【" + username + "】登陆成功！");
+        }
+        logger.info("用户【" + username + "】登录失败！");
+        return RespBean.error("用户【" + username + "】登录失败！");
     }
+
     /**
-     *查询在线人数
+     * 查询在线人数
      */
     @ApiOperation(value = "查询在线人数", httpMethod = "GET")
     @GetMapping("/online")
     public RespBean online() {
-        return  RespBean.ok("当前在线人数：" + MyHttpSessionListener.online + "人");
+        return RespBean.ok("当前在线人数：" + MyHttpSessionListener.online + "人");
     }
+
     /**
      * 退出登录
      */
     @ApiOperation(value = "退出登录", httpMethod = "GET")
-    @GetMapping ("/logout")
+    @GetMapping("/logout")
     public RespBean logout(HttpServletRequest request) {
         logger.info("用户退出登录开始！");
         HttpSession session = request.getSession(false);
-        if(session != null){
+        if (session != null) {
             session.removeAttribute("loginName");
             session.invalidate();
         }
         logger.info("用户退出登录结束！");
         return RespBean.ok("退出成功");
     }
+
     /**
      * 判断session是否有效
+     *
      * @param httpServletRequest
      * @return String
      */
-    @ApiOperation(value = "判断session是否有效",httpMethod = "GET")
+    @ApiOperation(value = "判断session是否有效", httpMethod = "GET")
     @GetMapping("/getSession")
     public RespBean getSession(HttpServletRequest httpServletRequest) {
         HttpSession session = httpServletRequest.getSession();

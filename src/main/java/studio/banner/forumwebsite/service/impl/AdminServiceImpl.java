@@ -23,58 +23,60 @@ import java.util.List;
 @Service
 public class AdminServiceImpl implements IAdminService {
 
-   @Autowired
-   private AdminMapper adminMapper;
+    @Autowired
+    private AdminMapper adminMapper;
 
-   @Autowired
-   private PostMapper postMapping;
+    @Autowired
+    private PostMapper postMapping;
 
     /**
      * 查询用户
+     *
      * @param page 第几页
      * @return page
      */
     @Override
     public Page<UserBean> selectAllUser(int page) {
         QueryWrapper<UserBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("member_admin",0);
-        Page<UserBean> page1 = new Page<>(page,10);
+        queryWrapper.eq("member_admin", 0);
+        Page<UserBean> page1 = new Page<>(page, 10);
         Page<UserBean> page2 = adminMapper.selectPage(page1, queryWrapper);
         return page2;
     }
 
     /**
      * 根据id删除用户
+     *
      * @param id 用户id
      * @return boolean
      */
     @Override
     public boolean deleteById(int id) {
         QueryWrapper<UserBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("member_admin",1);
+        queryWrapper.eq("member_admin", 1);
         QueryWrapper<PostBean> postBeanQueryWrapper = new QueryWrapper<>();
-        postBeanQueryWrapper.eq("post_member_id",id);
+        postBeanQueryWrapper.eq("post_member_id", id);
         List<UserBean> userBeans = adminMapper.selectList(queryWrapper);
-            if (adminMapper.deleteById(id)==1&&userBeans.size()==0){
-                postMapping.delete(postBeanQueryWrapper);
-                return true;
-            }else {
-                return false;
+        if (adminMapper.deleteById(id) == 1 && userBeans.size() == 0) {
+            postMapping.delete(postBeanQueryWrapper);
+            return true;
+        } else {
+            return false;
         }
     }
 
     @Override
     public boolean loginAdmin(String phone, String passWord) {
         QueryWrapper<UserBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("member_phone",phone)
-                .eq("member_password",passWord);
-        List<UserBean> list =new ArrayList<>();
+        queryWrapper.eq("member_phone", phone)
+                .eq("member_password", passWord);
+        List<UserBean> list = new ArrayList<>();
         list.add(adminMapper.selectOne(queryWrapper));
-        if (list.size()==1){
-            if (list.get(0)==null){
+        if (list.size() == 1) {
+            if (list.get(0) == null) {
                 return false;
             }
-            if (list.get(0).getMemberAdmin()==1) {
+            if (list.get(0).getMemberAdmin() == 1) {
 
                 return true;
             }

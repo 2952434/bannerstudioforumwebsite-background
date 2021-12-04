@@ -23,17 +23,19 @@ public class TencentPhotoController {
     protected static final Logger logger = LoggerFactory.getLogger(TencentPhotoController.class);
     @Autowired
     private ITencentYunService iTencentYunService;
-    @RequestMapping(value = "/upload" )
-    @ApiOperation(value = "腾讯云上传接口",notes = "上传图片不能为空",httpMethod = "POST")
+
+    @RequestMapping(value = "/upload")
+    @ApiOperation(value = "腾讯云上传接口", notes = "上传图片不能为空", httpMethod = "POST")
     public RespBean upload(@RequestPart MultipartFile file) {
         String url = iTencentYunService.upload(file);
-        return RespBean.ok("上传成功",url);
+        return RespBean.ok("上传成功", url);
     }
+
     @DeleteMapping("/delete")
-    @ApiOperation(value = "腾讯云删除接口",httpMethod = "DELETE")
-    @ApiImplicitParam(name = "fileName",value = "图片名",dataTypeClass = String.class)
-    public RespBean delete(@RequestParam String  fileName) {
-        if (iTencentYunService.delete(fileName)){
+    @ApiOperation(value = "腾讯云删除接口", httpMethod = "DELETE")
+    @ApiImplicitParam(name = "fileName", value = "图片名", dataTypeClass = String.class)
+    public RespBean delete(@RequestParam String fileName) {
+        if (iTencentYunService.delete(fileName)) {
             return RespBean.ok("删除成功");
         }
         return RespBean.error("删除失败");

@@ -123,6 +123,7 @@ public class QCloudCosUtils {
     public String generateUniqueName(String originalName) {
         return UUID.randomUUID() + originalName.substring(originalName.lastIndexOf("."));
     }
+
     /**
      * 删除文件
      */
@@ -140,7 +141,7 @@ public class QCloudCosUtils {
             cosclient.deleteObject(bucketName, key);
             // 关闭客户端(关闭后台线程)
             cosclient.shutdown();
-        }catch (CosClientException e) {
+        } catch (CosClientException e) {
             e.printStackTrace();
         }
         return true;

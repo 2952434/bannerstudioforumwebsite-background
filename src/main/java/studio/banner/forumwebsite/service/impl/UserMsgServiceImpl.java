@@ -48,12 +48,13 @@ public class UserMsgServiceImpl implements IUserMsgService {
 
     /**
      * 注册账户时调用，初始化用户信息表
+     *
      * @return boolean
      */
     @Override
     public boolean insertUserMsg(UserMsgBean userMsgBean) {
         int i = userMsgMapper.insert(userMsgBean);
-        if (i == 1){
+        if (i == 1) {
             return true;
         }
         return false;
@@ -61,69 +62,73 @@ public class UserMsgServiceImpl implements IUserMsgService {
 
     /**
      * 根据用户Id更改用户名
+     *
      * @param memberId
      * @param memberName
      * @return boolean
      */
     @Override
-    public boolean updateUserName(Integer memberId,String memberName) {
+    public boolean updateUserName(Integer memberId, String memberName) {
         QueryWrapper<UserMsgBean> wrapper = new QueryWrapper<>();
-        wrapper.eq("member_id",memberId);
+        wrapper.eq("member_id", memberId);
         UserMsgBean userMsgBean = userMsgMapper.selectOne(wrapper);
-        if (userMsgBean.getMemberId().equals(memberId)){
+        if (userMsgBean.getMemberId().equals(memberId)) {
             UpdateWrapper<UserMsgBean> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("member_id",memberId).set("member_name",memberName);
-            int i = userMsgMapper.update(null,updateWrapper);
+            updateWrapper.eq("member_id", memberId).set("member_name", memberName);
+            int i = userMsgMapper.update(null, updateWrapper);
             return i == 1;
-        }else{
+        } else {
             return false;
         }
     }
 
     /**
      * 根据用户Id更改性别
+     *
      * @param memberId
      * @param memberSex
-     * @return  boolean
+     * @return boolean
      */
     @Override
     public boolean updateUserSex(Integer memberId, String memberSex) {
         QueryWrapper<UserMsgBean> wrapper = new QueryWrapper<>();
-        wrapper.eq("member_id",memberId);
+        wrapper.eq("member_id", memberId);
         UserMsgBean userMsgBean = userMsgMapper.selectOne(wrapper);
-        if (userMsgBean.getMemberId().equals(memberId)){
+        if (userMsgBean.getMemberId().equals(memberId)) {
             UpdateWrapper<UserMsgBean> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("member_id",memberId).set("member_sex",memberSex);
-            int i = userMsgMapper.update(null,updateWrapper);
+            updateWrapper.eq("member_id", memberId).set("member_sex", memberSex);
+            int i = userMsgMapper.update(null, updateWrapper);
             return i == 1;
-        }else{
+        } else {
             return false;
         }
     }
 
     /**
      * 根据用户Id更改年龄
+     *
      * @param memberId
      * @param memberAge
-     * @return  boolean
+     * @return boolean
      */
     @Override
     public boolean updateUserAge(Integer memberId, Integer memberAge) {
         QueryWrapper<UserMsgBean> wrapper = new QueryWrapper<>();
-        wrapper.eq("member_id",memberId);
+        wrapper.eq("member_id", memberId);
         UserMsgBean userMsgBean = userMsgMapper.selectOne(wrapper);
-        if (userMsgBean.getMemberId().equals(memberId)){
+        if (userMsgBean.getMemberId().equals(memberId)) {
             UpdateWrapper<UserMsgBean> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("member_id",memberId).set("member_age",memberAge);
-            int i = userMsgMapper.update(null,updateWrapper);
+            updateWrapper.eq("member_id", memberId).set("member_age", memberAge);
+            int i = userMsgMapper.update(null, updateWrapper);
             return i == 1;
-        }else{
+        } else {
             return false;
         }
     }
 
     /**
      * 根据用户Id更改头像
+     *
      * @param memberId
      * @param memberHead
      * @return boolean
@@ -131,14 +136,14 @@ public class UserMsgServiceImpl implements IUserMsgService {
     @Override
     public boolean updateUserHead(Integer memberId, String memberHead) {
         QueryWrapper<UserMsgBean> wrapper = new QueryWrapper<>();
-        wrapper.eq("member_id",memberId);
+        wrapper.eq("member_id", memberId);
         UserMsgBean userMsgBean = userMsgMapper.selectOne(wrapper);
-        if (userMsgBean.getMemberId().equals(memberId)){
+        if (userMsgBean.getMemberId().equals(memberId)) {
             UpdateWrapper<UserMsgBean> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("member_id",memberId).set("member_head",memberHead);
-            int i = userMsgMapper.update(null,updateWrapper);
+            updateWrapper.eq("member_id", memberId).set("member_head", memberHead);
+            int i = userMsgMapper.update(null, updateWrapper);
             return i == 1;
-        }else{
+        } else {
             return false;
         }
     }
@@ -146,16 +151,16 @@ public class UserMsgServiceImpl implements IUserMsgService {
     @Override
     public UserMsgBean selectUserMsg(Integer memberId) {
         QueryWrapper<UserContactBean> wrapper1 = new QueryWrapper<>();
-        wrapper1.eq("member_star",memberId);
+        wrapper1.eq("member_star", memberId);
         Integer stared = userContactMapper.selectCount(wrapper1);
         QueryWrapper<UserContactBean> wrapper2 = new QueryWrapper<>();
-        wrapper2.eq("member_fan",memberId);
+        wrapper2.eq("member_fan", memberId);
         Integer faned = userContactMapper.selectCount(wrapper2);
         UpdateWrapper<UserMsgBean> wrapper3 = new UpdateWrapper<>();
-        wrapper3.eq("member_id",memberId).set("member_fans",stared).set("member_attention",faned);
-        userMsgMapper.update(null,wrapper3);
+        wrapper3.eq("member_id", memberId).set("member_fans", stared).set("member_attention", faned);
+        userMsgMapper.update(null, wrapper3);
         QueryWrapper<UserMsgBean> wrapper4 = new QueryWrapper<>();
-        wrapper4.eq("member_id",memberId);
+        wrapper4.eq("member_id", memberId);
         return userMsgMapper.selectOne(wrapper4);
     }
 
@@ -169,11 +174,11 @@ public class UserMsgServiceImpl implements IUserMsgService {
         String[] split1 = time.split("-");
 //        获取数据库生日
         QueryWrapper<UserMsgBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("member_id",id);
+        queryWrapper.eq("member_id", id);
         UserMsgBean userMsgBean = userMsgMapper.selectOne(queryWrapper);
         String birthday = bjSdf.format(userMsgBean.getMemberBirthday());
         String[] split = birthday.split("-");
-        if (split[1].equals(split1[1])&&split[2].equals(split1[2])){
+        if (split[1].equals(split1[1]) && split[2].equals(split1[2])) {
             return true;
         }
         return false;
@@ -187,9 +192,9 @@ public class UserMsgServiceImpl implements IUserMsgService {
         Date date = new Date();
         String time = bjSdf.format(date);
         String[] split = time.split("-");
-        String time01 = split[1]+"-"+split[2];
+        String time01 = split[1] + "-" + split[2];
         QueryWrapper<UserMsgBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("member_birthday",time01);
+        queryWrapper.like("member_birthday", time01);
         List<UserMsgBean> list = userMsgMapper.selectList(queryWrapper);
         list.removeIf(userMsgBean -> userMsgBean.getMemberId().equals(memberId));
         return list;
@@ -197,7 +202,7 @@ public class UserMsgServiceImpl implements IUserMsgService {
 
 
     @Override
-    public boolean blessUserBirthday(Integer memberId ,String content) {
+    public boolean blessUserBirthday(Integer memberId, String content) {
         UserBean userBean = userMapper.selectById(memberId);
         String memberMail = userBean.getMemberMail();
         boolean b = sendMail.sendBlessMail(memberMail, content);
@@ -206,7 +211,7 @@ public class UserMsgServiceImpl implements IUserMsgService {
 
 
     @Override
-    @Scheduled(cron="0 0 1 * * ?")
+    @Scheduled(cron = "0 0 1 * * ?")
     public void automaticSentMail() {
         //        获得当前时间
         SimpleDateFormat bjSdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -214,14 +219,14 @@ public class UserMsgServiceImpl implements IUserMsgService {
         Date date = new Date();
         String time = bjSdf.format(date);
         String[] split = time.split("-");
-        String time01 = split[1]+"-"+split[2];
+        String time01 = split[1] + "-" + split[2];
         QueryWrapper<UserMsgBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("member_birthday",time01);
+        queryWrapper.like("member_birthday", time01);
         List<UserMsgBean> list = userMsgMapper.selectList(queryWrapper);
-        if (list.size()!=0){
+        if (list.size() != 0) {
             for (int i = 0; i < list.size(); i++) {
                 UserBean userBean = userMapper.selectById(list.get(i).getMemberId());
-                sendMail.automaticMail(userBean.getMemberMail(),list.get(i).getMemberName());
+                sendMail.automaticMail(userBean.getMemberMail(), list.get(i).getMemberName());
             }
         }
     }

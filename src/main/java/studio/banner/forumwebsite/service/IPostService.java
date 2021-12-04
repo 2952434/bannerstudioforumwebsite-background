@@ -3,6 +3,7 @@ package studio.banner.forumwebsite.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.data.redis.core.ZSetOperations;
 import studio.banner.forumwebsite.bean.PostBean;
+import studio.banner.forumwebsite.bean.PostBeanEs;
 
 import java.util.List;
 import java.util.Set;
@@ -17,13 +18,15 @@ import java.util.Set;
 public interface IPostService {
     /**
      * 增加帖子
+     *
      * @param postBean
      * @return boolean
      */
-    boolean insertPost (PostBean postBean);
+    boolean insertPost(PostBean postBean);
 
     /**
      * 转发帖子
+     *
      * @param postBean
      * @return boolean
      */
@@ -31,6 +34,7 @@ public interface IPostService {
 
     /**
      * 根据帖子id删除帖子
+     *
      * @param postId
      * @return boolean
      */
@@ -38,6 +42,7 @@ public interface IPostService {
 
     /**
      * 根据用户id删除用户全部帖子
+     *
      * @param postMemberId
      * @return boolean
      */
@@ -46,6 +51,7 @@ public interface IPostService {
 
     /**
      * 根据帖子id更改帖子标题
+     *
      * @param postId
      * @return boolean
      */
@@ -55,15 +61,17 @@ public interface IPostService {
 
     /**
      * 根据帖子id更改帖子内容
+     *
      * @param postId
      * @param newContent
      * @return boolean
      */
 
-    boolean updatePostContent(int postId , String newContent);
+    boolean updatePostContent(int postId, String newContent);
 
     /**
      * 根据帖子id更改浏览量
+     *
      * @param postId
      * @return boolean
      */
@@ -72,6 +80,7 @@ public interface IPostService {
 
     /**
      * 根据帖子id更改评论量
+     *
      * @param postId
      * @return boolean
      */
@@ -80,6 +89,7 @@ public interface IPostService {
 
     /**
      * 根据帖子id更改点赞量
+     *
      * @param postId
      * @return boolean
      */
@@ -88,6 +98,7 @@ public interface IPostService {
 
     /**
      * 根据帖子id查询帖子
+     *
      * @param postId
      * @return PostBean
      */
@@ -96,6 +107,7 @@ public interface IPostService {
 
     /**
      * 根据用户id查询某用户全部帖子
+     *
      * @param postMemberId
      * @return List
      */
@@ -104,35 +116,45 @@ public interface IPostService {
 
     /**
      * 分页查询所有帖子
+     *
      * @param page
      * @return IPage
      */
     IPage<PostBean> selectAllPost(int page);
 
     /**
-     * 模糊查询帖子和作者
+     * 全文检索帖子和作者
+     *
      * @param page 第几页
-     * @param dim 查询字段
+     * @param dim  查询字段
      * @return
      */
-    IPage<PostBean> selectDimPost(int page,String dim);
+    List<PostBeanEs> selectDimPost(int page, String dim);
 
-//    /**
-//     * 将数据库中的帖子导入到Redis中
-//     *
-//     * @return
-//     */
-//    Set<ZSetOperations.TypedTuple<String>> addRedis();
+    /**
+     * 将数据库中的帖子导入到Redis中
+     *
+     * @return
+     */
+    Set<ZSetOperations.TypedTuple<String>> addRedis();
 
     /**
      * 每天早上1点自动更新Redis数据库中的帖子排名
+     *
+     * @return
      */
-    void updateRedisPostRank();
+    Set<ZSetOperations.TypedTuple<String>> updateRedisPostRank();
 
     /**
      * 帖子排行榜查询
+     *
      * @return
      */
     Set<ZSetOperations.TypedTuple<String>> selectPostRank();
+
+    /**
+     * 每分钟更新一次es中的数据
+     */
+    void updateEsPost();
 
 }

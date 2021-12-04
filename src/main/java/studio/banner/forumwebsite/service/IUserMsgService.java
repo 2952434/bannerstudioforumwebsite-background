@@ -14,45 +14,51 @@ import java.util.List;
 public interface IUserMsgService {
     /**
      * 新增用户信息
+     *
      * @return boolean
      */
     boolean insertUserMsg(UserMsgBean userMsgBean);
 
     /**
      * 根据Id更改用户昵称
+     *
      * @param memberId
      * @param newMemberName
      * @return boolean
      */
-     boolean updateUserName(Integer memberId,String newMemberName);
+    boolean updateUserName(Integer memberId, String newMemberName);
 
     /**
      * 根据Id更改用户性别
+     *
      * @param memberId
      * @param memberSex
      * @return boolean
      */
-     boolean updateUserSex(Integer memberId,String memberSex);
+    boolean updateUserSex(Integer memberId, String memberSex);
 
     /**
      * 根据Id更改用户年龄
+     *
      * @param memberId
      * @param memberAge
      * @return boolean
      */
-    boolean updateUserAge(Integer memberId,Integer memberAge);
+    boolean updateUserAge(Integer memberId, Integer memberAge);
 
     /**
      * 根据Id更改用户头像
+     *
      * @param memberId
      * @param memberHead
      * @return boolean
      */
-    boolean updateUserHead(Integer memberId,String memberHead);
+    boolean updateUserHead(Integer memberId, String memberHead);
 
 
     /**
      * 根据Id查询用户信息
+     *
      * @param memberId
      * @return UserMsgBean
      */
@@ -61,6 +67,7 @@ public interface IUserMsgService {
 
     /**
      * 根据用户id查询用户生日
+     *
      * @param id 用户id
      * @return boolean
      */
@@ -68,18 +75,20 @@ public interface IUserMsgService {
 
     /**
      * 查询过生日的人
-     * @return List
+     *
      * @param memberId 用户id
+     * @return List
      */
     List<UserMsgBean> selectBirthday(Integer memberId);
 
     /**
      * 通过邮箱祝福过生日的人
-     * @param content 祝福内容
+     *
+     * @param content  祝福内容
      * @param memberId 被祝福人的id
      * @return boolean
      */
-    boolean blessUserBirthday(Integer memberId,String content);
+    boolean blessUserBirthday(Integer memberId, String content);
 
     /**
      * 系统每天早上0点自动监测过生日的人并发送祝福邮件

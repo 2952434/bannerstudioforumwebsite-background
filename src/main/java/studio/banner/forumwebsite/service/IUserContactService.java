@@ -11,6 +11,7 @@ import java.util.List;
 public interface IUserContactService {
     /**
      * 新增关注
+     *
      * @param userContactBean
      * @return boolean
      */
@@ -18,6 +19,7 @@ public interface IUserContactService {
 
     /**
      * 取消关注
+     *
      * @param attentionId
      * @return boolean
      */
@@ -25,6 +27,7 @@ public interface IUserContactService {
 
     /**
      * 查询是否存在关注关系，返回对象
+     *
      * @param memberFan
      * @param memberStar
      * @return list
@@ -33,6 +36,7 @@ public interface IUserContactService {
 
     /**
      * 根据用户Id查询其粉丝
+     *
      * @param memberStar
      * @return list
      */
@@ -40,6 +44,7 @@ public interface IUserContactService {
 
     /**
      * 根据Id查询其关注的人
+     *
      * @param memberFan
      * @return list
      */

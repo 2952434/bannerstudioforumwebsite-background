@@ -12,6 +12,7 @@ import java.io.File;
 public interface ITencentYunService {
     /**
      * 处理浏览器文件上传请求
+     *
      * @param multipartFile
      * @return
      */
@@ -19,6 +20,7 @@ public interface ITencentYunService {
 
     /**
      * 处理普通文件上传
+     *
      * @param file
      * @return
      */
@@ -26,6 +28,7 @@ public interface ITencentYunService {
 
     /**
      * 根据文件名删除文件
+     *
      * @param fileName
      * @return
      */

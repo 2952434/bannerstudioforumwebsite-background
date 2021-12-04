@@ -21,8 +21,8 @@ public class ListenerServiceImpl implements IListenerService {
     @Override
     public List<UserBean> selectAllUser(Integer userNum) {
         QueryWrapper wrapper = new QueryWrapper();
-        wrapper.eq("member_account_number",userNum);
-        List<UserBean> list  = listenerMapper.selectList(wrapper);
+        wrapper.eq("member_account_number", userNum);
+        List<UserBean> list = listenerMapper.selectList(wrapper);
         return list;
     }
 }

@@ -22,10 +22,12 @@ import java.util.Enumeration;
 @Component
 public class WebLogAspectConfig {
     private static final Logger logger = LoggerFactory.getLogger(WebLogAspectConfig.class);
+
     @Pointcut("execution(public * studio.banner.forumwebsite.controller..*.*(..))")
     public void webLog() {
 
     }
+
     @Before("webLog()")
     public void doBefore(JoinPoint joinPoint) throws Throwable {
         // 接收到请求，记录请求内容
@@ -42,6 +44,7 @@ public class WebLogAspectConfig {
             logger.info("name:" + name + " - value:" + request.getParameter(name));
         }
     }
+
     @AfterReturning(returning = "ret", pointcut = "webLog()")
     public void doAfterReturning(Object ret) throws Throwable {
         logger.info("---------------response----------------");

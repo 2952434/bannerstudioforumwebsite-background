@@ -13,6 +13,7 @@ import java.util.List;
 public interface IAdminService {
     /**
      * 查询所有用户
+     *
      * @param page 第几页
      * @return所有用户集合
      */
@@ -20,6 +21,7 @@ public interface IAdminService {
 
     /**
      * 根据用户id删除用户
+     *
      * @param id 用户id
      * @return boolean
      */
@@ -27,9 +29,11 @@ public interface IAdminService {
 
     /**
      * 管理员登录
+     *
      * @param phone
      * @param passWord
      * @return
      */
-    boolean loginAdmin(String phone,String passWord);
+    boolean loginAdmin(String phone, String passWord);
+
 }

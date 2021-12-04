@@ -11,6 +11,7 @@ import java.util.List;
 public interface ICollectService {
     /**
      * 增加收藏文章
+     *
      * @param collectBean
      * @return boolean
      */
@@ -18,6 +19,7 @@ public interface ICollectService {
 
     /**
      * 根据id删除收藏文章
+     *
      * @param id
      * @return boolean
      */
@@ -25,12 +27,15 @@ public interface ICollectService {
 
     /**
      * 清除用户收藏
+     *
      * @param userid
      * @return
      */
     boolean deleteCollectByUserId(Integer userid);
+
     /**
      * 根据不同用户id查询收藏文章
+     *
      * @param userid
      * @return List
      */

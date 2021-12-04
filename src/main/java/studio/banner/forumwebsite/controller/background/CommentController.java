@@ -30,7 +30,7 @@ import java.util.Map;
  * @Description: 评论接口
  */
 @RestController
-@Api(tags = "评论接口",value = "CommentController")
+@Api(tags = "评论接口", value = "CommentController")
 public class CommentController {
     /**
      * 日志 打印信息
@@ -62,7 +62,7 @@ public class CommentController {
             @ApiImplicitParam(paramType = "query", name = "commentLikeNumber",
                     value = "评论点赞数量", required = false, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "commentContent",
-                    value = "评论内容2-100字之间", required = true,dataTypeClass = String.class),
+                    value = "评论内容2-100字之间", required = true, dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "commentTime",
                     value = "评论时间", required = true, dataTypeClass = String.class)
     }
@@ -84,7 +84,7 @@ public class CommentController {
             }
             return RespBean.error(map);
         }
-        if(iPostService.selectPost(commentBean.getCommentPostId()) != null) {
+        if (iPostService.selectPost(commentBean.getCommentPostId()) != null) {
             String judge = "^.{2,100}$";
             if (commentBean.getCommentContent().matches(judge)) {
                 iCommentServicel.insertComment(commentBean);
@@ -297,7 +297,7 @@ public class CommentController {
     @ApiOperation(value = "查询全部评论", notes = "评论需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "page",
-                    value = "分页查询页数", required = true,dataTypeClass = Integer.class)
+                    value = "分页查询页数", required = true, dataTypeClass = Integer.class)
 
     }
     )

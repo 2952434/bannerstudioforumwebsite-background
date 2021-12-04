@@ -18,7 +18,7 @@ import java.util.ArrayList;
 @EnableOpenApi
 public class Swagger3Config {
     @Bean
-    public Docket docket(){
+    public Docket docket() {
         return new Docket(DocumentationType.OAS_30)
                 .apiInfo(apiInfo())
                 .select()
@@ -40,13 +40,13 @@ public class Swagger3Config {
          */
     }
 
-    private ApiInfo apiInfo(){
+    private ApiInfo apiInfo() {
         return new ApiInfo(
                 "forumWebsite接口",
                 "用于测试论坛功能",
                 "v1.0",
                 "#",
-                new Contact("测试","#","2952434583@qq.com"),
+                new Contact("测试", "#", "2952434583@qq.com"),
                 "Apache 2.0",
                 "#",
                 new ArrayList<>());

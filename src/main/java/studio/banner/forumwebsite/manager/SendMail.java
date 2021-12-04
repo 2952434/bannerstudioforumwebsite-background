@@ -21,20 +21,20 @@ public class SendMail {
     int min = 10000;
     Random random = new Random();
 
-    public String sendSimpleMail(String email){
-        int s = random.nextInt(max-min+1) + min;
+    public String sendSimpleMail(String email) {
+        int s = random.nextInt(max - min + 1) + min;
         String code = String.valueOf(s);
         SimpleMailMessage message = new SimpleMailMessage();
         message.setSubject("找回密码");
         message.setFrom("2952434583@qq.com");
         message.setTo(email);
         message.setSentDate(new Date());
-        message.setText("你的验证码是："+code);
+        message.setText("你的验证码是：" + code);
         javaMailSender.send(message);
         return code;
     }
 
-    public boolean sendBlessMail(String email,String content){
+    public boolean sendBlessMail(String email, String content) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setSubject("生日快乐");
         message.setFrom("2952434583@qq.com");
@@ -45,9 +45,9 @@ public class SendMail {
         return true;
     }
 
-    public boolean automaticMail(String email,String username){
+    public boolean automaticMail(String email, String username) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setSubject(username+"生日快乐");
+        message.setSubject(username + "生日快乐");
         message.setFrom("2952434583@qq.com");
         message.setTo(email);
         message.setSentDate(new Date());

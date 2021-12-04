@@ -17,9 +17,7 @@ import java.net.URLEncoder;
  */
 
 /**
- *
  * Cookie 工具类
- *
  */
 public final class CookieUtils {
 
@@ -45,7 +43,7 @@ public final class CookieUtils {
      */
     public static String getCookieValue(HttpServletRequest request, String cookieName, boolean isDecoder) {
         Cookie[] cookieList = request.getCookies();
-        if (cookieList == null || cookieName == null){
+        if (cookieList == null || cookieName == null) {
             return null;
         }
         String retValue = null;
@@ -75,7 +73,7 @@ public final class CookieUtils {
      */
     public static String getCookieValue(HttpServletRequest request, String cookieName, String encodeString) {
         Cookie[] cookieList = request.getCookies();
-        if (cookieList == null || cookieName == null){
+        if (cookieList == null || cookieName == null) {
             return null;
         }
         String retValue = null;
@@ -94,44 +92,45 @@ public final class CookieUtils {
 
     /**
      * 生成cookie，并指定编码
-     * @param request 请求
-     * @param response 响应
-     * @param cookieName name
-     * @param cookieValue value
+     *
+     * @param request      请求
+     * @param response     响应
+     * @param cookieName   name
+     * @param cookieValue  value
      * @param encodeString 编码
      */
     public static final void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName, String cookieValue, String encodeString) {
-        setCookie(request,response,cookieName,cookieValue,null,encodeString, null);
+        setCookie(request, response, cookieName, cookieValue, null, encodeString, null);
     }
 
     /**
      * 生成cookie，并指定生存时间
-     * @param request 请求
-     * @param response 响应
-     * @param cookieName name
-     * @param cookieValue value
+     *
+     * @param request      请求
+     * @param response     响应
+     * @param cookieName   name
+     * @param cookieValue  value
      * @param cookieMaxAge 生存时间
      */
     public static final void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName, String cookieValue, Integer cookieMaxAge) {
-        setCookie(request,response,cookieName,cookieValue,cookieMaxAge,null, null);
+        setCookie(request, response, cookieName, cookieValue, cookieMaxAge, null, null);
     }
 
     /**
      * 设置cookie，不指定httpOnly属性
      */
     public static final void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName, String cookieValue, Integer cookieMaxAge, String encodeString) {
-        setCookie(request,response,cookieName,cookieValue,cookieMaxAge,encodeString, null);
+        setCookie(request, response, cookieName, cookieValue, cookieMaxAge, encodeString, null);
     }
 
     /**
      * 设置Cookie的值，并使其在指定时间内生效
      *
-     * @param cookieMaxAge
-     *            cookie生效的最大秒数
+     * @param cookieMaxAge cookie生效的最大秒数
      */
     public static final void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName, String cookieValue, Integer cookieMaxAge, String encodeString, Boolean httpOnly) {
         try {
-            if(StringUtils.isBlank(encodeString)) {
+            if (StringUtils.isBlank(encodeString)) {
                 encodeString = "utf-8";
             }
 
@@ -150,7 +149,7 @@ public final class CookieUtils {
             }
             cookie.setPath("/");
 
-            if(httpOnly != null) {
+            if (httpOnly != null) {
                 cookie.setHttpOnly(httpOnly);
             }
             response.addCookie(cookie);
@@ -169,10 +168,10 @@ public final class CookieUtils {
         if (serverName == null || serverName.equals("")) {
             domainName = "";
         } else {
-            if(request.getMethod().toUpperCase().equals("GET")){
-                domainName=request.getHeader("Referer").split("/")[2];
-            }else {
-                domainName=request.getHeader("Origin").split("//")[1];
+            if (request.getMethod().toUpperCase().equals("GET")) {
+                domainName = request.getHeader("Referer").split("/")[2];
+            } else {
+                domainName = request.getHeader("Origin").split("//")[1];
             }
         }
         return domainName;

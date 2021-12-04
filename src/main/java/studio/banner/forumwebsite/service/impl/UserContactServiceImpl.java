@@ -26,70 +26,74 @@ public class UserContactServiceImpl implements IUserContactService {
 
     /**
      * 将关注人fan与被关注人star存入关系表，实现用户间的关注
+     *
      * @param userContactBean
      * @return boolean
      */
     @Override
     public boolean insertContact(UserContactBean userContactBean) {
-        if (userContactBean.getMemberStar() != null){
+        if (userContactBean.getMemberStar() != null) {
             userContactMapper.insert(userContactBean);
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     /**
      * 取消关注
+     *
      * @param attentionId
      * @return boolean
      */
     @Override
     public boolean deleteContact(Integer attentionId) {
         QueryWrapper<UserContactBean> wrapper = new QueryWrapper<>();
-        wrapper.eq("attentionId",attentionId);
+        wrapper.eq("attentionId", attentionId);
         boolean cancel = (userContactMapper.deleteById(attentionId) != 0);
         return cancel;
     }
 
     /**
      * 查询是否存在关注关系
+     *
      * @param memberFan
      * @param memberStar
      * @return list
      */
     @Override
-    public List<UserContactBean> contacted(Integer memberFan,Integer memberStar) {
+    public List<UserContactBean> contacted(Integer memberFan, Integer memberStar) {
         QueryWrapper<UserContactBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("member_fan", memberFan)
-                .eq("member_star",memberStar);
+                .eq("member_star", memberStar);
         List<UserContactBean> list = userContactMapper.selectList(queryWrapper);
         return list;
     }
 
     /**
      * 根据用户Id查询其粉丝
+     *
      * @param memberStar
      * @return list
      */
     @Override
     public List<UserContactBean> fans(Integer memberStar) {
         QueryWrapper<UserContactBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("member_star",memberStar);
+        queryWrapper.eq("member_star", memberStar);
         List<UserContactBean> list = userContactMapper.selectList(queryWrapper);
         return list;
     }
 
     /**
      * 根据Id查询其关注的人
+     *
      * @param memberFan
      * @return list
      */
     @Override
-    public List<UserContactBean> stars(Integer memberFan){
+    public List<UserContactBean> stars(Integer memberFan) {
         QueryWrapper<UserContactBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("member_fan",memberFan);
+        queryWrapper.eq("member_fan", memberFan);
         List<UserContactBean> list = userContactMapper.selectList(queryWrapper);
         return list;
     }

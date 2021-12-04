@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class Listener implements WebMvcConfigurer {
     @Bean
-    public ServletListenerRegistrationBean listenerRegist(){
+    public ServletListenerRegistrationBean listenerRegist() {
         ServletListenerRegistrationBean srb = new ServletListenerRegistrationBean();
         srb.setListener(new MyHttpSessionListener());
         System.out.println("listener");

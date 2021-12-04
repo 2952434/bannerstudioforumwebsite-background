@@ -1,4 +1,5 @@
 package studio.banner.forumwebsite.service;
+
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import studio.banner.forumwebsite.bean.ReplyBean;
 
@@ -14,6 +15,7 @@ import java.util.List;
 public interface IReplyService {
     /**
      * 添加回复
+     *
      * @param replyBean
      * @return boolean
      */
@@ -21,6 +23,7 @@ public interface IReplyService {
 
     /**
      * 根据回复id删除回复
+     *
      * @param replyId
      * @return boolean
      */
@@ -28,6 +31,7 @@ public interface IReplyService {
 
     /**
      * 根据用户id删除该用户全部回复
+     *
      * @param memberId
      * @return boolean
      */
@@ -35,6 +39,7 @@ public interface IReplyService {
 
     /**
      * 根据评论id删除该评论下全部回复
+     *
      * @param commentId
      * @return boolean
      */
@@ -42,6 +47,7 @@ public interface IReplyService {
 
     /**
      * 修改回复内容
+     *
      * @param replyId
      * @return boolean
      */
@@ -49,6 +55,7 @@ public interface IReplyService {
 
     /**
      * 修改回复点赞数量
+     *
      * @param replyId
      * @return boolean
      */
@@ -56,13 +63,15 @@ public interface IReplyService {
 
     /**
      * 根据评论id分页查询该评论下全部回复
+     *
      * @param commenmtId
      * @return IPage
      */
-    IPage<ReplyBean> selectAllReplyByCommentId(Integer commenmtId , int page);
+    IPage<ReplyBean> selectAllReplyByCommentId(Integer commenmtId, int page);
 
     /**
      * 根据用户分页查询该用户下全部回复
+     *
      * @param memberId
      * @return IPage
      */
@@ -70,6 +79,7 @@ public interface IReplyService {
 
     /**
      * 根据回复id查询
+     *
      * @param replyId
      * @return ReplyBean
      */

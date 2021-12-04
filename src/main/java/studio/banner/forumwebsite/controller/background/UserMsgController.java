@@ -33,8 +33,8 @@ public class UserMsgController {
 
     @ApiOperation(value = "初始化用户信息", notes = "用户默认信息都为空", httpMethod = "POST")
     @PostMapping("/insertUserMsg")
-    @ApiImplicitParam(paramType = "query",name = "memberBirthday",
-            value = "格式必须为xxxx-xx-xx",required = false,dataTypeClass = Date.class)
+    @ApiImplicitParam(paramType = "query", name = "memberBirthday",
+            value = "格式必须为xxxx-xx-xx", required = false, dataTypeClass = Date.class)
     public RespBean insert(UserMsgBean userMsgBean) {
 
         try {
@@ -45,7 +45,7 @@ public class UserMsgController {
                 logger.info("Id为" + userMsgBean.getMemberId() + "的用户数据初始化失败");
                 return RespBean.error("Id为" + userMsgBean.getMemberId() + "的用户数据初始化失败");
             }
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return RespBean.error("日期格式错误！！！");
         }
     }
@@ -59,8 +59,8 @@ public class UserMsgController {
                     value = "新昵称", required = true, dataTypeClass = Integer.class),
     }
     )
-    public RespBean updateUserName(Integer memberId,String memberName) {
-        if (iUserMsgService.updateUserName(memberId,memberName) == true) {
+    public RespBean updateUserName(Integer memberId, String memberName) {
+        if (iUserMsgService.updateUserName(memberId, memberName) == true) {
             return RespBean.ok("昵称更改成功");
         }
         return RespBean.error("昵称更改失败");
@@ -75,8 +75,8 @@ public class UserMsgController {
                     value = "性别", required = true, dataTypeClass = String.class),
     }
     )
-    public RespBean updateUserSex(Integer memberId,String memberSex) {
-        if (iUserMsgService.updateUserSex(memberId,memberSex)) {
+    public RespBean updateUserSex(Integer memberId, String memberSex) {
+        if (iUserMsgService.updateUserSex(memberId, memberSex)) {
             return RespBean.ok("性别修改成功");
         }
         return RespBean.error("性别修改失败");
@@ -91,8 +91,8 @@ public class UserMsgController {
                     value = "年龄", required = true, dataTypeClass = Integer.class),
     }
     )
-    public RespBean updateUserAge(Integer memberId,Integer memberAge) {
-        if (iUserMsgService.updateUserAge(memberId,memberAge)) {
+    public RespBean updateUserAge(Integer memberId, Integer memberAge) {
+        if (iUserMsgService.updateUserAge(memberId, memberAge)) {
             return RespBean.ok("年龄修改成功");
         }
         return RespBean.error("年龄修改失败");
@@ -107,8 +107,8 @@ public class UserMsgController {
                     value = "新的头像地址值", required = true, dataTypeClass = String.class),
     }
     )
-    public RespBean updateUserHead(Integer memberId,String memberHead) {
-        if (iUserMsgService.updateUserHead(memberId,memberHead)) {
+    public RespBean updateUserHead(Integer memberId, String memberHead) {
+        if (iUserMsgService.updateUserHead(memberId, memberHead)) {
             return RespBean.ok("头像修改成功");
         }
         return RespBean.error("头像修改失败");
@@ -123,7 +123,7 @@ public class UserMsgController {
     }
     )
     public RespBean selectUserMsg(Integer memberId) {
-        if (iUserMsgService.selectUserMsg(memberId)!=null) {
+        if (iUserMsgService.selectUserMsg(memberId) != null) {
             return RespBean.ok(iUserMsgService.selectUserMsg(memberId));
         }
         return RespBean.error("用户信息查询失败");
@@ -132,10 +132,10 @@ public class UserMsgController {
     @ApiOperation(value = "根据用户id查询生日")
     @GetMapping("/selectUserBirthdayById")
     @ApiImplicitParam(paramType = "query", name = "id",
-            value = "用户id",required = true,dataTypeClass = Integer.class)
-    public RespBean selectUserBirthdayById(Integer id){
+            value = "用户id", required = true, dataTypeClass = Integer.class)
+    public RespBean selectUserBirthdayById(Integer id) {
         boolean birthdayById = iUserMsgService.selectBirthdayById(id);
-        if (birthdayById){
+        if (birthdayById) {
             return RespBean.ok("今天是您的生日，生日快乐！！！！");
         }
         return null;
@@ -145,12 +145,12 @@ public class UserMsgController {
     @GetMapping("/selectUserBirthday")
     @ApiOperation(value = "查询过生日的人")
     @ApiImplicitParam(paramType = "query", name = "memberId",
-            value = "用户id",required = true,dataTypeClass = Integer.class)
-    public RespBean selectUserBirthday(Integer memberId){
+            value = "用户id", required = true, dataTypeClass = Integer.class)
+    public RespBean selectUserBirthday(Integer memberId) {
         List<UserMsgBean> list = iUserMsgService.selectBirthday(memberId);
-        if (list.size()!=0){
-            return RespBean.ok("今天生日的人为：" +list);
-        }else {
+        if (list.size() != 0) {
+            return RespBean.ok("今天生日的人为：" + list);
+        } else {
             return RespBean.ok("今天没人过生日！！！");
         }
     }
@@ -158,18 +158,18 @@ public class UserMsgController {
     @PostMapping("/blessUserBirthday")
     @ApiOperation(value = "祝福过生日的人")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query",name="memberId",
-            value = "过生日人的id",required = true,dataTypeClass = Integer.class),
-            @ApiImplicitParam(paramType = "query",name="content",
-            value = "祝福内容",required = true,dataTypeClass = String.class)
+            @ApiImplicitParam(paramType = "query", name = "memberId",
+                    value = "过生日人的id", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "content",
+                    value = "祝福内容", required = true, dataTypeClass = String.class)
     })
-    public RespBean blessUserBirthday(Integer memberId,String content){
+    public RespBean blessUserBirthday(Integer memberId, String content) {
         boolean b = iUserMsgService.blessUserBirthday(memberId, content);
-        if (b){
+        if (b) {
             return RespBean.ok("邮件发送成功！！！");
-        }else {
+        } else {
             return RespBean.error("邮件发送失败！！！");
         }
     }
-    
+
 }

@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MybatisPlusConfig {
     @Bean
-    public ConfigurationCustomizer customizer(){
+    public ConfigurationCustomizer customizer() {
         /**
          * 将实体中驼峰命名法和表中的下划线对应
          */
@@ -30,6 +30,7 @@ public class MybatisPlusConfig {
 
     /**
      * 分页查询
+     *
      * @return
      */
     @Bean

@@ -16,21 +16,22 @@ import java.util.TimeZone;
  * @Date: 2021/05/29/15:31
  * @Description: 得到目前时间
  */
-@Api(tags = "得到当前时间接口",value = "getTimeController")
+@Api(tags = "得到当前时间接口", value = "getTimeController")
 @RestController
 public class GetTimeController {
     /**
      * 得到当前时间
+     *
      * @return
      */
 
     @GetMapping("/getTime")
-    public RespBean getTime(){
+    public RespBean getTime() {
 
         SimpleDateFormat bjSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
         Date date = new Date();
         String time = bjSdf.format(date);
-        return RespBean.ok("获取成功",time);
+        return RespBean.ok("获取成功", time);
     }
 }

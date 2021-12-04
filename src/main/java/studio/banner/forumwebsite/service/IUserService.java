@@ -13,6 +13,7 @@ import java.util.List;
 public interface IUserService {
     /**
      * 插入用户
+     *
      * @param userBean
      * @return boolean
      */
@@ -20,6 +21,7 @@ public interface IUserService {
 
     /**
      * 注册时查询是否已存在该账号
+     *
      * @param memberPhone
      * @return boolean
      */
@@ -27,6 +29,7 @@ public interface IUserService {
 
     /**
      * 根据用户账号返回用户
+     *
      * @param memberPhone
      * @return UserBean
      */
@@ -34,6 +37,7 @@ public interface IUserService {
 
     /**
      * 登陆时查询是否存在该账号与对应密码
+     *
      * @param memberPhone
      * @param memberPassword
      * @return boolean
@@ -42,51 +46,56 @@ public interface IUserService {
 
     /**
      * 删除用户
-     * @param memberId  传入Id
+     *
+     * @param memberId 传入Id
      * @return boolean
      */
     boolean deleteUser(Integer memberId);
 
     /**
      * 更新用户
+     *
      * @return boolean
      */
     boolean updateUser();
 
     /**
      * 更改用户密码
+     *
      * @param memberId
      * @param memberPassword
      * @param newMemberPassword
      * @param repeatPassword
      * @return boolean
      */
-    boolean updateUserPassWord(Integer memberId, String memberPassword, String newMemberPassword,String repeatPassword);
+    boolean updateUserPassWord(Integer memberId, String memberPassword, String newMemberPassword, String repeatPassword);
 
     /**
      * 忘记密码，根据邮箱修改密码
+     *
      * @param memberPhone
      * @param memberMail
      * @param code
      * @param newMemberPassword
      * @return boolean
      */
-    boolean forgetPassWord(String memberPhone,String memberMail,String code,String newMemberPassword);
+    boolean forgetPassWord(String memberPhone, String memberMail, String code, String newMemberPassword);
 
     /**
      * 分页查询用户
+     *
      * @return UserBean
      */
     IPage<UserBean> selectUser();
 
     /**
      * 发送验证码
+     *
      * @param email
      * @param phone
      * @return
      */
-    List<UserBean> sendMail(String email,String phone);
-
+    List<UserBean> sendMail(String email, String phone);
 
 
 }

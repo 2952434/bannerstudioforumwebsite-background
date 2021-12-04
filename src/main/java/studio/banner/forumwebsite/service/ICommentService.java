@@ -1,6 +1,8 @@
 package studio.banner.forumwebsite.service;
+
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import studio.banner.forumwebsite.bean.CommentBean;
+
 import java.util.List;
 
 /**
@@ -13,6 +15,7 @@ import java.util.List;
 public interface ICommentService {
     /**
      * 增加评论
+     *
      * @param commentBean
      * @return boolean
      */
@@ -20,6 +23,7 @@ public interface ICommentService {
 
     /**
      * 根据评论id删除该评论
+     *
      * @param commentId
      * @return boolean
      */
@@ -27,6 +31,7 @@ public interface ICommentService {
 
     /**
      * 根据帖子id删除该帖子全部评论
+     *
      * @param commentPostId
      * @return boolean
      */
@@ -34,6 +39,7 @@ public interface ICommentService {
 
     /**
      * 根据用户id删除该用户所有评论
+     *
      * @param commentMemberId
      * @return boolean
      */
@@ -41,13 +47,15 @@ public interface ICommentService {
 
     /**
      * 根据评论id修改评论内容
+     *
      * @param commentId
      * @return boolean
      */
-    boolean updateCommentContent(int commentId,String newContent);
+    boolean updateCommentContent(int commentId, String newContent);
 
     /**
      * 根据评论id修改评论点赞量
+     *
      * @param commentId
      * @return boolean
      */
@@ -55,20 +63,23 @@ public interface ICommentService {
 
     /**
      * 根据帖子id查找该帖子下全部评论
+     *
      * @param commentPostId
      * @return List
      */
-   List<CommentBean> selectAllCommentByPostId(int commentPostId);
+    List<CommentBean> selectAllCommentByPostId(int commentPostId);
 
     /**
      * 根据用户id查找该用户全部评论
+     *
      * @param commentMemberId
      * @return List
      */
-     List <CommentBean>selectAllCommentByMemberId(int commentMemberId);
+    List<CommentBean> selectAllCommentByMemberId(int commentMemberId);
 
     /**
      * 根据评论id查找该评论
+     *
      * @param commentId
      * @return CommentBean
      */
@@ -76,6 +87,7 @@ public interface ICommentService {
 
     /**
      * 分页查询全部评论
+     *
      * @return IPage
      */
     IPage<CommentBean> selectAllComment(int page);

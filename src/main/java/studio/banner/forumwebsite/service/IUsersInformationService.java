@@ -12,6 +12,7 @@ import java.util.List;
 public interface IUsersInformationService {
     /**
      * 增加用户信息到信息表
+     *
      * @param usersInformationBean
      * @return boolean
      */
@@ -20,6 +21,7 @@ public interface IUsersInformationService {
 
     /**
      * 查询用户信息通过id
+     *
      * @param id
      * @return boolean
      */
@@ -27,6 +29,7 @@ public interface IUsersInformationService {
 
     /**
      * 删除用户信息
+     *
      * @param id
      * @return boolean
      */
@@ -34,6 +37,7 @@ public interface IUsersInformationService {
 
     /**
      * 更改用户信息
+     *
      * @param usersInformationBean
      * @return boolean
      */
@@ -41,6 +45,7 @@ public interface IUsersInformationService {
 
     /**
      * 分页查询
+     *
      * @param page
      * @return IPage
      */
@@ -48,8 +53,9 @@ public interface IUsersInformationService {
 
     /**
      * 模糊查询用户
+     *
      * @param page 第几页
-     * @param dim 模糊查询字段
+     * @param dim  模糊查询字段
      * @return
      */
     IPage<UsersInformationBean> selectUserInformationDimPage(Integer page, String dim);

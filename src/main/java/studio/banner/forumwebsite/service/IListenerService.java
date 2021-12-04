@@ -11,6 +11,7 @@ import java.util.List;
 public interface IListenerService {
     /**
      * 查询用户
+     *
      * @param userNum
      * @return
      */

@@ -1,7 +1,7 @@
 package studio.banner.forumwebsite.controller.background;
+
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.api.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -15,10 +15,12 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import studio.banner.forumwebsite.bean.CommentBean;
 import studio.banner.forumwebsite.bean.PostBean;
+import studio.banner.forumwebsite.bean.PostBeanEs;
 import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.service.ICommentService;
 import studio.banner.forumwebsite.service.IPostService;
 import studio.banner.forumwebsite.service.IReplyService;
+
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -27,13 +29,14 @@ import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
+ *
  * @Author: HYK
  * @Date: 2021/05/10/21:30
  * Despriction 帖子操作接口
  */
 
 @RestController
-@Api(tags = "帖子接口",value = "PostController")
+@Api(tags = "帖子接口", value = "PostController")
 public class PostController {
     /**
      * 日志 打印信息
@@ -69,7 +72,7 @@ public class PostController {
             @ApiImplicitParam(paramType = "query", name = "postCommentNumber",
                     value = "帖子评论量", required = false, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "postTime",
-                    value = "帖子创建时间", required = true,dataTypeClass = String.class),
+                    value = "帖子创建时间", required = true, dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "postForward",
                     value = "帖子是否为转发，0为原创，其他数字为原创作者的id", required = false, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "postLikeNumber",
@@ -78,7 +81,7 @@ public class PostController {
                     value = "帖子图片地址", required = false, dataTypeClass = String.class)
     }
     )
-    public Object insertPost(@Valid PostBean postBean, BindingResult bindingResult) {
+    public RespBean insertPost(@Valid PostBean postBean, BindingResult bindingResult) {
 
         /**
          * 将@Valid鉴权的错误信息返给前端
@@ -95,15 +98,15 @@ public class PostController {
             }
             return RespBean.error(map);
         }
-        String judge1 = "^.{5,20}$";
-        String judge2 = "^.{1,10000}$";
+        String judge1 = "^.{3,20}$";
+        String judge2 = "^.{5,10000}$";
         if (postBean.getPostTitle().matches(judge1)) {
             if (postBean.getPostContent().matches(judge2)) {
                 iPostService.insertPost(postBean);
-                return JSON.toJSONString(RespBean.ok("添加帖子成功"));
+                return RespBean.ok("添加帖子成功");
             }
         }
-            return JSON.toJSONString(RespBean.error("添加帖子失败,帖子内容有误"));
+        return RespBean.error("添加帖子失败,帖子内容有误");
     }
 
     /**
@@ -126,7 +129,7 @@ public class PostController {
     }
 
     )
-    public RespBean forwardPost(int postId,int postForwardMemberId, String postTime) {
+    public RespBean forwardPost(int postId, int postForwardMemberId, String postTime) {
         if (iPostService.selectPost(postId) != null) {
             PostBean postBean1 = iPostService.selectPost(postId);
             String postContent = postBean1.getPostContent();
@@ -139,8 +142,10 @@ public class PostController {
         }
         return RespBean.error("转发失败，未查询到原帖子");
     }
+
     /**
      * 帖子删除接口
+     *
      * @param postId
      * @return RespBean
      */
@@ -202,6 +207,7 @@ public class PostController {
 
     /**
      * 根据帖子id修改帖子标题
+     *
      * @param postId
      * @param newTitle
      * @return RespBean
@@ -219,11 +225,11 @@ public class PostController {
     public RespBean udpatePostTitle(int postId, String newTitle) {
         if (iPostService.selectPost(postId) != null) {
             String judge = "^.{5,20}$";
-            if (newTitle.matches(judge)){
-                iPostService.updatePostTitle(postId,newTitle);
+            if (newTitle.matches(judge)) {
+                iPostService.updatePostTitle(postId, newTitle);
                 return RespBean.ok("更改成功");
             }
-           return RespBean.error("更改失败,标题不符合规则");
+            return RespBean.error("更改失败,标题不符合规则");
         }
         return RespBean.error("更改失败，未查询到改帖子");
     }
@@ -249,8 +255,8 @@ public class PostController {
     public RespBean udpatePostContent(int postId, String newContent) {
         if (iPostService.selectPost(postId) != null) {
             String judge = "^.{1,10000}$";
-            if (newContent.matches(judge)){
-                iPostService.updatePostContent(postId,newContent);
+            if (newContent.matches(judge)) {
+                iPostService.updatePostContent(postId, newContent);
                 return RespBean.ok("更改成功");
             }
             return RespBean.error("更改失败,内容不符合规则");
@@ -375,28 +381,28 @@ public class PostController {
     }
     )
     public RespBean selectAllPost(int page) {
-            IPage<PostBean> iPage = iPostService.selectAllPost(page);
-            List<PostBean> list = iPage.getRecords();
-            if (list.size() != 0){
+        IPage<PostBean> iPage = iPostService.selectAllPost(page);
+        List<PostBean> list = iPage.getRecords();
+        if (list.size() != 0) {
             return RespBean.ok("查询成功", list);
         }
         return RespBean.error("查询失败，未找到该页数");
     }
 
     @GetMapping("/selectDimPost")
-    @ApiOperation(value = "模糊查询帖子",httpMethod = "GET")
+    @ApiOperation(value = "全文检索帖子", httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query",name = "page",
-            value = "模糊分页查询页数",required = true,dataTypeClass = Integer.class),
-            @ApiImplicitParam(paramType = "query",name = "dim",
-            value = "模糊查询字段",required = true,dataTypeClass = String.class)
+            @ApiImplicitParam(paramType = "query", name = "page",
+                    value = "分页查询页数", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "dim",
+                    value = "全文检索字段", required = true, dataTypeClass = String.class)
     })
-    public RespBean selectDimPost(int page,String dim){
-        IPage<PostBean> iPage = iPostService.selectDimPost(page, dim);
-        List<PostBean> list = iPage.getRecords();
-        if (list.size()!=0){
-            return RespBean.ok("查询成功",list);
-        }else {
+    public RespBean selectDimPost(int page, String dim) {
+        List<PostBeanEs> list = iPostService.selectDimPost(page - 1, dim);
+        System.out.println(list);
+        if (list.size() != 0) {
+            return RespBean.ok("查询成功", list);
+        } else {
             IPage<PostBean> iPage1 = iPostService.selectAllPost(page);
             List<PostBean> list1 = iPage1.getRecords();
             if (list1.size() != 0) {
@@ -407,16 +413,16 @@ public class PostController {
     }
 
 
-//    @GetMapping("/add")
-//    @ApiOperation(value = "RedisTest",httpMethod = "GET")
-//    public RespBean s(){
-//        Set<ZSetOperations.TypedTuple<String>> s = iPostService.addRedis();
-//        return RespBean.ok(s);
-//    }
+    @GetMapping("/add")
+    @ApiOperation(value = "RedisTest", httpMethod = "GET")
+    public RespBean s() {
+        Set<ZSetOperations.TypedTuple<String>> s = iPostService.addRedis();
+        return RespBean.ok(s);
+    }
 
     @GetMapping("/selectPostRank")
-    @ApiOperation(value = "帖子排行榜查询",httpMethod = "GET")
-    public RespBean selectPostRank(){
+    @ApiOperation(value = "帖子排行榜查询", httpMethod = "GET")
+    public RespBean selectPostRank() {
         Set<ZSetOperations.TypedTuple<String>> rank = iPostService.selectPostRank();
         return RespBean.ok(rank);
     }
