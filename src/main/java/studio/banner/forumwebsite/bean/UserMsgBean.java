@@ -32,4 +32,5 @@ public class UserMsgBean {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JSONField(format= "yyyy-MM-dd")
     private Date memberBirthday;
-    }
+    private String memberSignature;
+}

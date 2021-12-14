@@ -1,36 +1,39 @@
 package studio.banner.forumwebsite.utils;
 
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.joda.time.DateTime;
-import studio.banner.forumwebsite.bean.UserInfo;
+import studio.banner.forumwebsite.bean.Payload;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
-
+import java.util.Base64;
+import java.util.UUID;
 /**
  * @Author: Ljx
  * @Date: 2021/11/19 8:12
  * @role:
  */
+
 public class JwtUtils {
+
+    private static final String JWT_PAYLOAD_USER_KEY = "user";
+
     /**
      * 私钥加密token
      *
-     * @param userInfo      载荷中的数据
-     * @param privateKey    私钥
-     * @param expireMinutes 过期时间，单位秒
-     * @return
-     * @throws Exception
+     * @param userInfo   载荷中的数据
+     * @param privateKey 私钥
+     * @param expire     过期时间，单位分钟
+     * @return JWT
      */
-    public static String generateToken(UserInfo userInfo, PrivateKey privateKey, int expireMinutes) throws Exception {
+    public static String generateTokenExpireInMinutes(Object userInfo, PrivateKey privateKey, int expire) {
         return Jwts.builder()
-                .claim(studio.banner.forumwebsite.utils.JwtConstans.JWT_KEY_ID, userInfo.getId())
-                .claim(studio.banner.forumwebsite.utils.JwtConstans.JWT_KEY_USER_NAME, userInfo.getUsername())
-                .setExpiration(DateTime.now().plusMinutes(expireMinutes).toDate())
+                .claim(JWT_PAYLOAD_USER_KEY, JsonUtils.toString(userInfo))
+                .setId(createJTI())
+                .setExpiration(DateTime.now().plusMinutes(expire).toDate())
                 .signWith(SignatureAlgorithm.RS256, privateKey)
                 .compact();
     }
@@ -38,18 +41,17 @@ public class JwtUtils {
     /**
      * 私钥加密token
      *
-     * @param userInfo      载荷中的数据
-     * @param privateKey    私钥字节数组
-     * @param expireMinutes 过期时间，单位秒
-     * @return
-     * @throws Exception
+     * @param userInfo   载荷中的数据
+     * @param privateKey 私钥
+     * @param expire     过期时间，单位秒
+     * @return JWT
      */
-    public static String generateToken(UserInfo userInfo, byte[] privateKey, int expireMinutes) throws Exception {
+    public static String generateTokenExpireInSeconds(Object userInfo, PrivateKey privateKey, int expire) {
         return Jwts.builder()
-                .claim(studio.banner.forumwebsite.utils.JwtConstans.JWT_KEY_ID, userInfo.getId())
-                .claim(studio.banner.forumwebsite.utils.JwtConstans.JWT_KEY_USER_NAME, userInfo.getUsername())
-                .setExpiration(DateTime.now().plusMinutes(expireMinutes).toDate())
-                .signWith(SignatureAlgorithm.RS256, studio.banner.forumwebsite.utils.RsaUtils.getPrivateKey(privateKey))
+                .claim(JWT_PAYLOAD_USER_KEY, JsonUtils.toString(userInfo))
+                .setId(createJTI())
+                .setExpiration(DateTime.now().plusSeconds(expire).toDate())
+                .signWith(SignatureAlgorithm.RS256, privateKey)
                 .compact();
     }
 
@@ -58,24 +60,14 @@ public class JwtUtils {
      *
      * @param token     用户请求中的token
      * @param publicKey 公钥
-     * @return
-     * @throws Exception
+     * @return Jws<Claims>
      */
     private static Jws<Claims> parserToken(String token, PublicKey publicKey) {
         return Jwts.parser().setSigningKey(publicKey).parseClaimsJws(token);
     }
 
-    /**
-     * 公钥解析token
-     *
-     * @param token     用户请求中的token
-     * @param publicKey 公钥字节数组
-     * @return
-     * @throws Exception
-     */
-    private static Jws<Claims> parserToken(String token, byte[] publicKey) throws Exception {
-        return Jwts.parser().setSigningKey(studio.banner.forumwebsite.utils.RsaUtils.getPublicKey(publicKey))
-                .parseClaimsJws(token);
+    private static String createJTI() {
+        return new String(Base64.getEncoder().encode(UUID.randomUUID().toString().getBytes()));
     }
 
     /**
@@ -84,31 +76,30 @@ public class JwtUtils {
      * @param token     用户请求中的令牌
      * @param publicKey 公钥
      * @return 用户信息
-     * @throws Exception
      */
-    public static UserInfo getInfoFromToken(String token, PublicKey publicKey) throws Exception {
+    public static <T> Payload<T> getInfoFromToken(String token, PublicKey publicKey, Class<T> userType) {
         Jws<Claims> claimsJws = parserToken(token, publicKey);
         Claims body = claimsJws.getBody();
-        return new UserInfo(
-                ObjectUtils.toLong(body.get(studio.banner.forumwebsite.utils.JwtConstans.JWT_KEY_ID)),
-                ObjectUtils.toString(body.get(studio.banner.forumwebsite.utils.JwtConstans.JWT_KEY_USER_NAME))
-        );
+        Payload<T> claims = new Payload<>();
+        claims.setId(body.getId());
+        claims.setUserInfo(JsonUtils.toBean(body.get(JWT_PAYLOAD_USER_KEY).toString(), userType));
+        claims.setExpiration(body.getExpiration());
+        return claims;
     }
 
     /**
-     * 获取token中的用户信息
+     * 获取token中的载荷信息
      *
      * @param token     用户请求中的令牌
      * @param publicKey 公钥
      * @return 用户信息
-     * @throws Exception
      */
-    public static UserInfo getInfoFromToken(String token, byte[] publicKey) throws Exception {
+    public static <T> Payload<T> getInfoFromToken(String token, PublicKey publicKey) {
         Jws<Claims> claimsJws = parserToken(token, publicKey);
         Claims body = claimsJws.getBody();
-        return new UserInfo(
-                ObjectUtils.toLong(body.get(studio.banner.forumwebsite.utils.JwtConstans.JWT_KEY_ID)),
-                ObjectUtils.toString(body.get(studio.banner.forumwebsite.utils.JwtConstans.JWT_KEY_USER_NAME))
-        );
+        Payload<T> claims = new Payload<>();
+        claims.setId(body.getId());
+        claims.setExpiration(body.getExpiration());
+        return claims;
     }
 }

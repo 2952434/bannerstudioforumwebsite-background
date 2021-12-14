@@ -3,6 +3,7 @@ package studio.banner.forumwebsite.bean;
 /**
  * @Author: Ljx
  * @Date: 2021/5/13 21:58
+ *
  */
 public class RespBean {
     private Integer status;

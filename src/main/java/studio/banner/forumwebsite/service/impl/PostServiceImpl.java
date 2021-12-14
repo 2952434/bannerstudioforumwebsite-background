@@ -14,10 +14,15 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import studio.banner.forumwebsite.bean.PostBean;
 import studio.banner.forumwebsite.bean.PostBeanEs;
+import studio.banner.forumwebsite.bean.PostContactBean;
+import studio.banner.forumwebsite.bean.PostTypeBean;
+import studio.banner.forumwebsite.mapper.PostContactMapper;
 import studio.banner.forumwebsite.mapper.PostMapper;
 import studio.banner.forumwebsite.mapper.PostMapperEs;
+import studio.banner.forumwebsite.mapper.PostTypeMapper;
 import studio.banner.forumwebsite.service.IPostService;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,19 +43,34 @@ public class PostServiceImpl implements IPostService {
     private PostMapperEs postMapperEs;
 
     @Autowired
+    private PostTypeMapper postTypeMapper;
+
+    @Autowired
+    private PostContactMapper postContactMapper;
+    @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
     public static final String POST_RANK = "post_rank";
 
     @Override
-    public boolean insertPost(PostBean postBean) {
+    public boolean insertPost(PostBean postBean,String ...postType) {
         if (postBean != null) {
             postMapper.insert(postBean);
             QueryWrapper<PostBean> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("post_title", postBean.getPostTitle());
+            queryWrapper.eq("post_title", postBean.getPostTitle())
+                    .eq("post_time",postBean.getPostTime());
             List<PostBean> list = postMapper.selectList(queryWrapper);
             Set<ZSetOperations.TypedTuple<String>> tuples = new HashSet<>();
             for (PostBean postBean1 : list) {
+                for (String s : postType) {
+                    QueryWrapper<PostTypeBean> typeBeanQueryWrapper = new QueryWrapper<>();
+                    typeBeanQueryWrapper.eq("post_type",s);
+                    PostTypeBean postTypeBean = postTypeMapper.selectOne(typeBeanQueryWrapper);
+                    PostContactBean postContactBean = new PostContactBean();
+                    postContactBean.setPostId(postBean1.getPostId());
+                    postContactBean.setPostTypeId(postTypeBean.getId());
+                    postContactMapper.insert(postContactBean);
+                }
                 PostBeanEs postBeanEs = new PostBeanEs();
                 postBeanEs.setId(postBean1.getPostId());
                 postBeanEs.setTitle(postBean1.getPostTitle());
@@ -172,6 +192,11 @@ public class PostServiceImpl implements IPostService {
             String key = postBean.getPostTitle() + "," + postBean.getPostId();
             UpdateWrapper<PostBean> updateWrapper = new UpdateWrapper<>();
             redisTemplate.opsForZSet().incrementScore(POST_RANK, key, 1);
+            Integer view = (Integer) redisTemplate.opsForHash().get(String.valueOf(postBean.getPostMemberId()), "view");
+            if (view == null){
+                view = 0;
+            }
+            redisTemplate.opsForHash().put(String.valueOf(postBean.getPostMemberId()),"view",String.valueOf(view+1));
             updateWrapper.eq("post_id", postId).set("post_page_view", postBean.getPostPageView() + 1);
             postMapper.update(null, updateWrapper);
             return true;
@@ -285,7 +310,7 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
-    @Scheduled(cron = "0 */1 * * * ?")
+//    @Scheduled(cron = "0 */1 * * * ?")
     public void updateEsPost() {
         List<PostBean> list = postMapper.selectList(null);
         for (PostBean postBean : list) {
@@ -302,6 +327,12 @@ public class PostServiceImpl implements IPostService {
             postBeanEs.setUid(postBean.getPostMemberId());
             postMapperEs.save(postBeanEs);
         }
+    }
+
+    @Override
+    public String selectYesterdayView(Integer memberId) {
+        String view = (String) redisTemplate.opsForHash().get(String.valueOf(memberId), "view");
+        return view;
     }
 
 }

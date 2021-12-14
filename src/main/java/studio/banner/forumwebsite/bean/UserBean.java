@@ -26,6 +26,6 @@ public class UserBean {
     private String memberPhone;
     private String memberPassword;
     private String memberMail;
-    private int memberAdmin;
+    private String memberAdmin;
     private String memberCode;
 }

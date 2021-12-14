@@ -94,4 +94,19 @@ public interface IUserMsgService {
      * 系统每天早上0点自动监测过生日的人并发送祝福邮件
      */
     void automaticSentMail();
+
+    /**
+     * 根据用户id更改个性签名
+     * @param memberId
+     * @param signature
+     * @return
+     */
+    boolean updateUserSignature(Integer memberId, String signature);
+
+    /**
+     * 根据id查询用户是否存在
+     * @param memberId
+     * @return
+     */
+    UserMsgBean selectUserById(Integer memberId);
 }

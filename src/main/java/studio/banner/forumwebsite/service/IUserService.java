@@ -42,7 +42,7 @@ public interface IUserService {
      * @param memberPassword
      * @return boolean
      */
-    List<UserBean> selectUser(String memberPhone, String memberPassword);
+    List<UserBean> selectUser(String memberPhone, String memberPassword) throws Exception;
 
     /**
      * 删除用户

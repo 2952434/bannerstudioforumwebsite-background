@@ -4,15 +4,20 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.security.*;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-
+import java.util.Base64;
 /**
  * @Author: Ljx
  * @Date: 2021/11/19 8:10
  * @role:
  */
+
 public class RsaUtils {
+
+    private static final int DEFAULT_KEY_SIZE = 2048;
+
     /**
      * 从文件中读取公钥
      *
@@ -44,7 +49,8 @@ public class RsaUtils {
      * @return
      * @throws Exception
      */
-    public static PublicKey getPublicKey(byte[] bytes) throws Exception {
+    private static PublicKey getPublicKey(byte[] bytes) throws Exception {
+        bytes = Base64.getDecoder().decode(bytes);
         X509EncodedKeySpec spec = new X509EncodedKeySpec(bytes);
         KeyFactory factory = KeyFactory.getInstance("RSA");
         return factory.generatePublic(spec);
@@ -57,7 +63,8 @@ public class RsaUtils {
      * @return
      * @throws Exception
      */
-    public static PrivateKey getPrivateKey(byte[] bytes) throws Exception {
+    private static PrivateKey getPrivateKey(byte[] bytes) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        bytes = Base64.getDecoder().decode(bytes);
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(bytes);
         KeyFactory factory = KeyFactory.getInstance("RSA");
         return factory.generatePrivate(spec);
@@ -69,19 +76,19 @@ public class RsaUtils {
      * @param publicKeyFilename  公钥文件路径
      * @param privateKeyFilename 私钥文件路径
      * @param secret             生成密钥的密文
-     * @throws IOException
-     * @throws NoSuchAlgorithmException
      */
-    public static void generateKey(String publicKeyFilename, String privateKeyFilename, String secret) throws Exception {
+    public static void generateKey(String publicKeyFilename, String privateKeyFilename, String secret, int keySize) throws Exception {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         SecureRandom secureRandom = new SecureRandom(secret.getBytes());
-        keyPairGenerator.initialize(1024, secureRandom);
+        keyPairGenerator.initialize(Math.max(keySize, DEFAULT_KEY_SIZE), secureRandom);
         KeyPair keyPair = keyPairGenerator.genKeyPair();
         // 获取公钥并写出
         byte[] publicKeyBytes = keyPair.getPublic().getEncoded();
+        publicKeyBytes = Base64.getEncoder().encode(publicKeyBytes);
         writeFile(publicKeyFilename, publicKeyBytes);
         // 获取私钥并写出
         byte[] privateKeyBytes = keyPair.getPrivate().getEncoded();
+        privateKeyBytes = Base64.getEncoder().encode(privateKeyBytes);
         writeFile(privateKeyFilename, privateKeyBytes);
     }
 

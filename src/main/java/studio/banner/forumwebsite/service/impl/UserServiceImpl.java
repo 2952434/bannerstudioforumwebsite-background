@@ -5,14 +5,21 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import studio.banner.forumwebsite.bean.UserBean;
+//import studio.banner.forumwebsite.bean.UserInfo;
 import studio.banner.forumwebsite.manager.SendMail;
 import studio.banner.forumwebsite.mapper.UserMapper;
 import studio.banner.forumwebsite.service.IUserService;
+import studio.banner.forumwebsite.utils.JwtUtils;
 
 import javax.servlet.http.HttpSession;
+import java.security.PrivateKey;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: Ljx
@@ -25,6 +32,8 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private SendMail sendMail;
 
+    @Autowired
+    private RedisTemplate<String,String> redisTemplate;
     /**
      * 增加数据
      *
@@ -34,7 +43,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public boolean insertUser(UserBean userBean) {
         if (selectAccount(userBean.getMemberPhone()) == true) {
-            userBean.setMemberAdmin(0);
+            userBean.setMemberAdmin("user");
             userMapper.insert(userBean);
             return true;
         } else {
@@ -69,11 +78,17 @@ public class UserServiceImpl implements IUserService {
      * @return boolean
      */
     @Override
-    public List<UserBean> selectUser(String MemberPhone, String memberPassword) {
+    public List<UserBean> selectUser(String MemberPhone, String memberPassword) throws Exception {
         QueryWrapper<UserBean> wrapper = new QueryWrapper<>();
         wrapper.eq("member_phone", MemberPhone)
                 .eq("member_password", memberPassword);
         List<UserBean> User = userMapper.selectList(wrapper);
+        if (User.size()!=0){
+            PrivateKey privateKey = (PrivateKey) redisTemplate.opsForHash().get("keys", "privateKey");
+            System.out.println("私钥为："+privateKey);
+//            String token = JwtUtils.generateToken(new UserInfo(MemberPhone, memberPassword), privateKey, 8);
+//            redisTemplate.opsForValue().set(MemberPhone,token,10, TimeUnit.MINUTES);
+        }
         return User;
     }
 

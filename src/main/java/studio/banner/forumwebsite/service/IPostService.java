@@ -18,11 +18,11 @@ import java.util.Set;
 public interface IPostService {
     /**
      * 增加帖子
-     *
      * @param postBean
-     * @return boolean
+     * @param postType
+     * @return
      */
-    boolean insertPost(PostBean postBean);
+    boolean insertPost(PostBean postBean, String ...postType);
 
     /**
      * 转发帖子
@@ -156,5 +156,12 @@ public interface IPostService {
      * 每分钟更新一次es中的数据
      */
     void updateEsPost();
+
+    /**
+     * 根据作者id查询昨天的总浏览量
+     * @param memberId
+     * @return
+     */
+    String selectYesterdayView(Integer memberId);
 
 }

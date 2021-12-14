@@ -69,10 +69,7 @@ public class UserMsgServiceImpl implements IUserMsgService {
      */
     @Override
     public boolean updateUserName(Integer memberId, String memberName) {
-        QueryWrapper<UserMsgBean> wrapper = new QueryWrapper<>();
-        wrapper.eq("member_id", memberId);
-        UserMsgBean userMsgBean = userMsgMapper.selectOne(wrapper);
-        if (userMsgBean.getMemberId().equals(memberId)) {
+        if (selectUserById(memberId)!=null) {
             UpdateWrapper<UserMsgBean> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("member_id", memberId).set("member_name", memberName);
             int i = userMsgMapper.update(null, updateWrapper);
@@ -91,10 +88,7 @@ public class UserMsgServiceImpl implements IUserMsgService {
      */
     @Override
     public boolean updateUserSex(Integer memberId, String memberSex) {
-        QueryWrapper<UserMsgBean> wrapper = new QueryWrapper<>();
-        wrapper.eq("member_id", memberId);
-        UserMsgBean userMsgBean = userMsgMapper.selectOne(wrapper);
-        if (userMsgBean.getMemberId().equals(memberId)) {
+        if (selectUserById(memberId)!=null) {
             UpdateWrapper<UserMsgBean> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("member_id", memberId).set("member_sex", memberSex);
             int i = userMsgMapper.update(null, updateWrapper);
@@ -113,10 +107,7 @@ public class UserMsgServiceImpl implements IUserMsgService {
      */
     @Override
     public boolean updateUserAge(Integer memberId, Integer memberAge) {
-        QueryWrapper<UserMsgBean> wrapper = new QueryWrapper<>();
-        wrapper.eq("member_id", memberId);
-        UserMsgBean userMsgBean = userMsgMapper.selectOne(wrapper);
-        if (userMsgBean.getMemberId().equals(memberId)) {
+        if (selectUserById(memberId)!=null) {
             UpdateWrapper<UserMsgBean> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("member_id", memberId).set("member_age", memberAge);
             int i = userMsgMapper.update(null, updateWrapper);
@@ -135,10 +126,7 @@ public class UserMsgServiceImpl implements IUserMsgService {
      */
     @Override
     public boolean updateUserHead(Integer memberId, String memberHead) {
-        QueryWrapper<UserMsgBean> wrapper = new QueryWrapper<>();
-        wrapper.eq("member_id", memberId);
-        UserMsgBean userMsgBean = userMsgMapper.selectOne(wrapper);
-        if (userMsgBean.getMemberId().equals(memberId)) {
+        if (selectUserById(memberId)!=null) {
             UpdateWrapper<UserMsgBean> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("member_id", memberId).set("member_head", memberHead);
             int i = userMsgMapper.update(null, updateWrapper);
@@ -229,5 +217,25 @@ public class UserMsgServiceImpl implements IUserMsgService {
                 sendMail.automaticMail(userBean.getMemberMail(), list.get(i).getMemberName());
             }
         }
+    }
+
+    @Override
+    public boolean updateUserSignature(Integer memberId, String signature) {
+        if (selectUserById(memberId)!=null){
+            UpdateWrapper<UserMsgBean> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("member_id", memberId).set("member_signature",signature);
+            int update = userMsgMapper.update(null, updateWrapper);
+            return update==1;
+        }
+        return false;
+    }
+
+    @Override
+    public UserMsgBean selectUserById(Integer memberId) {
+        QueryWrapper<UserMsgBean> wrapper = new QueryWrapper<>();
+        wrapper.eq("member_id", memberId);
+        UserMsgBean userMsgBean = userMsgMapper.selectOne(wrapper);
+        System.out.println(userMsgBean);
+        return userMsgBean;
     }
 }

@@ -64,23 +64,4 @@ public class AdminServiceImpl implements IAdminService {
             return false;
         }
     }
-
-    @Override
-    public boolean loginAdmin(String phone, String passWord) {
-        QueryWrapper<UserBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("member_phone", phone)
-                .eq("member_password", passWord);
-        List<UserBean> list = new ArrayList<>();
-        list.add(adminMapper.selectOne(queryWrapper));
-        if (list.size() == 1) {
-            if (list.get(0) == null) {
-                return false;
-            }
-            if (list.get(0).getMemberAdmin() == 1) {
-
-                return true;
-            }
-        }
-        return false;
-    }
 }

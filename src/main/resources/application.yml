@@ -27,7 +27,7 @@ spring:
   # 上传文件大小
   servlet:
     multipart:
-      max-file-size: 10MB
+      max-file-size: 20MB
       max-request-size: 100MB
   #redis
   redis:
@@ -42,7 +42,15 @@ spring:
         max-idle: 8
         min-idle: 0
     timeout: 0
+#    mongodb
+  data:
+    mongodb:
+      uri: mongodb://82.157.145.197:27017/test
 
+  mvc:
+    view:
+      suffix: .html
+      prefix: /html/
 #    es全文检索
   elasticsearch:
     rest:
@@ -63,6 +71,10 @@ spring:
 server:
   port: 8084
 
+rsa:
+  key:
+    pubKeyFile: E:\Java2\key\rsa.pub
+    priKeyFile: E:\Java2\key\rsa.pri
 # 腾讯云地址
 qcloud:
   path: https://ljxlwyq-1308186257.cos.ap-beijing.myqcloud.com
@@ -78,5 +90,4 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   type-aliases-package: studio.banner.forumwebsite.bean
-
 

@@ -27,13 +27,5 @@ public interface IAdminService {
      */
     boolean deleteById(int id);
 
-    /**
-     * 管理员登录
-     *
-     * @param phone
-     * @param passWord
-     * @return
-     */
-    boolean loginAdmin(String phone, String passWord);
 
 }
