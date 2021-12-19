@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
-import java.sql.DataTruncation;
 import java.util.Map;
 
 /**
@@ -22,13 +21,13 @@ public class MessageHandshakeInterceptor implements HandshakeInterceptor {
     public boolean beforeHandshake(ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse, WebSocketHandler webSocketHandler, Map<String, Object> map) throws Exception {
         String path = serverHttpRequest.getURI().getPath();
         String[] split = path.split("/");
-        if (split.length!= 2){
+        if (split.length!= 3){
             return false;
         }
-        if (!StringUtils.isNumeric(split[1])){
+        if (!StringUtils.isNumeric(split[2])){
             return false;
         }
-        map.put("uid",Integer.valueOf(split[1]));
+        map.put("uid",Integer.valueOf(split[2]));
         return true;
     }
 

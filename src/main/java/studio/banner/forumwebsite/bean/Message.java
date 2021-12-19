@@ -14,6 +14,7 @@ import java.util.Date;
 
 /**
  * 浏览器发送给服务器的websocket数据.
+ * @author jijunxiang
  */
 
 @Data

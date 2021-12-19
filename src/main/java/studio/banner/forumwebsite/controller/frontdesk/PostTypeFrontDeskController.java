@@ -48,4 +48,13 @@ public class PostTypeFrontDeskController {
             return RespBean.error("该类型还没有帖子，查询失败！！！",list);
         }
     }
+
+    @GetMapping("/postTypeFrontDesk/selectPostDescByType")
+    @ApiOperation(value = "通过类型查询该类型下帖子前十",notes = "帖子类型不为空",httpMethod = "GET")
+    @ApiImplicitParam(type = "query",name = "postType",
+            value = "帖子类型",required = true,dataTypeClass = String.class)
+    public RespBean selectPostDescByType(String postType) {
+        List<PostBean> list = iPostTypeService.selectPostDescByType(postType);
+        return RespBean.ok(list);
+    }
 }

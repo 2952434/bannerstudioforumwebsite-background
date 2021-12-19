@@ -47,44 +47,48 @@ public class UserGradeServiceImpl implements IUserGradeService {
 
     @Override
     public boolean insertUserGradeDirection(Integer userId, String grade, String userName, String userDirection) {
-        QueryWrapper<UserDirectionBean> queryWrapper3 = new QueryWrapper<>();
-        queryWrapper3.eq("user_direction", userDirection);
-        List<UserDirectionBean> userDirectionBeans = userDirectionMapper.selectList(queryWrapper3);
-        if (userDirectionBeans.size() == 0) {
+        QueryWrapper<UserGradeContactBean> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("user_id", userId);
+        UserGradeContactBean userGradeContactBean1 = userGradeContactMapper.selectOne(queryWrapper1);
+        if (userGradeContactBean1 != null){
             return false;
-        } else {
-            QueryWrapper<UserGradeBean> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("user_grade", grade);
-            UserGradeBean userGradeBean = userGradeMapper.selectOne(queryWrapper);
-            if (userGradeBean == null) {
+        }else {
+            QueryWrapper<UserDirectionBean> queryWrapper3 = new QueryWrapper<>();
+            queryWrapper3.eq("user_direction", userDirection);
+            List<UserDirectionBean> userDirectionBeans = userDirectionMapper.selectList(queryWrapper3);
+            if (userDirectionBeans.size() == 0) {
                 return false;
             } else {
-                QueryWrapper<UserNameBean> queryWrapper2 = new QueryWrapper<>();
-                queryWrapper2.eq("user_name", userName);
-                List<UserNameBean> userNameBeans = userNameMapper.selectList(queryWrapper2);
-                if (userNameBeans.size() != 0) {
+                QueryWrapper<UserGradeBean> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("user_grade", grade);
+                UserGradeBean userGradeBean = userGradeMapper.selectOne(queryWrapper);
+                if (userGradeBean == null) {
                     return false;
                 } else {
-                    UserNameBean userNameBean = new UserNameBean();
-                    userNameBean.setUserName(userName);
-                    int insert1 = userNameMapper.insert(userNameBean);
-                    if (insert1 != 1) {
+                    QueryWrapper<UserNameBean> queryWrapper2 = new QueryWrapper<>();
+                    queryWrapper2.eq("user_name", userName);
+                    List<UserNameBean> userNameBeans = userNameMapper.selectList(queryWrapper2);
+                    if (userNameBeans.size() != 0) {
                         return false;
                     } else {
-                        UserNameBean userNameBean1 = userNameMapper.selectOne(queryWrapper2);
-                        QueryWrapper<UserGradeContactBean> queryWrapper1 = new QueryWrapper<>();
-                        queryWrapper1.eq("user_id", userId);
-                        UserGradeContactBean userGradeContactBean1 = userGradeContactMapper.selectOne(queryWrapper1);
-                        if (userGradeContactBean1 == null && userNameBean1 != null) {
-                            UserGradeContactBean userGradeContactBean = new UserGradeContactBean();
-                            userGradeContactBean.setUserGradeId(userGradeBean.getId());
-                            userGradeContactBean.setUserId(userId);
-                            userGradeContactBean.setUserNameId(userNameBean1.getId());
-                            userGradeContactBean.setUserDirectionId(userDirectionBeans.get(0).getId());
-                            int insert = userGradeContactMapper.insert(userGradeContactBean);
-                            return insert == 1;
-                        } else {
+                        UserNameBean userNameBean = new UserNameBean();
+                        userNameBean.setUserName(userName);
+                        int insert1 = userNameMapper.insert(userNameBean);
+                        if (insert1 != 1) {
                             return false;
+                        } else {
+                            UserNameBean userNameBean1 = userNameMapper.selectOne(queryWrapper2);
+                            if (userNameBean1 != null) {
+                                UserGradeContactBean userGradeContactBean = new UserGradeContactBean();
+                                userGradeContactBean.setUserGradeId(userGradeBean.getId());
+                                userGradeContactBean.setUserId(userId);
+                                userGradeContactBean.setUserNameId(userNameBean1.getId());
+                                userGradeContactBean.setUserDirectionId(userDirectionBeans.get(0).getId());
+                                int insert = userGradeContactMapper.insert(userGradeContactBean);
+                                return insert == 1;
+                            } else {
+                                return false;
+                            }
                         }
                     }
                 }
@@ -424,5 +428,30 @@ public class UserGradeServiceImpl implements IUserGradeService {
                 return updateById==1;
             }
         }
+    }
+
+    @Override
+    public List<UserGradeContactBean> selectDimUserName(String dim) {
+        QueryWrapper<UserGradeContactBean> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<UserGradeBean> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.like("user_grade",dim);
+        List<UserGradeBean> userGradeBeans = userGradeMapper.selectList(queryWrapper1);
+        for (UserGradeBean userGradeBean : userGradeBeans) {
+            queryWrapper.or().eq("user_grade_id",userGradeBean.getId());
+        }
+        QueryWrapper<UserNameBean> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.like("user_name",dim);
+        List<UserNameBean> userNameBeans = userNameMapper.selectList(queryWrapper2);
+        for (UserNameBean userNameBean : userNameBeans) {
+            queryWrapper.or().eq("user_name_id",userNameBean.getId());
+        }
+        QueryWrapper<UserDirectionBean> queryWrapper3 = new QueryWrapper<>();
+        queryWrapper3.like("user_direction",dim);
+        List<UserDirectionBean> userDirectionBeans = userDirectionMapper.selectList(queryWrapper3);
+        for (UserDirectionBean userDirectionBean : userDirectionBeans) {
+            queryWrapper.or().eq("user_direction_id",userDirectionBean.getId());
+        }
+        List<UserGradeContactBean> userGradeContactBeans = userGradeContactMapper.selectList(queryWrapper);
+        return userGradeContactBeans;
     }
 }

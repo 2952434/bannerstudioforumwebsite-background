@@ -94,11 +94,6 @@ public class PostServiceImpl implements IPostService {
         }
     }
 
-    @Override
-    public boolean forwardPost(PostBean postBean) {
-        postMapper.insert(postBean);
-        return true;
-    }
 
     @Override
     public boolean deletePost(int postId) {
@@ -115,7 +110,7 @@ public class PostServiceImpl implements IPostService {
 
     @Override
     public boolean deleteAllPost(int postMemberId) {
-        if (selectAllPostById(postMemberId).size() != 0) {
+        if (selectAllPostByDescById(postMemberId).size() != 0) {
             UpdateWrapper<PostBean> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("post_member_id", postMemberId);
             List<PostBean> list = postMapper.selectList(updateWrapper);
@@ -186,7 +181,7 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
-    public boolean updatePostpageview(int postId) {
+    public boolean updatePostPageView(int postId) {
         if (selectPost(postId) != null) {
             PostBean postBean = selectPost(postId);
             String key = postBean.getPostTitle() + "," + postBean.getPostId();
@@ -236,9 +231,23 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
-    public List<PostBean> selectAllPostById(int postMemberId) {
+    public List<PostBean> selectAllPostByDescById(int postMemberId) {
         QueryWrapper<PostBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("post_member_id", postMemberId);
+        queryWrapper.eq("post_member_id", postMemberId)
+                .orderByDesc("post_top","post_time");
+        List<PostBean> list = postMapper.selectList(queryWrapper);
+        if (list.size() != 0) {
+            return list;
+        }
+        return null;
+    }
+
+    @Override
+    public List<PostBean> selectAllPostByAscById(int postMemberId) {
+        QueryWrapper<PostBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("post_member_id", postMemberId)
+                .orderByDesc("post_top")
+                .orderByAsc("post_time");
         List<PostBean> list = postMapper.selectList(queryWrapper);
         if (list.size() != 0) {
             return list;
@@ -333,6 +342,22 @@ public class PostServiceImpl implements IPostService {
     public String selectYesterdayView(Integer memberId) {
         String view = (String) redisTemplate.opsForHash().get(String.valueOf(memberId), "view");
         return view;
+    }
+
+    @Override
+    public boolean updatePostTopById(Integer postId) {
+        UpdateWrapper<PostBean> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("post_id",postId).set("post_top",1);
+        int update = postMapper.update(null, updateWrapper);
+        return update==1;
+    }
+
+    @Override
+    public boolean updatePostNoTopById(Integer postId) {
+        UpdateWrapper<PostBean> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("post_id",postId).set("post_top",0);
+        int update = postMapper.update(null, updateWrapper);
+        return update==1;
     }
 
 }

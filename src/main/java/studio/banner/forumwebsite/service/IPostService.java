@@ -25,14 +25,6 @@ public interface IPostService {
     boolean insertPost(PostBean postBean, String ...postType);
 
     /**
-     * 转发帖子
-     *
-     * @param postBean
-     * @return boolean
-     */
-    boolean forwardPost(PostBean postBean);
-
-    /**
      * 根据帖子id删除帖子
      *
      * @param postId
@@ -51,9 +43,9 @@ public interface IPostService {
 
     /**
      * 根据帖子id更改帖子标题
-     *
      * @param postId
-     * @return boolean
+     * @param newTitle
+     * @return
      */
 
     boolean updatePostTitle(int postId, String newTitle);
@@ -76,7 +68,7 @@ public interface IPostService {
      * @return boolean
      */
 
-    boolean updatePostpageview(int postId);
+    boolean updatePostPageView(int postId);
 
     /**
      * 根据帖子id更改评论量
@@ -106,13 +98,22 @@ public interface IPostService {
     PostBean selectPost(int postId);
 
     /**
-     * 根据用户id查询某用户全部帖子
+     * 根据用户id查询某用户全部帖子(根据时间返向排序)
      *
      * @param postMemberId
      * @return List
      */
 
-    List<PostBean> selectAllPostById(int postMemberId);
+    List<PostBean> selectAllPostByDescById(int postMemberId);
+
+    /**
+     * 根据用户id查询某用户全部帖子(根据时间正向排序)
+     *
+     * @param postMemberId
+     * @return List
+     */
+
+    List<PostBean> selectAllPostByAscById(int postMemberId);
 
     /**
      * 分页查询所有帖子
@@ -164,4 +165,17 @@ public interface IPostService {
      */
     String selectYesterdayView(Integer memberId);
 
+    /**
+     * 根据帖子id实现置顶功能
+     * @param postId
+     * @return
+     */
+    boolean updatePostTopById(Integer postId);
+
+    /**
+     * 根据贴子id取消置顶
+     * @param postId
+     * @return
+     */
+    boolean updatePostNoTopById(Integer postId);
 }

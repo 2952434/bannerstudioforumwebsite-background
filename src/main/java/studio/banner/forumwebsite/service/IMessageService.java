@@ -5,6 +5,7 @@ import com.mongodb.client.result.UpdateResult;
 import studio.banner.forumwebsite.bean.Message;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: Ljx
@@ -12,6 +13,23 @@ import java.util.List;
  * @role:
  */
 public interface IMessageService {
+
+    /**
+     * 查询通信用户列表
+     * @param userId
+     * @param page
+     * @return
+     */
+    List<Map<String,Object>> selectUserList(Integer userId,Integer page);
+
+    /**
+     * 将发送的消息保存到MongoDB
+     * @param userId
+     * @param toId
+     * @param message
+     * @return
+     */
+    Message saveMessage(Integer userId,Integer toId,String message);
     /**
      * 查询点对点聊天记录
      * @param formId
@@ -50,4 +68,15 @@ public interface IMessageService {
      * @return
      */
     DeleteResult deleteMessage(String id);
+
+    /**
+     * 查询历史消息
+     * @param fromId
+     * @param toId
+     * @param page
+     * @param rows
+     * @return
+     */
+    List<Message> queryMessageList(Integer fromId, Integer toId, Integer page, Integer rows);
+
 }

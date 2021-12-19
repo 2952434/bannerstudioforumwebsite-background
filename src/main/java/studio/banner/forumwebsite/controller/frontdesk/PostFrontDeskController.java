@@ -151,7 +151,7 @@ public class PostFrontDeskController {
             int postForward = postBean1.getPostMemberId();
             String postTitle = postBean1.getPostTitle();
             String[] strings = iPostTypeService.selectPostTypeById(postId);
-            PostBean postBean = new PostBean(0, postForwardMemberId, postTitle, postContent, postTime, null, null, postForward, null, imageAddress);
+            PostBean postBean = new PostBean(0, postForwardMemberId, postTitle, postContent, postTime, null, null, postForward, null, imageAddress,0);
             iPostService.insertPost(postBean,strings);
             return RespBean.ok("转发成功");
         }
@@ -202,8 +202,8 @@ public class PostFrontDeskController {
     }
     )
     public RespBean deleteAllPost(int postMemberId) {
-        if (iPostService.selectAllPostById(postMemberId) != null) {
-            List<PostBean> List = iPostService.selectAllPostById(postMemberId);
+        if (iPostService.selectAllPostByDescById(postMemberId) != null) {
+            List<PostBean> List = iPostService.selectAllPostByDescById(postMemberId);
             for (int j = 0; j < List.size(); j++) {
                 if (iCommentService.selectAllCommentByPostId(List.get(j).getPostId()) != null) {
                     List<CommentBean> list = iCommentService.selectAllCommentByPostId(List.get(j).getPostId());
@@ -295,7 +295,7 @@ public class PostFrontDeskController {
 
     )
     public RespBean udpatePostPageview(int postId) {
-        if (iPostService.updatePostpageview(postId)) {
+        if (iPostService.updatePostPageView(postId)) {
             return RespBean.ok("更改成功");
         }
         return RespBean.error("更改失败，未查询到改帖子");
@@ -368,21 +368,41 @@ public class PostFrontDeskController {
      * @param postMemberId
      * @return RespBean
      */
-    @GetMapping("/postFrontDesk/selectAllPostById")
-    @ApiOperation(value = "查询某用户所有帖子", notes = "帖子需存在", httpMethod = "GET")
+    @GetMapping("/postFrontDesk/selectAllPostByDescById")
+    @ApiOperation(value = "根据时间倒序查询某用户所有帖子", notes = "帖子需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postMemberId",
                     value = "用户id", required = true, dataTypeClass = Integer.class),
     }
     )
-    public RespBean selectAllPostById(int postMemberId) {
-        if (iPostService.selectAllPostById(postMemberId) != null) {
-            List<PostBean> list = iPostService.selectAllPostById(postMemberId);
+    public RespBean selectAllPostByDescById(int postMemberId) {
+        if (iPostService.selectAllPostByDescById(postMemberId) != null) {
+            List<PostBean> list = iPostService.selectAllPostByDescById(postMemberId);
             return RespBean.ok("查找成功", list);
         }
         return RespBean.error("查找失败，未查询到该用户或该用户无帖子");
     }
 
+    /**
+     * 根据用户id查询该用户所有帖子
+     *
+     * @param postMemberId
+     * @return RespBean
+     */
+    @GetMapping("/postFrontDesk/selectAllPostByAscById")
+    @ApiOperation(value = "根据时间正序查询某用户所有帖子", notes = "帖子需存在", httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "postMemberId",
+                    value = "用户id", required = true, dataTypeClass = Integer.class),
+    }
+    )
+    public RespBean selectAllPostByAscById(int postMemberId) {
+        if (iPostService.selectAllPostByAscById(postMemberId) != null) {
+            List<PostBean> list = iPostService.selectAllPostByAscById(postMemberId);
+            return RespBean.ok("查找成功", list);
+        }
+        return RespBean.error("查找失败，未查询到该用户或该用户无帖子");
+    }
     /**
      * 查询全部帖子接口
      *
@@ -454,4 +474,32 @@ public class PostFrontDeskController {
         }
         return RespBean.ok("昨天的浏览总量为："+view);
     }
+
+    @PostMapping("/postFrontDesk/updatePostTopById")
+    @ApiOperation(value = "根据帖子id实现置顶",notes = "帖子id需存在",httpMethod = "POST")
+    @ApiImplicitParam(type = "query",name = "postId",
+            value = "帖子id",required = true,dataTypeClass = Integer.class)
+    public RespBean updatePostTopById(Integer postId) {
+        boolean updatePostTopById = iPostService.updatePostTopById(postId);
+        if (updatePostTopById){
+            return RespBean.ok("置顶成功！！！");
+        }else {
+            return RespBean.error("帖子不存在，置顶失败！！！");
+        }
+    }
+
+    @PostMapping("/postFrontDesk/updatePostNoTopById")
+    @ApiOperation(value = "根据帖子id取消置顶",notes = "帖子id需存在",httpMethod = "POST")
+    @ApiImplicitParam(type = "query",name = "postId",
+            value = "帖子id",required = true,dataTypeClass = Integer.class)
+    public RespBean updatePostNoTopById(Integer postId) {
+        boolean updatePostTopById = iPostService.updatePostNoTopById(postId);
+        if (updatePostTopById){
+            return RespBean.ok("取消置顶成功！！！");
+        }else {
+            return RespBean.error("帖子不存在，取消置顶失败！！！");
+        }
+    }
+
+
 }

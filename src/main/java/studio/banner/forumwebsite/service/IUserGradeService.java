@@ -167,4 +167,11 @@ public interface IUserGradeService {
      * @return
      */
     boolean updateUserGradeByUserId(Integer userId,String userGrade);
+
+    /**
+     * 根据方向、年级、姓名模糊查询用户
+     * @param dim
+     * @return
+     */
+    List<UserGradeContactBean> selectDimUserName(String dim);
 }

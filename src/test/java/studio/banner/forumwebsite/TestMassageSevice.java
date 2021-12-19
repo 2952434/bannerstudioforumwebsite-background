@@ -26,7 +26,7 @@ public class TestMassageSevice {
                 .sendDate(new Date())
                 .status(1)
                 .from(new User(100, "zhangshan"))
-                .to(new User(121, "lishi"))
+                .to(new User(101, "lishi"))
                 .build();
         this.messageService.saveMessage(message);
         message = Message.builder()
@@ -34,7 +34,7 @@ public class TestMassageSevice {
                 .msg("你也好")
                 .sendDate(new Date())
                 .status(1)
-                .from(new User(121, "lishi"))
+                .from(new User(101, "lishi"))
                 .to(new User(100, "zhangshan"))
                 .build();
         this.messageService.saveMessage(message);
@@ -42,7 +42,7 @@ public class TestMassageSevice {
 
     @Test
     public void testQueryList(){
-        List<Message> listByFromAndTo = this.messageService.findListByFromAndTo(100, 121, 1, 10);
+        List<Message> listByFromAndTo = this.messageService.findListByFromAndTo(26, 25, 1, 10);
         for (Message message : listByFromAndTo) {
             System.out.println(message);
         }

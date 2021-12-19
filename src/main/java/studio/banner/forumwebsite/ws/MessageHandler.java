@@ -8,7 +8,6 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import studio.banner.forumwebsite.bean.Message;
-import studio.banner.forumwebsite.bean.UserData;
 import studio.banner.forumwebsite.service.IMessageService;
 
 import java.util.HashMap;
@@ -43,15 +42,10 @@ public class MessageHandler extends TextWebSocketHandler {
         int toId = jsonNode.get("toId").asInt();
         String msg = jsonNode.get("msg").asText();
 
-        Message message = Message.builder()
-                .from(UserData.USER_MAP.get(uid))
-                .to(UserData.USER_MAP.get(toId))
-                .msg(msg)
-                .build();
         //将消息保存到MongoDB
-        message = this.messageService.saveMessage(message);
+        Message message = this.messageService.saveMessage(uid,toId,msg);
 
-//        判断to用户是否在线
+        //判断to用户是否在线
         WebSocketSession toSession = SESSION.get(toId);
         if (toSession != null&&toSession.isOpen()){
             //TODO 具体格式需要和前端对接

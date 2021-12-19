@@ -330,4 +330,17 @@ public class UserGradeBackGroundController {
             return RespBean.error("修改失败，请检查输入格式是否正确！！！");
         }
     }
+
+    @GetMapping("/userGradeBackGround/selectDimUserContact")
+    @ApiOperation(value = "模糊查询用户信息",notes = "模糊查询字段需为年级、姓名、或方向其中一项",httpMethod = "GET")
+    @ApiImplicitParam(type = "query",name = "dim",
+            value = "模糊查询字段",required = true,dataTypeClass = String.class)
+    public RespBean selectDimUserContact(String dim){
+        List<UserGradeContactBean> userGradeContactBeans = userGradeService.selectDimUserName(dim);
+        if (userGradeContactBeans.size()!=0){
+            return RespBean.ok("查询成功",userGradeContactBeans);
+        }else {
+            return RespBean.error("未查询到该用户",userGradeContactBeans);
+        }
+    }
 }

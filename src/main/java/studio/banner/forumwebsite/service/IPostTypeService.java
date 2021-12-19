@@ -28,7 +28,7 @@ public interface IPostTypeService {
     boolean insertPostType(PostTypeBean postType);
 
     /**
-     * 查询所有帖子内容
+     * 查询所有帖子类型
      * @return
      */
     List<PostTypeBean> selectAllPostType();
@@ -46,4 +46,12 @@ public interface IPostTypeService {
      * @return
      */
     List<PostBean> selectPostByType(String postType);
+
+    /**
+     * 通过类型分页查询该类型的帖子根据浏览量逆向排序
+     * @param postType
+     * @return
+     */
+    List<PostBean> selectPostDescByType(String postType);
+
 }

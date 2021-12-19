@@ -15,6 +15,7 @@ import studio.banner.forumwebsite.mapper.PostTypeMapper;
 import studio.banner.forumwebsite.service.IPostTypeService;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -70,8 +71,7 @@ public class PostTypeServiceImpl implements IPostTypeService {
 
     @Override
     public List<PostTypeBean> selectAllPostType() {
-        List<PostTypeBean> list = postTypeMapper.selectList(null);
-        return list;
+        return postTypeMapper.selectList(null);
     }
 
     @Override
@@ -110,6 +110,41 @@ public class PostTypeServiceImpl implements IPostTypeService {
                 for (PostContactBean postContactBean : postContactBeans) {
                     PostBean postBean = postMapper.selectById(postContactBean.getPostId());
                     list.add(postBean);
+                }
+                return list;
+            }
+        }
+    }
+
+    @Override
+    public List<PostBean> selectPostDescByType(String postType) {
+        QueryWrapper<PostTypeBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("post_type",postType);
+        PostTypeBean postTypeBean = postTypeMapper.selectOne(queryWrapper);
+        if (postTypeBean==null){
+            return null;
+        }else {
+            QueryWrapper<PostContactBean> queryWrapper1 = new QueryWrapper<>();
+            queryWrapper1.eq("post_type_id",postTypeBean.getId());
+            List<PostContactBean> postContactBeans = postContactMapper.selectList(queryWrapper1);
+            if (postContactBeans.size()==0){
+                return null;
+            }else {
+                List<PostBean> list = new ArrayList<>();
+                for (PostContactBean postContactBean : postContactBeans) {
+                    PostBean postBean = postMapper.selectById(postContactBean.getPostId());
+                    list.add(postBean);
+                }
+                Comparator<PostBean> comparator = new Comparator<PostBean>(){
+                    @Override
+                    public int compare(PostBean s1, PostBean s2) {
+                        return s2.getPostPageView()-s1.getPostPageView();
+                    }
+                };
+                list.sort(comparator);
+                if (list.size()>10){
+                    List<PostBean> list1 = list.subList(0, 10);
+                    return list1;
                 }
                 return list;
             }

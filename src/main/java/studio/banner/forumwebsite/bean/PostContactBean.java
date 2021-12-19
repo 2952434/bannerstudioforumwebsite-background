@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 /**
  * @Author: Ljx
  * @Date: 2021/12/12 14:24
- * @role:
+ * @role: 帖子类型关联表
  */
 @Data
 @ToString

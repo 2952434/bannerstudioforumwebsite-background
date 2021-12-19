@@ -39,4 +39,5 @@ public class PostBean {
     private Integer postForward;
     private Integer postLikeNumber;
     private String postImageAddress;
+    private Integer postTop;
 }
