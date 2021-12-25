@@ -7,7 +7,7 @@ import studio.banner.forumwebsite.bean.UserDirectionBean;
 /**
  * @Author: Ljx
  * @Date: 2021/12/13 16:43
- * @role:
+ * @role: 学习方向映射
  */
 @Repository
 public interface UserDirectionMapper extends BaseMapper<UserDirectionBean> {

@@ -9,6 +9,10 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import studio.banner.forumwebsite.ws.MessageHandler;
 import studio.banner.forumwebsite.ws.MessageHandshakeInterceptor;
 
+/**
+ * @author jijunxiang
+ * WebSocket配置类
+ */
 @Configuration
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
@@ -19,7 +23,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(this.messageHandler,"/ws/{uid}")
+        registry.addHandler(this.messageHandler, "/ws/{uid}")
                 .setAllowedOrigins("*")
                 .addInterceptors(this.messageHandshakeInterceptor);
     }

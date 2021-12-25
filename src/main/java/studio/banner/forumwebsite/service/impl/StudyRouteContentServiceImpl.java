@@ -24,6 +24,12 @@ public class StudyRouteContentServiceImpl implements IStudyRouteContentService {
     @Resource
     private StudyRouteContentMapper studyRouteContentMapper;
 
+    /**
+     * 插入一条学习路线内容
+     *
+     * @param studyRouteContent 学习路线内容对象
+     * @return boolean
+     */
     @Override
     public boolean insert(StudyRouteContent studyRouteContent) {
         QueryWrapper<StudyRouteContent> queryWrapper = new QueryWrapper<>();
@@ -38,6 +44,13 @@ public class StudyRouteContentServiceImpl implements IStudyRouteContentService {
         return false;
     }
 
+    /**
+     * 根据内容序号 和 学习路线id 删除指定一条学习路线内容
+     *
+     * @param serialNumber 内容序号
+     * @param directionId  学习路线id
+     * @return boolean
+     */
     @Override
     public boolean delete(Integer serialNumber, Integer directionId) {
         QueryWrapper<StudyRouteContent> queryWrapper = new QueryWrapper<>();
@@ -52,6 +65,12 @@ public class StudyRouteContentServiceImpl implements IStudyRouteContentService {
         return false;
     }
 
+    /**
+     * 更新指定学习路线指定阶段的指定内容
+     *
+     * @param studyRouteContent 学习内容对象
+     * @return boolean
+     */
     @Override
     public boolean update(StudyRouteContent studyRouteContent) {
         QueryWrapper<StudyRouteContent> queryWrapper = new QueryWrapper<>();
@@ -66,6 +85,13 @@ public class StudyRouteContentServiceImpl implements IStudyRouteContentService {
         return false;
     }
 
+    /**
+     * 根据 内容序号、学习路线id 查询指定条 学习路线内容
+     *
+     * @param serialNumber 内容序号
+     * @param directionId  学习路线id
+     * @return StudyRouteContent
+     */
     @Override
     public StudyRouteContent selectSingle(Integer serialNumber, Integer directionId) {
         QueryWrapper<StudyRouteContent> queryWrapper = new QueryWrapper<>();
@@ -80,6 +106,12 @@ public class StudyRouteContentServiceImpl implements IStudyRouteContentService {
         return null;
     }
 
+    /**
+     * 查询 指定学习路线的指定阶段的所有内容
+     *
+     * @param directionId 学习路线id
+     * @return List<StudyRouteContent>
+     */
     @Override
     public List<StudyRouteContent> selectByDirectionId(Integer directionId) {
         QueryWrapper<StudyRouteContent> queryWrapper = new QueryWrapper<>();
@@ -93,11 +125,23 @@ public class StudyRouteContentServiceImpl implements IStudyRouteContentService {
         return null;
     }
 
+    /**
+     * 查询 学习路线内容表 中的所有内容
+     *
+     * @return List<StudyRouteContent>
+     */
     @Override
     public List<StudyRouteContent> selectAll() {
         return studyRouteContentMapper.selectList(null);
     }
 
+    /**
+     * 分页查询 所有内容
+     *
+     * @param pageNumber 页码数
+     * @param pageSize   每页容量
+     * @return IPage<StudyRouteContent>
+     */
     @Override
     public IPage<StudyRouteContent> selectByPage(Integer pageNumber, Integer pageSize) {
         Page<StudyRouteContent> page = new Page<>(pageNumber, pageSize);

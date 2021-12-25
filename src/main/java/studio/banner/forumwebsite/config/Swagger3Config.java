@@ -13,6 +13,7 @@ import java.util.ArrayList;
 /**
  * @Author: Ljx
  * @Date: 2021/5/13 22:00
+ * @role: Swagger 配置类
  */
 @Configuration
 @EnableOpenApi

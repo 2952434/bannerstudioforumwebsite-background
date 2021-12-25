@@ -1,6 +1,5 @@
 package studio.banner.forumwebsite.ws;
 
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -21,13 +20,13 @@ public class MessageHandshakeInterceptor implements HandshakeInterceptor {
     public boolean beforeHandshake(ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse, WebSocketHandler webSocketHandler, Map<String, Object> map) throws Exception {
         String path = serverHttpRequest.getURI().getPath();
         String[] split = path.split("/");
-        if (split.length!= 3){
+        if (split.length != 3) {
             return false;
         }
-        if (!StringUtils.isNumeric(split[2])){
+        if (!StringUtils.isNumeric(split[2])) {
             return false;
         }
-        map.put("uid",Integer.valueOf(split[2]));
+        map.put("uid", Integer.valueOf(split[2]));
         return true;
     }
 

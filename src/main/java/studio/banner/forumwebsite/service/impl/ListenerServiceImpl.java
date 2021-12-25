@@ -12,17 +12,23 @@ import java.util.List;
 /**
  * @Author: Ljx
  * @Date: 2021/5/14 21:09
+ * @role: 监听用户服务层实现
  */
 @Service
 public class ListenerServiceImpl implements IListenerService {
     @Autowired
     private ListenerMapper listenerMapper;
 
+    /**
+     * 查询用户
+     *
+     * @param userNum 用户账号
+     * @return List<UserBean>
+     */
     @Override
     public List<UserBean> selectAllUser(Integer userNum) {
-        QueryWrapper wrapper = new QueryWrapper();
+        QueryWrapper<UserBean> wrapper = new QueryWrapper<>();
         wrapper.eq("member_account_number", userNum);
-        List<UserBean> list = listenerMapper.selectList(wrapper);
-        return list;
+        return listenerMapper.selectList(wrapper);
     }
 }

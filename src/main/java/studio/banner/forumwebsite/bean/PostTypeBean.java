@@ -21,8 +21,14 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostTypeBean {
+    /**
+     * 帖子类型id
+     */
     @TableId(type = IdType.AUTO)
     private Integer id;
+    /**
+     * 帖子类型
+     */
     @NotNull(message = "帖子类型不为空")
     private String postType;
 }

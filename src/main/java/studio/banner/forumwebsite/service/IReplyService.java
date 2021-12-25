@@ -16,7 +16,7 @@ public interface IReplyService {
     /**
      * 添加回复
      *
-     * @param replyBean
+     * @param replyBean 回复实体
      * @return boolean
      */
     boolean insertReply(ReplyBean replyBean);
@@ -24,7 +24,7 @@ public interface IReplyService {
     /**
      * 根据回复id删除回复
      *
-     * @param replyId
+     * @param replyId 回复id
      * @return boolean
      */
     boolean deleteReply(Integer replyId);
@@ -32,7 +32,7 @@ public interface IReplyService {
     /**
      * 根据用户id删除该用户全部回复
      *
-     * @param memberId
+     * @param memberId 用户id
      * @return boolean
      */
     boolean deleteAllReplyByMemberId(Integer memberId);
@@ -40,7 +40,7 @@ public interface IReplyService {
     /**
      * 根据评论id删除该评论下全部回复
      *
-     * @param commentId
+     * @param commentId 评论id
      * @return boolean
      */
     boolean deleteAllReplyByCommentId(Integer commentId);
@@ -48,7 +48,8 @@ public interface IReplyService {
     /**
      * 修改回复内容
      *
-     * @param replyId
+     * @param replyId    回复id
+     * @param newContent 新回复内容
      * @return boolean
      */
     boolean updateReplyContent(Integer replyId, String newContent);
@@ -56,7 +57,7 @@ public interface IReplyService {
     /**
      * 修改回复点赞数量
      *
-     * @param replyId
+     * @param replyId 回复id
      * @return boolean
      */
     boolean updateReplyLikeNumber(Integer replyId);
@@ -64,23 +65,25 @@ public interface IReplyService {
     /**
      * 根据评论id分页查询该评论下全部回复
      *
-     * @param commenmtId
-     * @return IPage
+     * @param commentId 评论id
+     * @param page      第几页
+     * @return IPage<ReplyBean>
      */
-    IPage<ReplyBean> selectAllReplyByCommentId(Integer commenmtId, int page);
+    IPage<ReplyBean> selectAllReplyByCommentId(Integer commentId, int page);
 
     /**
      * 根据用户分页查询该用户下全部回复
      *
-     * @param memberId
-     * @return IPage
+     * @param memberId 用户id
+     * @param page     第几页
+     * @return IPage<ReplyBean>
      */
     IPage<ReplyBean> selectAllReplyByMemberId(Integer memberId, int page);
 
     /**
      * 根据回复id查询
      *
-     * @param replyId
+     * @param replyId 回复id
      * @return ReplyBean
      */
     ReplyBean selectReply(Integer replyId);

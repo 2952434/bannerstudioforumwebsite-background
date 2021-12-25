@@ -10,7 +10,7 @@ import java.security.PublicKey;
 /**
  * @Author: Ljx
  * @Date: 2021/12/8 12:13
- * @role:
+ * @role: 公私钥配置类
  */
 
 @ConfigurationProperties(prefix = "rsa.key")

@@ -7,12 +7,13 @@ import java.util.List;
 /**
  * @Author: Ljx
  * @Date: 2021/5/13 22:04
+ * @role: 收藏服务层接口
  */
 public interface ICollectService {
     /**
      * 增加收藏文章
      *
-     * @param collectBean
+     * @param collectBean 贴子对象
      * @return boolean
      */
     boolean insertCollect(CollectBean collectBean);
@@ -20,7 +21,7 @@ public interface ICollectService {
     /**
      * 根据id删除收藏文章
      *
-     * @param id
+     * @param id 用户id
      * @return boolean
      */
     boolean deleteCollect(Integer id);
@@ -28,15 +29,15 @@ public interface ICollectService {
     /**
      * 清除用户收藏
      *
-     * @param userid
-     * @return
+     * @param userid 用户id
+     * @return boolean
      */
     boolean deleteCollectByUserId(Integer userid);
 
     /**
      * 根据不同用户id查询收藏文章
      *
-     * @param userid
+     * @param userid 用户id
      * @return List
      */
 

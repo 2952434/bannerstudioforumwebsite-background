@@ -7,7 +7,7 @@ import studio.banner.forumwebsite.bean.InformBean;
 /**
  * @Author: Ljx
  * @Date: 2021/12/19 14:06
- * @role:
+ * @role: 通知映射
  */
 @Repository
 public interface InformMapper extends BaseMapper<InformBean> {

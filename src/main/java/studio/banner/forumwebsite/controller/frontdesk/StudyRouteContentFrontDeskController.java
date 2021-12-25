@@ -21,16 +21,17 @@ import java.util.List;
  */
 @RestController
 @Slf4j
-@Api(tags = "学习路线内容前台接口",value = "StudyRouteContentFrontDeskController")
+@Api(tags = "学习路线内容前台接口", value = "StudyRouteContentFrontDeskController")
 public class StudyRouteContentFrontDeskController {
     @Resource
     private IStudyRouteContentService iStudyRouteContentService;
     @Resource
     private IStudyRouteService iStudyRouteService;
+
     @GetMapping("/studyRouteContentFrontDesk/selectSingle")
-    @ApiOperation(value = "根据 内容序号、学习路线id 查询指定条 学习路线内容",httpMethod = "GET")
+    @ApiOperation(value = "根据 内容序号、学习路线id 查询指定条 学习路线内容", httpMethod = "GET")
     public RespBean selectSingle(@RequestParam String studyDirection, @RequestParam Integer stageNumber, @RequestParam Integer serialNumber) {
-        if (studyDirection==null||stageNumber==null||serialNumber==null){
+        if (studyDirection == null || stageNumber == null || serialNumber == null) {
             return RespBean.error("查询失败，stageNumber和studyDirection和serialNumber不可以为空");
         }
         StudyRoute studyRoute = iStudyRouteService.selectByStageNumber(studyDirection, stageNumber);
@@ -47,10 +48,11 @@ public class StudyRouteContentFrontDeskController {
         log.info("查询失败");
         return RespBean.error(String.format("查询失败，未找到%s学习路线的第%d阶段", studyDirection, stageNumber));
     }
+
     @GetMapping("/studyRouteContentFrontDesk/selectByDirectionId")
-    @ApiOperation(value = "查询指定学习路线的指定阶段的所有内容",httpMethod = "GET")
+    @ApiOperation(value = "查询指定学习路线的指定阶段的所有内容", httpMethod = "GET")
     public RespBean selectByDirectionId(@RequestParam String studyDirection, @RequestParam Integer stageNumber) {
-        if (studyDirection==null||stageNumber==null){
+        if (studyDirection == null || stageNumber == null) {
             return RespBean.error("删除失败，stageNumber和studyDirection不可以为空");
         }
         StudyRoute studyRoute = iStudyRouteService.selectByStageNumber(studyDirection, stageNumber);
@@ -67,8 +69,9 @@ public class StudyRouteContentFrontDeskController {
         log.info("查询失败！");
         return RespBean.error(String.format("删除失败，未找到%s学习路线的第%d阶段", studyDirection, stageNumber));
     }
+
     @GetMapping("/studyRouteContentFrontDesk/selectAll")
-    @ApiOperation(value = "查询学习路线内容表中的所有内容",httpMethod = "GET")
+    @ApiOperation(value = "查询学习路线内容表中的所有内容", httpMethod = "GET")
     public RespBean selectAll() {
         List<StudyRouteContent> list = iStudyRouteContentService.selectAll();
         if (list != null) {

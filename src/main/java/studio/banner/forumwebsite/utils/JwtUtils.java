@@ -11,6 +11,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Base64;
 import java.util.UUID;
+
 /**
  * @Author: Ljx
  * @Date: 2021/11/19 8:12
@@ -44,7 +45,7 @@ public class JwtUtils {
      * @param userInfo   载荷中的数据
      * @param privateKey 私钥
      * @param expire     过期时间，单位秒
-     * @return JWT
+     * @return String
      */
     public static String generateTokenExpireInSeconds(Object userInfo, PrivateKey privateKey, int expire) {
         return Jwts.builder()

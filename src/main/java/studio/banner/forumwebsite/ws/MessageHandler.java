@@ -31,7 +31,7 @@ public class MessageHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         Integer uid = (Integer) session.getAttributes().get("uid");
         //将当前用户的session放置到map中，后面会使用相应的session通信
-        SESSION.put(uid,session);
+        SESSION.put(uid, session);
     }
 
     @Override
@@ -43,16 +43,16 @@ public class MessageHandler extends TextWebSocketHandler {
         String msg = jsonNode.get("msg").asText();
 
         //将消息保存到MongoDB
-        Message message = this.messageService.saveMessage(uid,toId,msg);
+        Message message = this.messageService.saveMessage(uid, toId, msg);
 
         //判断to用户是否在线
         WebSocketSession toSession = SESSION.get(toId);
-        if (toSession != null&&toSession.isOpen()){
+        if (toSession != null && toSession.isOpen()) {
             //TODO 具体格式需要和前端对接
             toSession.sendMessage(new TextMessage(MAPPER.writeValueAsString(message)));
 
             //更新消息为已读
-            this.messageService.updateMessageState(message.getId(),2);
+            this.messageService.updateMessageState(message.getId(), 2);
 
         }
     }

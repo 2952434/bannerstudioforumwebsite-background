@@ -13,8 +13,8 @@
 //@ControllerAdvice
 //public class HandlerControllerException {
 //    @ExceptionHandler(RuntimeException.class)
-//    public String handException(RuntimeException e){
-//        if (e instanceof AccessDeniedException){
+//    public String handException(RuntimeException e) {
+//        if (e instanceof AccessDeniedException) {
 //            return "redirect:403.jsp";
 //        }
 //        return "redirect:500.jsp";

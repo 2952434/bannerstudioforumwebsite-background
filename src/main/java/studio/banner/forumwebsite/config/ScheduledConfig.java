@@ -8,7 +8,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 /**
  * @Author: Ljx
  * @Date: 2021/12/10 15:23
- * @role:
+ * @role: 定时任务配置
  */
 @Configuration
 public class ScheduledConfig {

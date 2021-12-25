@@ -20,7 +20,7 @@ import java.util.List;
  * @role:
  */
 @RestController
-@Api(tags = "后台用户年级姓名方向接口",value = "UserGradeBackGroundController")
+@Api(tags = "后台用户年级姓名方向接口", value = "UserGradeBackGroundController")
 public class UserGradeBackGroundController {
 
     @Autowired
@@ -88,14 +88,14 @@ public class UserGradeBackGroundController {
     }
 
     @GetMapping("/userGradeBackGround/selectUserDirectionById")
-    @ApiOperation(value = "根据用户id查询该用户方向",notes = "用户id不为空",httpMethod = "GET")
-    @ApiImplicitParam(type = "query",name = "userId",
-            value = "用户id",required = true,dataTypeClass = Integer.class)
-    public RespBean selectUserDirectionById(Integer userId){
+    @ApiOperation(value = "根据用户id查询该用户方向", notes = "用户id不为空", httpMethod = "GET")
+    @ApiImplicitParam(type = "query", name = "userId",
+            value = "用户id", required = true, dataTypeClass = Integer.class)
+    public RespBean selectUserDirectionById(Integer userId) {
         UserDirectionBean userDirectionBean = userGradeService.selectUserDirectionById(userId);
-        if (userDirectionBean==null){
+        if (userDirectionBean == null) {
             return RespBean.error("查询用户班级失败");
-        }else {
+        } else {
             return RespBean.ok("查询成功", userDirectionBean);
         }
     }
@@ -127,220 +127,220 @@ public class UserGradeBackGroundController {
     }
 
     @GetMapping("/userGradeBackGround/selectUserContactByUserName")
-    @ApiOperation(value = "跟据姓名查询该用户关系id",notes = "用户姓名不能为空",httpMethod = "GET")
-    @ApiImplicitParam(type = "query",name = "userName",
-            value = "用户姓名",required = true,dataTypeClass = String.class)
-    public RespBean selectUserContactByUserName(String userName){
+    @ApiOperation(value = "跟据姓名查询该用户关系id", notes = "用户姓名不能为空", httpMethod = "GET")
+    @ApiImplicitParam(type = "query", name = "userName",
+            value = "用户姓名", required = true, dataTypeClass = String.class)
+    public RespBean selectUserContactByUserName(String userName) {
         List<UserGradeContactBean> userGradeContactBeans = userGradeService.selectUserContactByUserName(userName);
-        if (userGradeContactBeans==null){
+        if (userGradeContactBeans == null) {
             return RespBean.error("查询失败！！！");
-        }else {
-            return RespBean.ok("查询成功",userGradeContactBeans);
+        } else {
+            return RespBean.ok("查询成功", userGradeContactBeans);
         }
     }
 
     @GetMapping("/userGradeBackGround/selectUserNameByDirectionAndGrade")
-    @ApiOperation(value = "根据用户方向和年级查询姓名",notes = "用户方向和姓名不能为空",httpMethod = "GET")
+    @ApiOperation(value = "根据用户方向和年级查询姓名", notes = "用户方向和姓名不能为空", httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(type = "query",name = "userDirection",
-                    value = "用户方向",required = true,dataTypeClass = String.class),
-            @ApiImplicitParam(type = "query",name = "userGrade",
-                    value = "用户班级",required = true,dataTypeClass = String.class)
+            @ApiImplicitParam(type = "query", name = "userDirection",
+                    value = "用户方向", required = true, dataTypeClass = String.class),
+            @ApiImplicitParam(type = "query", name = "userGrade",
+                    value = "用户班级", required = true, dataTypeClass = String.class)
     })
-    public RespBean selectUserNameByDirectionAndGrade(String userDirection,String userGrade){
+    public RespBean selectUserNameByDirectionAndGrade(String userDirection, String userGrade) {
         List<UserNameBean> userNameBeans = userGradeService.selectUserNameByDirectionAndGrade(userDirection, userGrade);
-        if (userNameBeans==null){
+        if (userNameBeans == null) {
             return RespBean.error("查询失败！！！");
-        }else {
-            return RespBean.ok("查询成功",userNameBeans);
+        } else {
+            return RespBean.ok("查询成功", userNameBeans);
         }
     }
 
     @DeleteMapping("/userGradeBackGround/deleteUserById")
     @ApiOperation(value = "根据用户id删除该用户")
-    @ApiImplicitParam(type = "query",name = "userId",
-            value = "用户id",required = true,dataTypeClass = Integer.class)
-    public RespBean deleteUserById(Integer userId){
+    @ApiImplicitParam(type = "query", name = "userId",
+            value = "用户id", required = true, dataTypeClass = Integer.class)
+    public RespBean deleteUserById(Integer userId) {
         boolean deleteUserById = userGradeService.deleteUserById(userId);
-        if (deleteUserById){
+        if (deleteUserById) {
             return RespBean.ok("删除成功！！！");
-        }else {
+        } else {
             return RespBean.error("删除失败！！！");
         }
     }
 
 
     @PostMapping("/userGradeBackGround/insertUserGrade")
-    @ApiOperation(value = "增加用户年级",notes = "用户年级不能为空",httpMethod = "POST")
+    @ApiOperation(value = "增加用户年级", notes = "用户年级不能为空", httpMethod = "POST")
     @ApiImplicitParams({
-            @ApiImplicitParam(type = "query",name = "id",
-                    value = "id",required = false,dataTypeClass = Integer.class),
-            @ApiImplicitParam(type = "query",name = "userGrade",
-                    value = "要增加的年级",required = true,dataTypeClass = String.class)
+            @ApiImplicitParam(type = "query", name = "id",
+                    value = "id", required = false, dataTypeClass = Integer.class),
+            @ApiImplicitParam(type = "query", name = "userGrade",
+                    value = "要增加的年级", required = true, dataTypeClass = String.class)
     })
-    public RespBean insertUserGrade(UserGradeBean userGradeBean){
+    public RespBean insertUserGrade(UserGradeBean userGradeBean) {
         boolean insertUserGrade = userGradeService.insertUserGrade(userGradeBean);
-        if (insertUserGrade){
+        if (insertUserGrade) {
             return RespBean.ok("添加成功！！！");
-        }else {
+        } else {
             return RespBean.error("添加失败！！！");
         }
     }
 
     @GetMapping("/userGradeBackGround/selectAllUserGrade")
-    @ApiOperation(value = "查询所有年级",httpMethod = "GET")
-    public RespBean selectAllUserGrade(){
+    @ApiOperation(value = "查询所有年级", httpMethod = "GET")
+    public RespBean selectAllUserGrade() {
         List<UserGradeBean> userGradeBeans = userGradeService.selectAllUserGrade();
-        return RespBean.ok("查询成功",userGradeBeans);
+        return RespBean.ok("查询成功", userGradeBeans);
     }
 
     @PostMapping("/userGradeBackGround/updateUserGradeById")
-    @ApiOperation(value = "通过年级id更改年级",notes = "id和年级不能为空",httpMethod = "POST")
+    @ApiOperation(value = "通过年级id更改年级", notes = "id和年级不能为空", httpMethod = "POST")
     @ApiImplicitParams({
-            @ApiImplicitParam(type = "query",name = "id",
-                    value = "年级id",required = true,dataTypeClass = Integer.class),
-            @ApiImplicitParam(type = "query",name = "userGrade",
-                    value = "年级内容",required = true,dataTypeClass = String.class)
+            @ApiImplicitParam(type = "query", name = "id",
+                    value = "年级id", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(type = "query", name = "userGrade",
+                    value = "年级内容", required = true, dataTypeClass = String.class)
     })
-    public RespBean updateUserGradeById(UserGradeBean userGradeBean){
+    public RespBean updateUserGradeById(UserGradeBean userGradeBean) {
         boolean updateUserGrade = userGradeService.updateUserGradeById(userGradeBean);
-        if (updateUserGrade){
+        if (updateUserGrade) {
             return RespBean.ok("修改成功!!!");
-        }else {
+        } else {
             return RespBean.error("修改失败！！！");
         }
     }
 
     @DeleteMapping("/userGradeBackGround/deleteUserGradeById")
-    @ApiOperation(value = "根据年级id删除年级",notes = "id不能为空",httpMethod = "DELETE")
+    @ApiOperation(value = "根据年级id删除年级", notes = "id不能为空", httpMethod = "DELETE")
     @ApiImplicitParam(type = "query", name = "gradeId",
-            value = "年级id",required = true,dataTypeClass = Integer.class)
-    public RespBean deleteUserGradeById(Integer gradeId){
+            value = "年级id", required = true, dataTypeClass = Integer.class)
+    public RespBean deleteUserGradeById(Integer gradeId) {
         boolean deleteUserGradeById = userGradeService.deleteUserGradeById(gradeId);
-        if (deleteUserGradeById){
+        if (deleteUserGradeById) {
             return RespBean.ok("删除成功！！！");
-        }else {
+        } else {
             return RespBean.error("删除失败！！！");
         }
     }
 
     @PostMapping("/userGradeBackGround/insertUserDirection")
-    @ApiOperation(value = "管理员添加学习方向",notes = "学习方向不能为空",httpMethod = "POST")
+    @ApiOperation(value = "管理员添加学习方向", notes = "学习方向不能为空", httpMethod = "POST")
     @ApiImplicitParams({
-            @ApiImplicitParam(type = "query",name = "id",
-                    value = "方向id",required = false,dataTypeClass = Integer.class),
-            @ApiImplicitParam(type = "query",name = "userDirection",
-                    value = "学习方向",required = true,dataTypeClass = String.class)
+            @ApiImplicitParam(type = "query", name = "id",
+                    value = "方向id", required = false, dataTypeClass = Integer.class),
+            @ApiImplicitParam(type = "query", name = "userDirection",
+                    value = "学习方向", required = true, dataTypeClass = String.class)
     })
-    public RespBean insertUserDirection(UserDirectionBean userDirectionBean){
+    public RespBean insertUserDirection(UserDirectionBean userDirectionBean) {
         boolean insertUserDirection = userGradeService.insertUserDirection(userDirectionBean);
-        if (insertUserDirection){
+        if (insertUserDirection) {
             return RespBean.ok("添加成功！！！");
-        }else {
+        } else {
             return RespBean.error("该方向已存在，添加失败！！！");
         }
     }
 
     @GetMapping("/userGradeBackGround/selectAllUserDirection")
-    @ApiOperation(value = "查询所有学习方向",httpMethod = "GET")
+    @ApiOperation(value = "查询所有学习方向", httpMethod = "GET")
     public RespBean selectAllUserDirection() {
         List<UserDirectionBean> userDirectionBeans = userGradeService.selectAllUserDirection();
-        return RespBean.ok("查询成功",userDirectionBeans);
+        return RespBean.ok("查询成功", userDirectionBeans);
     }
 
     @PostMapping("/userGradeBackGround/updateUserDirectionById")
     @ApiOperation(value = "管理员更改学习方向")
     @ApiImplicitParams({
-            @ApiImplicitParam(type = "query",name = "id",
-                    value = "学习方向id",required = true,dataTypeClass = Integer.class),
-            @ApiImplicitParam(type = "query",name = "userDirection",
-                    value = "学习方向",required = true,dataTypeClass = String.class)
+            @ApiImplicitParam(type = "query", name = "id",
+                    value = "学习方向id", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(type = "query", name = "userDirection",
+                    value = "学习方向", required = true, dataTypeClass = String.class)
     })
-    public RespBean updateUserDirectionById(UserDirectionBean userDirectionBean){
+    public RespBean updateUserDirectionById(UserDirectionBean userDirectionBean) {
         boolean updateUserDirectionById = userGradeService.updateUserDirectionById(userDirectionBean);
-        if (updateUserDirectionById){
+        if (updateUserDirectionById) {
             return RespBean.ok("更改成功！！！");
-        }else {
+        } else {
             return RespBean.error("该方向已存在，更改失败！！！");
         }
     }
 
     @DeleteMapping("/userGradeBackGround/deleteUserDirectionById")
-    @ApiOperation(value = "管理员根据学习方向id删除该学习方向",notes = "id不能为空",httpMethod = "DELETE")
-    @ApiImplicitParam(type = "query",name = "userDirectionId",
-            value = "学习方向id",required = true,dataTypeClass = Integer.class)
+    @ApiOperation(value = "管理员根据学习方向id删除该学习方向", notes = "id不能为空", httpMethod = "DELETE")
+    @ApiImplicitParam(type = "query", name = "userDirectionId",
+            value = "学习方向id", required = true, dataTypeClass = Integer.class)
     public RespBean deleteUserDirectionById(Integer userDirectionId) {
         boolean deleteUserDirectionById = userGradeService.deleteUserDirectionById(userDirectionId);
-        if (deleteUserDirectionById){
+        if (deleteUserDirectionById) {
             return RespBean.ok("删除成功！！！");
-        }else {
+        } else {
             return RespBean.error("删除失败！！！");
         }
     }
 
     @PostMapping("/userGradeBackGround/updateUserDirectionByUserId")
-    @ApiOperation(value = "管理员根据用户id更改用户所选方向",notes = "用户id和用户方向不能为空",httpMethod = "POST")
+    @ApiOperation(value = "管理员根据用户id更改用户所选方向", notes = "用户id和用户方向不能为空", httpMethod = "POST")
     @ApiImplicitParams({
-            @ApiImplicitParam(type = "query",name = "userId",
-                    value = "用户id",required = true,dataTypeClass = Integer.class),
-            @ApiImplicitParam(type = "query",name = "userDirection",
-                    value = "学习方向",required = true,dataTypeClass = String.class)
+            @ApiImplicitParam(type = "query", name = "userId",
+                    value = "用户id", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(type = "query", name = "userDirection",
+                    value = "学习方向", required = true, dataTypeClass = String.class)
     })
-    public RespBean updateUserDirectionByUserId(Integer userId,String userDirection) {
+    public RespBean updateUserDirectionByUserId(Integer userId, String userDirection) {
         boolean updateUserDirectionByUserId = userGradeService.updateUserDirectionByUserId(userId, userDirection);
-        if (updateUserDirectionByUserId){
+        if (updateUserDirectionByUserId) {
             return RespBean.ok("修改成功");
-        }else {
+        } else {
             return RespBean.error("修改失败,请检查输入是否正确！！！");
         }
     }
 
     @PostMapping("/userGradeBackGround/updateUserNameByUserId")
-    @ApiOperation(value = "管理员根据用户id更改用户姓名",notes = "用户id和用户名不能为空",httpMethod = "POST")
+    @ApiOperation(value = "管理员根据用户id更改用户姓名", notes = "用户id和用户名不能为空", httpMethod = "POST")
     @ApiImplicitParams({
-            @ApiImplicitParam(type = "query",name = "userId",
-                    value = "用户id",required = true,dataTypeClass = Integer.class),
-            @ApiImplicitParam(type = "query",name = "id",
-                    value = "姓名id",required = false,dataTypeClass = Integer.class),
-            @ApiImplicitParam(type = "query",name = "userName",
-                    value = "用户姓名",required = true,dataTypeClass = String.class)
+            @ApiImplicitParam(type = "query", name = "userId",
+                    value = "用户id", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(type = "query", name = "id",
+                    value = "姓名id", required = false, dataTypeClass = Integer.class),
+            @ApiImplicitParam(type = "query", name = "userName",
+                    value = "用户姓名", required = true, dataTypeClass = String.class)
     })
     public RespBean updateUserNameByUserId(Integer userId, UserNameBean userNameBean) {
         boolean updateUserNameByUserId = userGradeService.updateUserNameByUserId(userId, userNameBean);
-        if (updateUserNameByUserId){
+        if (updateUserNameByUserId) {
             return RespBean.ok("修改成功！！！");
-        }else {
+        } else {
             return RespBean.error("修改失败，该用户已存在！！！");
         }
     }
 
     @PostMapping("/userGradeBackGround/updateUserGradeByUserId")
-    @ApiOperation(value = "管理员根据用户id更改用户所在年级",notes = "用户id和用户方向不能为空",httpMethod = "POST")
+    @ApiOperation(value = "管理员根据用户id更改用户所在年级", notes = "用户id和用户方向不能为空", httpMethod = "POST")
     @ApiImplicitParams({
-            @ApiImplicitParam(type = "query",name = "userId",
-                    value = "用户id",required = true,dataTypeClass = Integer.class),
-            @ApiImplicitParam(type = "query",name = "userGrade",
-                    value = "年级",required = true,dataTypeClass = String.class)
+            @ApiImplicitParam(type = "query", name = "userId",
+                    value = "用户id", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(type = "query", name = "userGrade",
+                    value = "年级", required = true, dataTypeClass = String.class)
     })
     public RespBean updateUserGradeByUserId(Integer userId, String userGrade) {
         boolean updateUserGradeByUserId = userGradeService.updateUserGradeByUserId(userId, userGrade);
-        if (updateUserGradeByUserId){
+        if (updateUserGradeByUserId) {
             return RespBean.ok("修改成功！！！");
-        }else {
+        } else {
             return RespBean.error("修改失败，请检查输入格式是否正确！！！");
         }
     }
 
     @GetMapping("/userGradeBackGround/selectDimUserContact")
-    @ApiOperation(value = "模糊查询用户信息",notes = "模糊查询字段需为年级、姓名、或方向其中一项",httpMethod = "GET")
-    @ApiImplicitParam(type = "query",name = "dim",
-            value = "模糊查询字段",required = true,dataTypeClass = String.class)
-    public RespBean selectDimUserContact(String dim){
+    @ApiOperation(value = "模糊查询用户信息", notes = "模糊查询字段需为年级、姓名、或方向其中一项", httpMethod = "GET")
+    @ApiImplicitParam(type = "query", name = "dim",
+            value = "模糊查询字段", required = true, dataTypeClass = String.class)
+    public RespBean selectDimUserContact(String dim) {
         List<UserGradeContactBean> userGradeContactBeans = userGradeService.selectDimUserName(dim);
-        if (userGradeContactBeans.size()!=0){
-            return RespBean.ok("查询成功",userGradeContactBeans);
-        }else {
-            return RespBean.error("未查询到该用户",userGradeContactBeans);
+        if (userGradeContactBeans.size() != 0) {
+            return RespBean.ok("查询成功", userGradeContactBeans);
+        } else {
+            return RespBean.error("未查询到该用户", userGradeContactBeans);
         }
     }
 }

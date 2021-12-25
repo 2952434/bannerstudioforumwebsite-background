@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * @Author: Ljx
  * @Date: 2021/10/23 18:20
- * @role:
+ * @role: 管理员服务层实现
  */
 @Service
 public class AdminServiceImpl implements IAdminService {
@@ -33,7 +33,7 @@ public class AdminServiceImpl implements IAdminService {
      * 查询用户
      *
      * @param page 第几页
-     * @return page
+     * @return Page<UserBean>
      */
     @Override
     public Page<UserBean> selectAllUser(int page) {

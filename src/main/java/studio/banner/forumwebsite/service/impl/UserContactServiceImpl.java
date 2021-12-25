@@ -16,6 +16,7 @@ import java.util.List;
 /**
  * @Author: Mo
  * @Date: 2021/5/18 18:35
+ * @role: 关注关系服务实现
  */
 @Service
 public class UserContactServiceImpl implements IUserContactService {
@@ -25,9 +26,9 @@ public class UserContactServiceImpl implements IUserContactService {
     private UserContactMapper userContactMapper;
 
     /**
-     * 将关注人fan与被关注人star存入关系表，实现用户间的关注
+     * 新增关注
      *
-     * @param userContactBean
+     * @param userContactBean 关注实体
      * @return boolean
      */
     @Override
@@ -43,7 +44,7 @@ public class UserContactServiceImpl implements IUserContactService {
     /**
      * 取消关注
      *
-     * @param attentionId
+     * @param attentionId 关注id
      * @return boolean
      */
     @Override
@@ -55,11 +56,11 @@ public class UserContactServiceImpl implements IUserContactService {
     }
 
     /**
-     * 查询是否存在关注关系
+     * 查询是否存在关注关系，返回对象
      *
-     * @param memberFan
-     * @param memberStar
-     * @return list
+     * @param memberFan  粉丝id
+     * @param memberStar 被关注者id
+     * @return List<UserContactBean>
      */
     @Override
     public List<UserContactBean> contacted(Integer memberFan, Integer memberStar) {
@@ -73,8 +74,8 @@ public class UserContactServiceImpl implements IUserContactService {
     /**
      * 根据用户Id查询其粉丝
      *
-     * @param memberStar
-     * @return list
+     * @param memberStar 用户id
+     * @return List<UserContactBean>
      */
     @Override
     public List<UserContactBean> fans(Integer memberStar) {
@@ -87,8 +88,8 @@ public class UserContactServiceImpl implements IUserContactService {
     /**
      * 根据Id查询其关注的人
      *
-     * @param memberFan
-     * @return list
+     * @param memberFan 粉丝id
+     * @return List<UserContactBean>
      */
     @Override
     public List<UserContactBean> stars(Integer memberFan) {

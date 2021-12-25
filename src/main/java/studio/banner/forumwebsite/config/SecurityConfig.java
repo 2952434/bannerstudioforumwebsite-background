@@ -35,6 +35,7 @@
 //
 //    /**
 //     * 指定认证对象来源
+//     *
 //     * @param auth
 //     * @throws Exception
 //     */
@@ -58,8 +59,8 @@
 //                .anyRequest()
 //                .authenticated()
 //                .and()
-//                .addFilter(new JwtLoginFilter(super.authenticationManager(),prop))
-//                .addFilter(new JwtVerifyFilter(super.authenticationManager(),prop))
+//                .addFilter(new JwtLoginFilter(super.authenticationManager(), prop))
+//                .addFilter(new JwtVerifyFilter(super.authenticationManager(), prop))
 //                // 不需要session
 //                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 //    }

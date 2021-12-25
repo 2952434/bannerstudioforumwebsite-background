@@ -52,19 +52,26 @@ public class PostServiceImpl implements IPostService {
 
     public static final String POST_RANK = "post_rank";
 
+    /**
+     * 增加帖子
+     *
+     * @param postBean 帖子实体
+     * @param postType 帖子类型
+     * @return boolean
+     */
     @Override
-    public boolean insertPost(PostBean postBean,String ...postType) {
+    public boolean insertPost(PostBean postBean, String... postType) {
         if (postBean != null) {
             postMapper.insert(postBean);
             QueryWrapper<PostBean> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("post_title", postBean.getPostTitle())
-                    .eq("post_time",postBean.getPostTime());
+                    .eq("post_time", postBean.getPostTime());
             List<PostBean> list = postMapper.selectList(queryWrapper);
             Set<ZSetOperations.TypedTuple<String>> tuples = new HashSet<>();
             for (PostBean postBean1 : list) {
                 for (String s : postType) {
                     QueryWrapper<PostTypeBean> typeBeanQueryWrapper = new QueryWrapper<>();
-                    typeBeanQueryWrapper.eq("post_type",s);
+                    typeBeanQueryWrapper.eq("post_type", s);
                     PostTypeBean postTypeBean = postTypeMapper.selectOne(typeBeanQueryWrapper);
                     PostContactBean postContactBean = new PostContactBean();
                     postContactBean.setPostId(postBean1.getPostId());
@@ -94,7 +101,12 @@ public class PostServiceImpl implements IPostService {
         }
     }
 
-
+    /**
+     * 根据帖子id删除帖子
+     *
+     * @param postId 帖子id
+     * @return boolean
+     */
     @Override
     public boolean deletePost(int postId) {
         if (postMapper.selectById(postId) != null) {
@@ -108,6 +120,12 @@ public class PostServiceImpl implements IPostService {
         return false;
     }
 
+    /**
+     * 根据用户id删除用户全部帖子
+     *
+     * @param postMemberId 用户id
+     * @return boolean
+     */
     @Override
     public boolean deleteAllPost(int postMemberId) {
         if (selectAllPostByDescById(postMemberId).size() != 0) {
@@ -126,6 +144,13 @@ public class PostServiceImpl implements IPostService {
         return false;
     }
 
+    /**
+     * 根据帖子id更改帖子标题
+     *
+     * @param postId   帖子id
+     * @param newTitle 新标题
+     * @return boolean
+     */
     @Override
     public boolean updatePostTitle(int postId, String newTitle) {
         if (selectPost(postId) != null) {
@@ -155,6 +180,14 @@ public class PostServiceImpl implements IPostService {
         return false;
     }
 
+
+    /**
+     * 根据帖子id更改帖子内容
+     *
+     * @param postId     帖子id
+     * @param newContent 新内容
+     * @return boolean
+     */
     @Override
     public boolean updatePostContent(int postId, String newContent) {
         if (selectPost(postId) != null) {
@@ -180,6 +213,12 @@ public class PostServiceImpl implements IPostService {
         return false;
     }
 
+    /**
+     * 根据帖子id更改浏览量
+     *
+     * @param postId 帖子id
+     * @return boolean
+     */
     @Override
     public boolean updatePostPageView(int postId) {
         if (selectPost(postId) != null) {
@@ -188,10 +227,10 @@ public class PostServiceImpl implements IPostService {
             UpdateWrapper<PostBean> updateWrapper = new UpdateWrapper<>();
             redisTemplate.opsForZSet().incrementScore(POST_RANK, key, 1);
             Integer view = (Integer) redisTemplate.opsForHash().get(String.valueOf(postBean.getPostMemberId()), "view");
-            if (view == null){
+            if (view == null) {
                 view = 0;
             }
-            redisTemplate.opsForHash().put(String.valueOf(postBean.getPostMemberId()),"view",String.valueOf(view+1));
+            redisTemplate.opsForHash().put(String.valueOf(postBean.getPostMemberId()), "view", String.valueOf(view + 1));
             updateWrapper.eq("post_id", postId).set("post_page_view", postBean.getPostPageView() + 1);
             postMapper.update(null, updateWrapper);
             return true;
@@ -199,6 +238,12 @@ public class PostServiceImpl implements IPostService {
         return false;
     }
 
+    /**
+     * 根据帖子id更改评论量
+     *
+     * @param postId 帖子id
+     * @return boolean
+     */
     @Override
     public boolean updatePostCommentNumber(int postId) {
         if (selectPost(postId) != null) {
@@ -212,6 +257,12 @@ public class PostServiceImpl implements IPostService {
         return false;
     }
 
+    /**
+     * 根据帖子id更改点赞量
+     *
+     * @param postId 帖子id
+     * @return boolean
+     */
     @Override
     public boolean updatePostLikeNumber(int postId) {
         if (selectPost(postId) != null) {
@@ -225,16 +276,28 @@ public class PostServiceImpl implements IPostService {
     }
 
 
+    /**
+     * 根据帖子id查询帖子
+     *
+     * @param postId 帖子id
+     * @return PostBean
+     */
     @Override
     public PostBean selectPost(int postId) {
         return postMapper.selectById(postId);
     }
 
+    /**
+     * 根据用户id查询某用户全部帖子(根据时间返向排序)
+     *
+     * @param postMemberId 用户id
+     * @return List
+     */
     @Override
     public List<PostBean> selectAllPostByDescById(int postMemberId) {
         QueryWrapper<PostBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("post_member_id", postMemberId)
-                .orderByDesc("post_top","post_time");
+                .orderByDesc("post_top", "post_time");
         List<PostBean> list = postMapper.selectList(queryWrapper);
         if (list.size() != 0) {
             return list;
@@ -242,6 +305,12 @@ public class PostServiceImpl implements IPostService {
         return null;
     }
 
+    /**
+     * 根据用户id查询某用户全部帖子(根据时间正向排序)
+     *
+     * @param postMemberId 用户id
+     * @return List
+     */
     @Override
     public List<PostBean> selectAllPostByAscById(int postMemberId) {
         QueryWrapper<PostBean> queryWrapper = new QueryWrapper<>();
@@ -255,6 +324,12 @@ public class PostServiceImpl implements IPostService {
         return null;
     }
 
+    /**
+     * 分页查询所有帖子
+     *
+     * @param page 页数
+     * @return IPage
+     */
     @Override
     public IPage<PostBean> selectAllPost(int page) {
         Page<PostBean> page1 = new Page<>(page, 10);
@@ -265,6 +340,13 @@ public class PostServiceImpl implements IPostService {
         return null;
     }
 
+    /**
+     * 全文检索帖子和作者
+     *
+     * @param page 第几页
+     * @param dim  查询字段
+     * @return List<PostBeanEs>
+     */
     @Override
     public List<PostBeanEs> selectDimPost(int page, String dim) {
         PageRequest pageRequest = PageRequest.of(page, 20);
@@ -272,7 +354,11 @@ public class PostServiceImpl implements IPostService {
         return postBeanList;
     }
 
-
+    /**
+     * 将数据库中的帖子导入到Redis中
+     *
+     * @return Set<ZSetOperations.TypedTuple < String>>
+     */
     @Override
     public Set<ZSetOperations.TypedTuple<String>> addRedis() {
         redisTemplate.opsForZSet().removeRangeByScore(POST_RANK, 0, 1000000);
@@ -292,6 +378,11 @@ public class PostServiceImpl implements IPostService {
         return rangeWithScores;
     }
 
+    /**
+     * 每天早上1点自动更新Redis数据库中的帖子排名
+     *
+     * @return Set<ZSetOperations.TypedTuple < String>>
+     */
     @Override
     @Scheduled(cron = "0 0 1 * * ?")
     public Set<ZSetOperations.TypedTuple<String>> updateRedisPostRank() {
@@ -312,12 +403,20 @@ public class PostServiceImpl implements IPostService {
         return rangeWithScores;
     }
 
+    /**
+     * 帖子排行榜查询
+     *
+     * @return Set<ZSetOperations.TypedTuple < String>>
+     */
     @Override
     public Set<ZSetOperations.TypedTuple<String>> selectPostRank() {
         Set<ZSetOperations.TypedTuple<String>> rangeWithScores = redisTemplate.opsForZSet().reverseRangeWithScores(POST_RANK, 0, 10);
         return rangeWithScores;
     }
 
+    /**
+     * 每分钟更新一次es中的数据
+     */
     @Override
 //    @Scheduled(cron = "0 */1 * * * ?")
     public void updateEsPost() {
@@ -338,26 +437,44 @@ public class PostServiceImpl implements IPostService {
         }
     }
 
+    /**
+     * 根据作者id查询昨天的总浏览量
+     *
+     * @param memberId 用户id
+     * @return String
+     */
     @Override
     public String selectYesterdayView(Integer memberId) {
         String view = (String) redisTemplate.opsForHash().get(String.valueOf(memberId), "view");
         return view;
     }
 
+    /**
+     * 根据帖子id实现置顶功能
+     *
+     * @param postId 帖子id
+     * @return boolean
+     */
     @Override
     public boolean updatePostTopById(Integer postId) {
         UpdateWrapper<PostBean> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("post_id",postId).set("post_top",1);
+        updateWrapper.eq("post_id", postId).set("post_top", 1);
         int update = postMapper.update(null, updateWrapper);
-        return update==1;
+        return update == 1;
     }
 
+    /**
+     * 根据贴子id取消置顶
+     *
+     * @param postId 帖子id
+     * @return boolean
+     */
     @Override
     public boolean updatePostNoTopById(Integer postId) {
         UpdateWrapper<PostBean> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("post_id",postId).set("post_top",0);
+        updateWrapper.eq("post_id", postId).set("post_top", 0);
         int update = postMapper.update(null, updateWrapper);
-        return update==1;
+        return update == 1;
     }
 
 }

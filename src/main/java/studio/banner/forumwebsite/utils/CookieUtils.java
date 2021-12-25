@@ -26,9 +26,9 @@ public final class CookieUtils {
     /**
      * 得到Cookie的值, 不编码
      *
-     * @param request
-     * @param cookieName
-     * @return
+     * @param request    请求
+     * @param cookieName cook的名字
+     * @return String
      */
     public static String getCookieValue(HttpServletRequest request, String cookieName) {
         return getCookieValue(request, cookieName, false);
@@ -37,9 +37,9 @@ public final class CookieUtils {
     /**
      * 得到Cookie的值,
      *
-     * @param request
-     * @param cookieName
-     * @return
+     * @param request    请求
+     * @param cookieName cook的名字
+     * @return String
      */
     public static String getCookieValue(HttpServletRequest request, String cookieName, boolean isDecoder) {
         Cookie[] cookieList = request.getCookies();
@@ -67,9 +67,9 @@ public final class CookieUtils {
     /**
      * 得到Cookie的值,
      *
-     * @param request
-     * @param cookieName
-     * @return
+     * @param request    请求
+     * @param cookieName cook的名字
+     * @return String
      */
     public static String getCookieValue(HttpServletRequest request, String cookieName, String encodeString) {
         Cookie[] cookieList = request.getCookies();

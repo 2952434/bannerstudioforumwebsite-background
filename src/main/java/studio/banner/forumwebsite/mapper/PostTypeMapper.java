@@ -7,7 +7,7 @@ import studio.banner.forumwebsite.bean.PostTypeBean;
 /**
  * @Author: Ljx
  * @Date: 2021/12/12 14:46
- * @role:
+ * @role: 帖子类型映射
  */
 @Repository
 public interface PostTypeMapper extends BaseMapper<PostTypeBean> {

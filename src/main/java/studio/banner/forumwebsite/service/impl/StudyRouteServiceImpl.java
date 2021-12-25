@@ -24,6 +24,12 @@ public class StudyRouteServiceImpl implements IStudyRouteService {
     @Resource
     private StudyRouteMapper studyRouteMapper;
 
+    /**
+     * 插入一条学习路线
+     *
+     * @param studyRoute 学习路线对象
+     * @return boolean
+     */
     @Override
     public boolean insert(StudyRoute studyRoute) {
         QueryWrapper<StudyRoute> queryWrapper = new QueryWrapper<>();
@@ -38,6 +44,13 @@ public class StudyRouteServiceImpl implements IStudyRouteService {
         return false;
     }
 
+    /**
+     * 根据 学习方向 和 阶段编号 删除指定学习方向的指定阶段的内容
+     *
+     * @param studyDirection 学习方向
+     * @param stageNumber    阶段编号
+     * @return boolean
+     */
     @Override
     public boolean deleteByNumber(String studyDirection, Integer stageNumber) {
         QueryWrapper<StudyRoute> queryWrapper = new QueryWrapper<>();
@@ -52,6 +65,12 @@ public class StudyRouteServiceImpl implements IStudyRouteService {
         return false;
     }
 
+    /**
+     * 根据学习方向 删除指定方向的所有内容
+     *
+     * @param studyDirection 学习方向
+     * @return boolean
+     */
     @Override
     public boolean deleteByDirection(String studyDirection) {
         QueryWrapper<StudyRoute> queryWrapper = new QueryWrapper<>();
@@ -66,6 +85,12 @@ public class StudyRouteServiceImpl implements IStudyRouteService {
         return false;
     }
 
+    /**
+     * 根据 学习方向 和 阶段编号 更新 指定学习方向的指定阶段的内容
+     *
+     * @param studyRoute 学习路线对象
+     * @return boolean
+     */
     @Override
     public boolean update(StudyRoute studyRoute) {
         QueryWrapper<StudyRoute> queryWrapper = new QueryWrapper<>();
@@ -80,6 +105,13 @@ public class StudyRouteServiceImpl implements IStudyRouteService {
         return false;
     }
 
+    /**
+     * 根据 学习方向 和 阶段编号 查询指定学习方向的指定阶段的内容
+     *
+     * @param studyDirection 学习方向
+     * @param stageNumber    阶段编号
+     * @return StudyRoute
+     */
     @Override
     public StudyRoute selectByStageNumber(String studyDirection, Integer stageNumber) {
         QueryWrapper<StudyRoute> queryWrapper = new QueryWrapper<>();
@@ -92,6 +124,12 @@ public class StudyRouteServiceImpl implements IStudyRouteService {
         return null;
     }
 
+    /**
+     * 根据学习方向查询该方向的所有阶段的内容
+     *
+     * @param studyDirection 学习方向
+     * @return List<StudyRoute>
+     */
     @Override
     public List<StudyRoute> selectByStudyDirection(String studyDirection) {
         QueryWrapper<StudyRoute> queryWrapper = new QueryWrapper<>();
@@ -106,11 +144,23 @@ public class StudyRouteServiceImpl implements IStudyRouteService {
         return null;
     }
 
+    /**
+     * 查询所有学习方向内容
+     *
+     * @return List<StudyRoute>
+     */
     @Override
     public List<StudyRoute> selectAll() {
         return studyRouteMapper.selectList(null);
     }
 
+    /**
+     * 分页查询所有学习方向内容
+     *
+     * @param pageNumber 页码数
+     * @param pageSize   每页容量
+     * @return IPage<StudyRoute>
+     */
     @Override
     public IPage<StudyRoute> selectByPage(Integer pageNumber, Integer pageSize) {
         Page<StudyRoute> page = new Page<>(pageNumber, pageSize);

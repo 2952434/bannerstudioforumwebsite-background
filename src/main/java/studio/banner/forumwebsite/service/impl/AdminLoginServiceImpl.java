@@ -28,12 +28,12 @@
 //    @Override
 //    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
 //        QueryWrapper<UserBean> queryWrapper = new QueryWrapper<>();
-//        queryWrapper.eq("member_phone",s);
+//        queryWrapper.eq("member_phone", s);
 //        UserBean userBean = adminMapper.selectOne(queryWrapper);
-//        if(userBean==null){
+//        if (userBean == null) {
 //            System.out.println("----------用户名报错--------------");
 //            throw new UsernameNotFoundException("用户名错误！！");
-//        }else {
+//        } else {
 //            UserInfo user = new UserInfo();
 //            user.setPhone(user.getPhone());
 //            user.setPassword(userBean.getMemberPassword());

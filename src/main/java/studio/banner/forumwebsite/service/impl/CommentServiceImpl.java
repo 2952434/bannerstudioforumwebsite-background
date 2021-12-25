@@ -17,13 +17,19 @@ import java.util.List;
  *
  * @Author: HYK
  * @Date: 2021/05/15/17:25
- * @Description:
+ * @Description: 评论功能服务层实现
  */
 @Service
 public class CommentServiceImpl implements ICommentService {
     @Autowired
     protected CommentMapper commentMapper;
 
+    /**
+     * 增加评论
+     *
+     * @param commentBean 评论实体
+     * @return boolean
+     */
     @Override
     public boolean insertComment(CommentBean commentBean) {
         if (commentBean != null) {
@@ -33,6 +39,12 @@ public class CommentServiceImpl implements ICommentService {
         return false;
     }
 
+    /**
+     * 根据评论id删除该评论
+     *
+     * @param commentId 评论id
+     * @return boolean
+     */
     @Override
     public boolean deleteComment(int commentId) {
         if (selectComment(commentId) != null) {
@@ -44,6 +56,12 @@ public class CommentServiceImpl implements ICommentService {
         return false;
     }
 
+    /**
+     * 根据帖子id删除该帖子全部评论
+     *
+     * @param commentPostId 被评论帖子id
+     * @return boolean
+     */
     @Override
     public boolean deleteAllCommnetByPostId(int commentPostId) {
         if (selectAllCommentByPostId(commentPostId) != null) {
@@ -55,6 +73,12 @@ public class CommentServiceImpl implements ICommentService {
         return false;
     }
 
+    /**
+     * 根据用户id删除该用户所有评论
+     *
+     * @param commentMemberId 评论用户
+     * @return boolean
+     */
     @Override
     public boolean deleteAllCommentByMemberId(int commentMemberId) {
         if (selectAllCommentByMemberId(commentMemberId) != null) {
@@ -66,6 +90,13 @@ public class CommentServiceImpl implements ICommentService {
         return false;
     }
 
+    /**
+     * 根据评论id修改评论内容
+     *
+     * @param commentId  评论id
+     * @param newContent 新评论内容
+     * @return Boolean
+     */
     @Override
     public boolean updateCommentContent(int commentId, String newContent) {
         if (commentMapper.selectById(commentId) != null) {
@@ -77,6 +108,12 @@ public class CommentServiceImpl implements ICommentService {
         return false;
     }
 
+    /**
+     * 根据评论id修改评论点赞量
+     *
+     * @param commentId 评论id
+     * @return boolean
+     */
     @Override
     public boolean updateCommentLikeNumber(int commentId) {
         if (commentMapper.selectById(commentId) != null) {
@@ -88,8 +125,13 @@ public class CommentServiceImpl implements ICommentService {
         return false;
     }
 
+    /**
+     * 根据帖子id查找该帖子下全部评论
+     *
+     * @param commentPostId 被评论的帖子id
+     * @return List<CommentBean>
+     */
     @Override
-
     public List<CommentBean> selectAllCommentByPostId(int commentPostId) {
         QueryWrapper<CommentBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("comment_post_id", commentPostId);
@@ -99,6 +141,12 @@ public class CommentServiceImpl implements ICommentService {
         return null;
     }
 
+    /**
+     * 根据用户id查找该用户全部评论
+     *
+     * @param commentMemberId 用户id
+     * @return List<CommentBean>
+     */
     @Override
     public List<CommentBean> selectAllCommentByMemberId(int commentMemberId) {
         QueryWrapper<CommentBean> queryWrapper = new QueryWrapper<>();
@@ -109,6 +157,12 @@ public class CommentServiceImpl implements ICommentService {
         return null;
     }
 
+    /**
+     * 根据评论id查找该评论
+     *
+     * @param commentId 评论id
+     * @return CommentBean
+     */
     @Override
     public CommentBean selectComment(int commentId) {
         if (commentMapper.selectById(commentId) != null) {
@@ -117,6 +171,12 @@ public class CommentServiceImpl implements ICommentService {
         return null;
     }
 
+    /**
+     * 分页查询全部评论
+     *
+     * @param page 页数
+     * @return IPage<CommentBean>
+     */
     @Override
     public IPage<CommentBean> selectAllComment(int page) {
         Page<CommentBean> page1 = new Page<>(page, 10);

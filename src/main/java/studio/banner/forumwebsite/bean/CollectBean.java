@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
+ * 收藏对象
+ *
  * @Author: Ljx
  * @Date: 2021/5/13 21:56
  */
@@ -19,14 +21,26 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("tab_collect")
-@ApiModel(value="收藏对象")
+@ApiModel(value = "收藏对象")
 public class CollectBean {
-    @TableId(value = "col_id",type = IdType.AUTO)
+    /**
+     * 收藏id
+     */
+    @TableId(value = "col_id", type = IdType.AUTO)
     private Integer colId;
+    /**
+     * 收藏的文章id
+     */
     @TableField(value = "col_art_id")
     private Integer colArtId;
+    /**
+     * 收藏文章标题
+     */
     @TableField(value = "col_art_tit")
     private String colArtTit;
+    /**
+     * 收藏文章的用户id
+     */
     @TableField(value = "clo_user_id")
     private Integer cloUserId;
 

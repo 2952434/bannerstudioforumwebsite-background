@@ -69,7 +69,7 @@ public class UserMsgServiceImpl implements IUserMsgService {
      */
     @Override
     public boolean updateUserName(Integer memberId, String memberName) {
-        if (selectUserById(memberId)!=null) {
+        if (selectUserById(memberId) != null) {
             UpdateWrapper<UserMsgBean> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("member_id", memberId).set("member_name", memberName);
             int i = userMsgMapper.update(null, updateWrapper);
@@ -88,7 +88,7 @@ public class UserMsgServiceImpl implements IUserMsgService {
      */
     @Override
     public boolean updateUserSex(Integer memberId, String memberSex) {
-        if (selectUserById(memberId)!=null) {
+        if (selectUserById(memberId) != null) {
             UpdateWrapper<UserMsgBean> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("member_id", memberId).set("member_sex", memberSex);
             int i = userMsgMapper.update(null, updateWrapper);
@@ -107,7 +107,7 @@ public class UserMsgServiceImpl implements IUserMsgService {
      */
     @Override
     public boolean updateUserAge(Integer memberId, Integer memberAge) {
-        if (selectUserById(memberId)!=null) {
+        if (selectUserById(memberId) != null) {
             UpdateWrapper<UserMsgBean> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("member_id", memberId).set("member_age", memberAge);
             int i = userMsgMapper.update(null, updateWrapper);
@@ -126,7 +126,7 @@ public class UserMsgServiceImpl implements IUserMsgService {
      */
     @Override
     public boolean updateUserHead(Integer memberId, String memberHead) {
-        if (selectUserById(memberId)!=null) {
+        if (selectUserById(memberId) != null) {
             UpdateWrapper<UserMsgBean> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("member_id", memberId).set("member_head", memberHead);
             int i = userMsgMapper.update(null, updateWrapper);
@@ -221,11 +221,11 @@ public class UserMsgServiceImpl implements IUserMsgService {
 
     @Override
     public boolean updateUserSignature(Integer memberId, String signature) {
-        if (selectUserById(memberId)!=null){
+        if (selectUserById(memberId) != null) {
             UpdateWrapper<UserMsgBean> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("member_id", memberId).set("member_signature",signature);
+            updateWrapper.eq("member_id", memberId).set("member_signature", signature);
             int update = userMsgMapper.update(null, updateWrapper);
-            return update==1;
+            return update == 1;
         }
         return false;
     }

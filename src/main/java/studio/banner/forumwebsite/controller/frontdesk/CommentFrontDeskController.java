@@ -40,13 +40,6 @@ public class CommentFrontDeskController {
     @Autowired
     protected IPostService iPostService;
 
-    /**
-     * 评论增加接口
-     *
-     * @param commentBean
-     * @param bindingResult
-     * @return RespBean
-     */
     @PostMapping("/commentFrontDesk/insertComment")
     @ApiOperation(value = "评论增加", notes = "评论内容不能为空", httpMethod = "POST")
     @ApiImplicitParams({
@@ -65,10 +58,7 @@ public class CommentFrontDeskController {
     })
     public RespBean insertComment(@Valid CommentBean commentBean, BindingResult bindingResult) {
 
-        /**
-         * 将@Valid鉴权的错误信息返给前端
-         */
-
+        //将@Valid鉴权的错误信息返给前端
         if (bindingResult.hasErrors()) {
             Map<String, Object> map = new HashMap<>(999);
             List<FieldError> errors = bindingResult.getFieldErrors();
@@ -91,13 +81,6 @@ public class CommentFrontDeskController {
         return RespBean.error("评论失败，未找到该帖子");
     }
 
-
-    /**
-     * 评论删除
-     *
-     * @param commentId
-     * @return RespBean
-     */
     @DeleteMapping("/commentFrontDesk/deleteComment")
     @ApiOperation(value = "评论删除", notes = "评论需存在", httpMethod = "DELETE")
     @ApiImplicitParams({
@@ -112,14 +95,6 @@ public class CommentFrontDeskController {
         }
         return RespBean.error("删除失败，未找到该评论");
     }
-
-
-    /**
-     * 评论点赞量修改
-     *
-     * @param commentId
-     * @return RespBean
-     */
 
     @PutMapping("/commentFrontDesk/updateCommentLikeNumber")
     @ApiOperation(value = "评论点赞量修改", notes = "评论需存在", httpMethod = "PUT")
@@ -136,12 +111,6 @@ public class CommentFrontDeskController {
         return RespBean.error("修改失败，未找到该评论");
     }
 
-    /**
-     * 根据帖子id查询该帖子下全部评论
-     *
-     * @param commentPostId
-     * @return RespBean
-     */
 
     @GetMapping("/commentFrontDesk/selectAllCommentByPostId")
     @ApiOperation(value = "根据帖子id查询该帖子下全部评论", notes = "帖子需存在", httpMethod = "GET")
@@ -158,12 +127,6 @@ public class CommentFrontDeskController {
         return RespBean.error("查询失败，未找到该帖子或该帖子下无评论");
     }
 
-    /**
-     * 查询评论
-     *
-     * @param commentId
-     * @return RespBean
-     */
     @GetMapping("/commentFrontDesk/selectComment")
     @ApiOperation(value = "查询评论", notes = "评论需存在", httpMethod = "GET")
     @ApiImplicitParams({

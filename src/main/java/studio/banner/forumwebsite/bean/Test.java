@@ -8,9 +8,9 @@ import java.util.Date;
 /**
  * @Author: Ljx
  * @Date: 2021/12/19 15:49
- * @role:
+ * @role: 测试类
  */
-public class test {
+public class Test {
     public static void main(String[] args) throws ParseException {
 
         SimpleDateFormat dft = new SimpleDateFormat("yyyy-MM-dd");

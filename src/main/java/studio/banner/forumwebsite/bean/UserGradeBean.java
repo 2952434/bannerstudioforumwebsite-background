@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 /**
  * @Author: Ljx
  * @Date: 2021/12/12 19:33
- * @role:
+ * @role: 年级实体
  */
 @Data
 @ToString
@@ -21,9 +21,14 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserGradeBean {
-
+    /**
+     * 年级id
+     */
     @TableId(type = IdType.AUTO)
     private Integer id;
+    /**
+     * 用户年级如：2020级
+     */
     @NotNull(message = "班级不能为空")
     private String userGrade;
 }

@@ -22,7 +22,7 @@ import java.time.Duration;
 /**
  * @Author: Ljx
  * @Date: 2021/12/1 13:34
- * @role:
+ * @role: Redis配置类
  */
 @Configuration
 @EnableCaching

@@ -82,7 +82,7 @@ public class PostBackGroundController {
                     value = "帖子类型", required = false, dataTypeClass = String.class)
     }
     )
-    public RespBean insertPost(PostBean postBean, BindingResult bindingResult,String ...postType) {
+    public RespBean insertPost(PostBean postBean, BindingResult bindingResult, String... postType) {
         System.out.println(postBean);
         /**
          * 将@Valid鉴权的错误信息返给前端
@@ -103,7 +103,7 @@ public class PostBackGroundController {
         String judge2 = "^.{5,10000}$";
         if (postBean.getPostTitle().matches(judge1)) {
             if (postBean.getPostContent().matches(judge2)) {
-                iPostService.insertPost(postBean,postType);
+                iPostService.insertPost(postBean, postType);
                 return RespBean.ok("添加帖子成功");
             }
         }
@@ -138,8 +138,8 @@ public class PostBackGroundController {
             int postForward = postBean1.getPostMemberId();
             String postTitle = postBean1.getPostTitle();
             String[] strings = iPostTypeService.selectPostTypeById(postId);
-            PostBean postBean = new PostBean(0, postForwardMemberId, postTitle, postContent, postTime, null, null, postForward, null, imageAddress,0);
-            iPostService.insertPost(postBean,strings);
+            PostBean postBean = new PostBean(0, postForwardMemberId, postTitle, postContent, postTime, null, null, postForward, null, imageAddress, 0);
+            iPostService.insertPost(postBean, strings);
             return RespBean.ok("转发成功");
         }
         return RespBean.error("转发失败，未查询到原帖子");
@@ -449,37 +449,37 @@ public class PostBackGroundController {
     @ApiOperation(value = "根据作者id获得昨天帖子浏览总量")
     @ApiImplicitParam(paramType = "query", name = "memberId",
             value = "用户id", required = true, dataTypeClass = Integer.class)
-    public RespBean selectYesterdayView(Integer memberId){
+    public RespBean selectYesterdayView(Integer memberId) {
         String view = iPostService.selectYesterdayView(memberId);
-        if (view==null){
+        if (view == null) {
             view = "0";
         }
-        return RespBean.ok("昨天的浏览总量为："+view);
+        return RespBean.ok("昨天的浏览总量为：" + view);
     }
 
 
     @PostMapping("/postBackGround/updatePostTopById")
-    @ApiOperation(value = "根据帖子id实现置顶",notes = "帖子id需存在",httpMethod = "POST")
-    @ApiImplicitParam(type = "query",name = "postId",
-            value = "帖子id",required = true,dataTypeClass = Integer.class)
+    @ApiOperation(value = "根据帖子id实现置顶", notes = "帖子id需存在", httpMethod = "POST")
+    @ApiImplicitParam(type = "query", name = "postId",
+            value = "帖子id", required = true, dataTypeClass = Integer.class)
     public RespBean updatePostTopById(Integer postId) {
         boolean updatePostTopById = iPostService.updatePostTopById(postId);
-        if (updatePostTopById){
+        if (updatePostTopById) {
             return RespBean.ok("置顶成功！！！");
-        }else {
+        } else {
             return RespBean.error("帖子不存在，置顶失败！！！");
         }
     }
 
     @PostMapping("/postBackGround/updatePostNoTopById")
-    @ApiOperation(value = "根据帖子id取消置顶",notes = "帖子id需存在",httpMethod = "POST")
-    @ApiImplicitParam(type = "query",name = "postId",
-            value = "帖子id",required = true,dataTypeClass = Integer.class)
+    @ApiOperation(value = "根据帖子id取消置顶", notes = "帖子id需存在", httpMethod = "POST")
+    @ApiImplicitParam(type = "query", name = "postId",
+            value = "帖子id", required = true, dataTypeClass = Integer.class)
     public RespBean updatePostNoTopById(Integer postId) {
         boolean updatePostTopById = iPostService.updatePostNoTopById(postId);
-        if (updatePostTopById){
+        if (updatePostTopById) {
             return RespBean.ok("取消置顶成功！！！");
-        }else {
+        } else {
             return RespBean.error("帖子不存在，取消置顶失败！！！");
         }
     }

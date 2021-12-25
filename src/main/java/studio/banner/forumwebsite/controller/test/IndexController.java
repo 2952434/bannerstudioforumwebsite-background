@@ -15,7 +15,9 @@ import studio.banner.forumwebsite.service.IMessageService;
 import java.util.List;
 import java.util.Map;
 
-/** test websocket
+/**
+ * test websocket
+ *
  * @author jijunxiang
  */
 @RestController
@@ -25,51 +27,51 @@ public class IndexController {
     private IMessageService messageService;
 
     @GetMapping("/IndexController/queryMessageList")
-    @ApiOperation(value = "查询聊天记录",httpMethod = "GET")
+    @ApiOperation(value = "查询聊天记录", httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(type = "query",name = "fromId",
-                    value = "发送人id",required = true,dataTypeClass = Integer.class),
-            @ApiImplicitParam(type = "query",name = "toId",
-                    value = "接收人id",required = true,dataTypeClass = Integer.class),
+            @ApiImplicitParam(type = "query", name = "fromId",
+                    value = "发送人id", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(type = "query", name = "toId",
+                    value = "接收人id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(type = "query", name = "page",
-                    value = "页数",required = true,dataTypeClass = Integer.class),
-            @ApiImplicitParam(type = "query",name = "rows",
-                    value = "每页的信息条数",required = true,dataTypeClass = Integer.class)
+                    value = "页数", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(type = "query", name = "rows",
+                    value = "每页的信息条数", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean queryMessageList(Integer fromId, Integer toId, Integer page, Integer rows){
+    public RespBean queryMessageList(Integer fromId, Integer toId, Integer page, Integer rows) {
         List<Message> messages = messageService.queryMessageList(fromId, toId, page, rows);
         return RespBean.ok(messages);
     }
 
 
     @GetMapping("/IndexController/queryUserList")
-    @ApiOperation(value = "查询用户列表页面",httpMethod = "GET")
+    @ApiOperation(value = "查询用户列表页面", httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(type = "query",name = "userId",
-                    value = "用户id",required = true,dataTypeClass = Integer.class),
-            @ApiImplicitParam(type = "query",name = "page",
-                    value = "页数",required = true,dataTypeClass = Integer.class)
+            @ApiImplicitParam(type = "query", name = "userId",
+                    value = "用户id", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(type = "query", name = "page",
+                    value = "页数", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean queryUserList(Integer userId,Integer page){
-        List<Map<String, Object>> maps = messageService.selectUserList(userId,page);
+    public RespBean queryUserList(Integer userId, Integer page) {
+        List<Map<String, Object>> maps = messageService.selectUserList(userId, page);
         return RespBean.ok(maps);
     }
 
     @PostMapping("/IndexController/saveMessage")
-    @ApiOperation(value = "发送信息",httpMethod = "POST")
+    @ApiOperation(value = "发送信息", httpMethod = "POST")
     @ApiImplicitParams({
-            @ApiImplicitParam(type = "query",name = "userId",
-                    value = "发送人id",required = true,dataTypeClass = Integer.class),
-            @ApiImplicitParam(type = "query",name = "toId",
-                    value = "接收人id",required = true,dataTypeClass = Integer.class),
-            @ApiImplicitParam(type = "query",name = "msg",
-                    value = "发送的信息",required = true,dataTypeClass = String.class)
+            @ApiImplicitParam(type = "query", name = "userId",
+                    value = "发送人id", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(type = "query", name = "toId",
+                    value = "接收人id", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(type = "query", name = "msg",
+                    value = "发送的信息", required = true, dataTypeClass = String.class)
     })
     public RespBean saveMessage(Integer userId, Integer toId, String msg) {
         Message saveMessage = messageService.saveMessage(userId, toId, msg);
-        if (saveMessage!=null){
+        if (saveMessage != null) {
             return RespBean.ok("发送成功！！！");
-        }else {
+        } else {
             return RespBean.error("发送失败！！！");
         }
     }

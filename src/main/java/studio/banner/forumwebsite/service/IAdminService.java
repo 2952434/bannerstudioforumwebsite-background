@@ -8,14 +8,14 @@ import java.util.List;
 /**
  * @Author: Ljx
  * @Date: 2021/10/23 18:14
- * @role:
+ * @role: 管理员服务层接口
  */
 public interface IAdminService {
     /**
      * 查询所有用户
      *
      * @param page 第几页
-     * @return所有用户集合
+     * @return Page<UserBean>
      */
     Page<UserBean> selectAllUser(int page);
 

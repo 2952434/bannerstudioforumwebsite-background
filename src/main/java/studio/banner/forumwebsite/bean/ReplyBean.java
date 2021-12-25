@@ -24,15 +24,36 @@ import javax.validation.constraints.NotNull;
 @TableName("tab_reply")
 @ApiModel("回复实体类")
 public class ReplyBean {
+    /**
+     * 回复id
+     */
     @TableId(type = IdType.AUTO)
     private Integer replyId;
+    /**
+     * 评论id
+     */
     @TableField
     private Integer commentId;
+    /**
+     * 回复作者id
+     */
     private Integer replyMemberId;
+    /**
+     * 被回复作者id
+     */
     private Integer replyCommentMemberId;
+    /**
+     * 回复内容
+     */
     @NotNull(message = "回复内容不能为空")
     private String replyContent;
+    /**
+     * 回复点赞量
+     */
     private Integer replyLikeNumber;
+    /**
+     * 回复时间
+     */
     private String replyTime;
 
 

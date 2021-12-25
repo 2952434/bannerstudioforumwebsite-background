@@ -10,30 +10,60 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 /**
  * @Author: Ljx
  * @Date: 2021/12/3 21:56
- * @role:
+ * @role: elasticsearch文章类
  */
 @Data
 @Document(indexName = "post")
 public class PostBeanEs {
+    /**
+     * 帖子id
+     */
     @Id
-    @Field(index = false,type = FieldType.Integer)
+    @Field(index = false, type = FieldType.Integer)
     private Integer id;
-    @Field(analyzer = "ik_smart",searchAnalyzer = "ik_smart",store = true,type = FieldType.Text)
+    /**
+     * 帖子标题
+     */
+    @Field(analyzer = "ik_smart", searchAnalyzer = "ik_smart", store = true, type = FieldType.Text)
     private String title;
-    @Field(analyzer = "ik_smart",searchAnalyzer = "ik_smart",store = true,type = FieldType.Text)
+    /**
+     * 帖子内容
+     */
+    @Field(analyzer = "ik_smart", searchAnalyzer = "ik_smart", store = true, type = FieldType.Text)
     private String context;
-    @Field(index = false,store = true,type = FieldType.Integer)
+    /**
+     * 帖子浏览量
+     */
+    @Field(index = false, store = true, type = FieldType.Integer)
     private Integer hits;
-    @Field(index = false,store = true,type = FieldType.Text)
+    /**
+     * 帖子发布时间
+     */
+    @Field(index = false, store = true, type = FieldType.Text)
     private String time;
-    @Field(index = false,store = true,type = FieldType.Integer)
+    /**
+     * 帖子评论量
+     */
+    @Field(index = false, store = true, type = FieldType.Integer)
     private Integer commentNumber;
-    @Field(index = false,store = true,type = FieldType.Integer)
+    /**
+     * 帖子点赞量
+     */
+    @Field(index = false, store = true, type = FieldType.Integer)
     private Integer likeNumber;
-    @Field(index = false,store = true,type = FieldType.Integer)
+    /**
+     * 作者id
+     */
+    @Field(index = false, store = true, type = FieldType.Integer)
     private Integer uid;
-    @Field(index = false,store = true,type = FieldType.Integer)
+    /**
+     * 帖子是否是转发帖子 0：原创  1：转发
+     */
+    @Field(index = false, store = true, type = FieldType.Integer)
     private Integer forward;
-    @Field(index = false,store = true,type = FieldType.Integer)
+    /**
+     * 帖子图片地址
+     */
+    @Field(index = false, store = true, type = FieldType.Integer)
     private String postImageAddress;
 }

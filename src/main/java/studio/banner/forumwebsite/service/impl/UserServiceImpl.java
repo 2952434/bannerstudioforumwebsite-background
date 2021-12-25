@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import studio.banner.forumwebsite.bean.User;
 import studio.banner.forumwebsite.bean.UserBean;
 //import studio.banner.forumwebsite.bean.UserInfo;
 import studio.banner.forumwebsite.manager.SendMail;
@@ -24,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @Author: Ljx
  * @Date: 2021/5/13 22:05
+ * @role: 用户服务类实现
  */
 @Service
 public class UserServiceImpl implements IUserService {
@@ -35,14 +37,14 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private RedisTemplate<String,String> redisTemplate;
     /**
-     * 增加数据
+     * 插入用户
      *
-     * @param userBean 插入的用户
+     * @param userBean 用户实体
      * @return boolean
      */
     @Override
     public boolean insertUser(UserBean userBean) {
-        if (selectAccount(userBean.getMemberPhone()) == true) {
+        if (selectAccount(userBean.getMemberPhone())) {
             userBean.setMemberAdmin("user");
             userMapper.insert(userBean);
             return true;
@@ -61,35 +63,32 @@ public class UserServiceImpl implements IUserService {
     public boolean selectAccount(String memberPhone) {
         QueryWrapper<UserBean> wrapper = new QueryWrapper<>();
         wrapper.eq("member_phone", memberPhone);
-        List User = userMapper.selectList(wrapper);
-        if (User.size() == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        List<UserBean> user = userMapper.selectList(wrapper);
+        return user.size() == 0;
     }
 
 
     /**
-     * 查询账号密码是否对应存在
+     * 登陆时查询是否存在该账号与对应密码
      *
-     * @param MemberPhone    查询用户账号
-     * @param memberPassword 查询用户账号
-     * @return boolean
+     * @param memberPhone 用户账号
+     * @param memberPassword 用户密码
+     * @return List<UserBean>
+     * @throws Exception io异常
      */
     @Override
-    public List<UserBean> selectUser(String MemberPhone, String memberPassword) throws Exception {
+    public List<UserBean> selectUser(String memberPhone, String memberPassword) throws Exception {
         QueryWrapper<UserBean> wrapper = new QueryWrapper<>();
-        wrapper.eq("member_phone", MemberPhone)
+        wrapper.eq("member_phone", memberPhone)
                 .eq("member_password", memberPassword);
-        List<UserBean> User = userMapper.selectList(wrapper);
-        if (User.size()!=0){
+        List<UserBean> user = userMapper.selectList(wrapper);
+        if (user.size()!=0){
             PrivateKey privateKey = (PrivateKey) redisTemplate.opsForHash().get("keys", "privateKey");
             System.out.println("私钥为："+privateKey);
 //            String token = JwtUtils.generateToken(new UserInfo(MemberPhone, memberPassword), privateKey, 8);
 //            redisTemplate.opsForValue().set(MemberPhone,token,10, TimeUnit.MINUTES);
         }
-        return User;
+        return user;
     }
 
     /**
@@ -103,10 +102,13 @@ public class UserServiceImpl implements IUserService {
         int i = userMapper.deleteById(memberId);
         return i == 1;
     }
-
+    /**
+     * 更新用户
+     *
+     * @return boolean
+     */
     @Override
     public boolean updateUser() {
-
         return false;
     }
 
@@ -144,10 +146,10 @@ public class UserServiceImpl implements IUserService {
     /**
      * 忘记密码，根据邮箱修改密码
      *
-     * @param memberPhone
-     * @param memberMail
-     * @param code
-     * @param newMemberPassword
+     * @param memberPhone 账号
+     * @param memberMail 邮箱
+     * @param code 验证码
+     * @param newMemberPassword 新密码
      * @return boolean
      */
     @Override
@@ -180,11 +182,23 @@ public class UserServiceImpl implements IUserService {
         return userMapper.selectOne(wrapper);
     }
 
+    /**
+     * 分页查询用户
+     *
+     * @return UserBean
+     */
     @Override
     public IPage<UserBean> selectUser() {
         return null;
     }
 
+    /**
+     * 发送验证码
+     *
+     * @param email 邮箱
+     * @param phone 账号
+     * @return List<UserBean>
+     */
     @Override
     public List<UserBean> sendMail(String email, String phone) {
         String code = sendMail.sendSimpleMail(email);

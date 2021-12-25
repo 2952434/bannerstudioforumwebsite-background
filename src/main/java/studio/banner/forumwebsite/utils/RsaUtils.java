@@ -8,6 +8,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+
 /**
  * @Author: Ljx
  * @Date: 2021/11/19 8:10
@@ -23,7 +24,7 @@ public class RsaUtils {
      *
      * @param filename 公钥保存路径，相对于classpath
      * @return 公钥对象
-     * @throws Exception
+     * @throws Exception io异常
      */
     public static PublicKey getPublicKey(String filename) throws Exception {
         byte[] bytes = readFile(filename);
@@ -35,7 +36,7 @@ public class RsaUtils {
      *
      * @param filename 私钥保存路径，相对于classpath
      * @return 私钥对象
-     * @throws Exception
+     * @throws Exception io异常
      */
     public static PrivateKey getPrivateKey(String filename) throws Exception {
         byte[] bytes = readFile(filename);
@@ -46,8 +47,8 @@ public class RsaUtils {
      * 获取公钥
      *
      * @param bytes 公钥的字节形式
-     * @return
-     * @throws Exception
+     * @return PublicKey
+     * @throws Exception io异常
      */
     private static PublicKey getPublicKey(byte[] bytes) throws Exception {
         bytes = Base64.getDecoder().decode(bytes);
@@ -60,8 +61,8 @@ public class RsaUtils {
      * 获取密钥
      *
      * @param bytes 私钥的字节形式
-     * @return
-     * @throws Exception
+     * @return PrivateKey
+     * @throws Exception io异常
      */
     private static PrivateKey getPrivateKey(byte[] bytes) throws NoSuchAlgorithmException, InvalidKeySpecException {
         bytes = Base64.getDecoder().decode(bytes);
@@ -92,10 +93,24 @@ public class RsaUtils {
         writeFile(privateKeyFilename, privateKeyBytes);
     }
 
+    /**
+     * 读文件
+     *
+     * @param fileName 文件名
+     * @return byte[]
+     * @throws Exception io异常
+     */
     private static byte[] readFile(String fileName) throws Exception {
         return Files.readAllBytes(new File(fileName).toPath());
     }
 
+    /**
+     * 写文件
+     *
+     * @param destPath 文件路径
+     * @param bytes    字节数组
+     * @throws IOException io异常
+     */
     private static void writeFile(String destPath, byte[] bytes) throws IOException {
         File dest = new File(destPath);
         if (!dest.exists()) {

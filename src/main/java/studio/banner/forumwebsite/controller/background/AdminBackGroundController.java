@@ -57,19 +57,19 @@ public class AdminBackGroundController {
 
     @ApiOperation(value = "更新帖子排行榜", httpMethod = "POST")
     @PostMapping("/adminBackGround/updateRedisPostRank")
-    public RespBean updateRedisPostRank(){
+    public RespBean updateRedisPostRank() {
         Set<ZSetOperations.TypedTuple<String>> typedTuples = postService.updateRedisPostRank();
-        if (typedTuples.size()!=0){
+        if (typedTuples.size() != 0) {
             return RespBean.ok("更新成功，今天的排行榜为：", JSON.toJSONString(typedTuples));
-        }else {
+        } else {
             return RespBean.error("更新失败！！！");
         }
 
     }
 
-    @ApiOperation(value = "更新全文检索",httpMethod = "POST")
+    @ApiOperation(value = "更新全文检索", httpMethod = "POST")
     @PostMapping("/adminBackGround/updateEsPost")
-    public RespBean updateEsPost(){
+    public RespBean updateEsPost() {
         postService.updateEsPost();
         return RespBean.ok("更新成功！！！");
     }

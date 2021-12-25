@@ -1,8 +1,5 @@
 package studio.banner.forumwebsite.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import lombok.Data;
-import org.springframework.stereotype.Service;
 import studio.banner.forumwebsite.bean.UserMsgBean;
 
 import java.util.List;
@@ -97,6 +94,7 @@ public interface IUserMsgService {
 
     /**
      * 根据用户id更改个性签名
+     *
      * @param memberId
      * @param signature
      * @return
@@ -105,6 +103,7 @@ public interface IUserMsgService {
 
     /**
      * 根据id查询用户是否存在
+     *
      * @param memberId
      * @return
      */

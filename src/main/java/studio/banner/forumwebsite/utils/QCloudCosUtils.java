@@ -23,22 +23,34 @@ import java.util.UUID;
 @Data
 public class QCloudCosUtils {
 
-    //API密钥secretId
+    /**
+     * API密钥secretId
+     */
     private String secretId;
 
-    //API密钥secretKey
+    /**
+     * API密钥secretKey
+     */
     private String secretKey;
 
-    //存储桶所属地域
+    /**
+     * 存储桶所属地域
+     */
     private String region;
 
-    //存储桶空间名称
+    /**
+     * 存储桶空间名称
+     */
     private String bucketName;
 
-    //存储桶访问域名
+    /**
+     * 存储桶访问域名
+     */
     private String path;
 
-    //上传文件前缀路径(eg:/images/)
+    /**
+     * 上传文件前缀路径(eg:/images/)
+     */
     private String prefix;
 
     /**
@@ -117,8 +129,8 @@ public class QCloudCosUtils {
     /**
      * 根据UUID生成唯一文件名
      *
-     * @param originalName
-     * @return
+     * @param originalName 原名
+     * @return String
      */
     public String generateUniqueName(String originalName) {
         return UUID.randomUUID() + originalName.substring(originalName.lastIndexOf("."));
@@ -126,6 +138,9 @@ public class QCloudCosUtils {
 
     /**
      * 删除文件
+     *
+     * @param fileName 文件名
+     * @return boolean
      */
     public boolean deleteFile(String fileName) {
         String key = prefix + fileName;

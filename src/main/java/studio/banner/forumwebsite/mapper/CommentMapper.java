@@ -9,7 +9,7 @@ import studio.banner.forumwebsite.bean.CommentBean;
  *
  * @Author: HYK
  * @Date: 2021/05/15/17:00
- * @Description:评论底层接口
+ * @Description: 评论底层接口
  */
 @Repository
 public interface CommentMapper extends BaseMapper<CommentBean> {

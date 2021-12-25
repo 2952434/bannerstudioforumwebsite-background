@@ -8,7 +8,7 @@ import studio.banner.forumwebsite.utils.QCloudCosUtils;
 /**
  * @Author: Ljx
  * @Date: 2021/11/28 14:05
- * @role:
+ * @role: 腾讯云配置
  */
 @Configuration
 public class QCloudCosUtilsConfig {

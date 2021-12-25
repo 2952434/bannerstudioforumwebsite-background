@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 /**
  * @Author: Ljx
  * @Date: 2021/12/13 15:44
- * @role:
+ * @role: 学习方向实体
  */
 @Data
 @ToString
@@ -21,8 +21,14 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDirectionBean {
+    /**
+     * 方向id
+     */
     @TableId(type = IdType.AUTO)
     private Integer id;
-    @NotNull(message = "用户方向不能为空")
+    /**
+     * 学习方向如：Java
+     */
+    @NotNull(message = "学习方向不能为空")
     private String userDirection;
 }

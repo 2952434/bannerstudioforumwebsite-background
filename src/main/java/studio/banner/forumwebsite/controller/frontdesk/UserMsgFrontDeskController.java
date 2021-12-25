@@ -32,27 +32,27 @@ public class UserMsgFrontDeskController {
     @PostMapping("/userMsgFrontDesk/insertUserMsg")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberId",
-                    value = "用户Id",   dataTypeClass = Integer.class),
+                    value = "用户Id", dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "memberName",
-                    value = "用户昵称",  dataTypeClass = String.class),
+                    value = "用户昵称", dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "memberSex",
-                    value = "用户性别",  dataTypeClass = String.class),
+                    value = "用户性别", dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "memberAge",
-                    value = "用户年龄",  dataTypeClass = Integer.class),
+                    value = "用户年龄", dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "memberTime",
-                    value = "注册时间",  dataTypeClass = String.class),
+                    value = "注册时间", dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "memberHead",
-                    value = "用户头像",  dataTypeClass = String.class),
+                    value = "用户头像", dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "memberFans",
-                    value = "用户粉丝数",  dataTypeClass = Integer.class),
+                    value = "用户粉丝数", dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "memberFans",
                     value = "用户粉丝数", dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "memberAttention",
-                    value = "用户关注数",  dataTypeClass = Integer.class),
+                    value = "用户关注数", dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "memberBirthday",
                     value = "格式必须为xxxx-xx-xx", required = false, dataTypeClass = Date.class),
             @ApiImplicitParam(paramType = "query", name = "memberSignature",
-                    value = "个性签名",  dataTypeClass = String.class)
+                    value = "个性签名", dataTypeClass = String.class)
 
     }
     )
@@ -200,13 +200,13 @@ public class UserMsgFrontDeskController {
             @ApiImplicitParam(paramType = "query", name = "memberId",
                     value = "用户id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "signature",
-                    value = "个性签名",dataTypeClass = String.class)
+                    value = "个性签名", dataTypeClass = String.class)
     })
-    public RespBean updateUserSignature(Integer memberId,String signature){
+    public RespBean updateUserSignature(Integer memberId, String signature) {
         boolean signature1 = iUserMsgService.updateUserSignature(memberId, signature);
-        if (signature1){
+        if (signature1) {
             return RespBean.ok("更新成功！！！");
-        }else {
+        } else {
             return RespBean.error("更新失败！！！");
         }
     }

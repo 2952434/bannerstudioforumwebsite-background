@@ -3,7 +3,6 @@ package studio.banner.forumwebsite.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import studio.banner.forumwebsite.bean.UsersInformationBean;
 
-import java.util.List;
 
 /**
  * @Author: Ljx
@@ -13,7 +12,7 @@ public interface IUsersInformationService {
     /**
      * 增加用户信息到信息表
      *
-     * @param usersInformationBean
+     * @param usersInformationBean 用户信息实体
      * @return boolean
      */
     boolean insertUsersInformation(UsersInformationBean usersInformationBean);
@@ -22,7 +21,7 @@ public interface IUsersInformationService {
     /**
      * 查询用户信息通过id
      *
-     * @param id
+     * @param id 用户id
      * @return boolean
      */
     boolean selectUsersInformationById(Integer id);
@@ -30,7 +29,7 @@ public interface IUsersInformationService {
     /**
      * 删除用户信息
      *
-     * @param id
+     * @param id 用户id
      * @return boolean
      */
     boolean deleteUsersInformation(Integer id);
@@ -38,7 +37,7 @@ public interface IUsersInformationService {
     /**
      * 更改用户信息
      *
-     * @param usersInformationBean
+     * @param usersInformationBean 用户信息实体
      * @return boolean
      */
     boolean updateUsersInformation(UsersInformationBean usersInformationBean);
@@ -46,8 +45,8 @@ public interface IUsersInformationService {
     /**
      * 分页查询
      *
-     * @param page
-     * @return IPage
+     * @param page 页数
+     * @return IPage<UsersInformationBean>
      */
     IPage<UsersInformationBean> selectUsersInformationBeanPage(Integer page);
 
@@ -56,7 +55,7 @@ public interface IUsersInformationService {
      *
      * @param page 第几页
      * @param dim  模糊查询字段
-     * @return
+     * @return IPage<UsersInformationBean>
      */
     IPage<UsersInformationBean> selectUserInformationDimPage(Integer page, String dim);
 }

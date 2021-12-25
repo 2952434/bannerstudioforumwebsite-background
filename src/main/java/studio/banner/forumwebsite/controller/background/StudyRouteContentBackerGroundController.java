@@ -41,13 +41,13 @@ public class StudyRouteContentBackerGroundController {
     @PostMapping(value = "/studyRouteContentBackerGround/insert")
     @ApiOperation("插入一条学习路线内容")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "studyContent", value = "学习路线内容",dataTypeClass = String.class),
-            @ApiImplicitParam(name = "serialNumber", value = "内容序号",dataTypeClass = Long.class),
-            @ApiImplicitParam(name = "studyDirection", value = "学习路线",dataTypeClass = String.class),
-            @ApiImplicitParam(name = "stageNumber", value = "学习阶段编号",dataTypeClass = Long.class)
+            @ApiImplicitParam(name = "studyContent", value = "学习路线内容", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "serialNumber", value = "内容序号", dataTypeClass = Long.class),
+            @ApiImplicitParam(name = "studyDirection", value = "学习路线", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "stageNumber", value = "学习阶段编号", dataTypeClass = Long.class)
     })
     public RespBean insert(@Valid StudyRouteContent studyRouteContent, BindingResult bindingResult, @RequestParam String studyDirection, @RequestParam Integer stageNumber) {
-        if (bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             Map<String, Object> map = new HashMap<>();
             List<FieldError> errors = bindingResult.getFieldErrors();
             logger.error("插入失败！");
@@ -72,12 +72,12 @@ public class StudyRouteContentBackerGroundController {
     @DeleteMapping(value = "/studyRouteContentBackerGround/deleteSingle")
     @ApiOperation("根据学习路线、学习阶段编号以及内容序号删除指定条内容")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "studyDirection", value = "学习路线",dataTypeClass = String.class),
-            @ApiImplicitParam(name = "stageNumber", value = "学习阶段编号",dataTypeClass = Long.class),
-            @ApiImplicitParam(name = "serialNumber", value = "内容序号",dataTypeClass = Long.class)
+            @ApiImplicitParam(name = "studyDirection", value = "学习路线", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "stageNumber", value = "学习阶段编号", dataTypeClass = Long.class),
+            @ApiImplicitParam(name = "serialNumber", value = "内容序号", dataTypeClass = Long.class)
     })
     public RespBean deleteSingle(@RequestParam String studyDirection, @RequestParam Integer stageNumber, @RequestParam Integer serialNumber) {
-        if (studyDirection==null||stageNumber==null||serialNumber==null){
+        if (studyDirection == null || stageNumber == null || serialNumber == null) {
             return RespBean.error("删除失败，stageNumber和studyDirection和serialNumber不可以为空");
         }
         StudyRoute studyRoute = iStudyRouteService.selectByStageNumber(studyDirection, stageNumber);
@@ -91,14 +91,15 @@ public class StudyRouteContentBackerGroundController {
         }
         return RespBean.error(String.format("删除失败，未找到%s学习路线的第%d阶段", studyDirection, stageNumber));
     }
+
     @DeleteMapping(value = "/studyRouteContentBackerGround/deleteByStageNumber")
     @ApiOperation("根据学习路线、阶段编号删除指定阶段所有内容")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "studyDirection", value = "学习方向",dataTypeClass = String.class),
-            @ApiImplicitParam(name = "stageNumber", value = "阶段编号",dataTypeClass = Long.class)
+            @ApiImplicitParam(name = "studyDirection", value = "学习方向", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "stageNumber", value = "阶段编号", dataTypeClass = Long.class)
     })
     public RespBean deleteByStageNumber(@RequestParam String studyDirection, @RequestParam Integer stageNumber) {
-        if (studyDirection==null||stageNumber==null){
+        if (studyDirection == null || stageNumber == null) {
             return RespBean.error("删除失败，stageNumber和studyDirection不可以为空");
         }
         if (iStudyRouteService.deleteByNumber(studyDirection, stageNumber)) {
@@ -111,9 +112,9 @@ public class StudyRouteContentBackerGroundController {
 
     @DeleteMapping(value = "/studyRouteContentBackerGround/deleteByStudyDirection")
     @ApiOperation("根据学习方向删除指定方向的所有内容")
-    @ApiImplicitParam(name = "studyDirection", value = "学习方向",dataTypeClass = String.class)
+    @ApiImplicitParam(name = "studyDirection", value = "学习方向", dataTypeClass = String.class)
     public RespBean deleteByStudyDirection(@RequestParam String studyDirection) {
-        if (studyDirection==null){
+        if (studyDirection == null) {
             return RespBean.error("删除失败，studyDirection不可以为空");
         }
         if (iStudyRouteService.deleteByDirection(studyDirection)) {
@@ -128,13 +129,13 @@ public class StudyRouteContentBackerGroundController {
     @PutMapping(value = "/studyRouteContentBackerGround/update")
     @ApiOperation("更新指定条学习路线内容")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "studyContent", value = "学习路线内容",dataTypeClass = String.class),
-            @ApiImplicitParam(name = "serialNumber", value = "内容序号",dataTypeClass = Long.class),
-            @ApiImplicitParam(name = "studyDirection", value = "学习路线",dataTypeClass = String.class),
-            @ApiImplicitParam(name = "stageNumber", value = "学习阶段编号",dataTypeClass = Long.class)
+            @ApiImplicitParam(name = "studyContent", value = "学习路线内容", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "serialNumber", value = "内容序号", dataTypeClass = Long.class),
+            @ApiImplicitParam(name = "studyDirection", value = "学习路线", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "stageNumber", value = "学习阶段编号", dataTypeClass = Long.class)
     })
     public RespBean update(@Valid StudyRouteContent studyRouteContent, BindingResult bindingResult, @RequestParam String studyDirection, @RequestParam Integer stageNumber) {
-        if (bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             Map<String, Object> map = new HashMap<>();
             List<FieldError> errors = bindingResult.getFieldErrors();
             logger.error("插入失败！");
@@ -163,12 +164,12 @@ public class StudyRouteContentBackerGroundController {
     @GetMapping(value = "/studyRouteContentBackerGround/selectSingle")
     @ApiOperation("根据学习路线,学习阶段编号,内容序号 查询指定条内容")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "studyDirection", value = "学习路线",dataTypeClass = String.class),
-            @ApiImplicitParam(name = "stageNumber", value = "学习阶段编号",dataTypeClass = Long.class),
-            @ApiImplicitParam(name = "serialNumber", value = "内容序号",dataTypeClass = Long.class)
+            @ApiImplicitParam(name = "studyDirection", value = "学习路线", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "stageNumber", value = "学习阶段编号", dataTypeClass = Long.class),
+            @ApiImplicitParam(name = "serialNumber", value = "内容序号", dataTypeClass = Long.class)
     })
     public RespBean selectSingle(@RequestParam String studyDirection, @RequestParam Integer stageNumber, @RequestParam Integer serialNumber) {
-        if (studyDirection==null||stageNumber==null||serialNumber==null){
+        if (studyDirection == null || stageNumber == null || serialNumber == null) {
             return RespBean.error("查询失败，stageNumber和studyDirection和serialNumber不可以为空");
         }
         StudyRoute studyRoute = iStudyRouteService.selectByStageNumber(studyDirection, stageNumber);
@@ -189,11 +190,11 @@ public class StudyRouteContentBackerGroundController {
     @GetMapping(value = "/studyRouteContentBackerGround/selectByDirectionId")
     @ApiOperation("根据学习路线，学习阶段编号查询指定阶段的所有内容")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "studyDirection", value = "学习路线",dataTypeClass = String.class),
-            @ApiImplicitParam(name = "stageNumber", value = "学习阶段编号",dataTypeClass = Long.class)
+            @ApiImplicitParam(name = "studyDirection", value = "学习路线", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "stageNumber", value = "学习阶段编号", dataTypeClass = Long.class)
     })
     public RespBean selectByDirectionId(@RequestParam String studyDirection, @RequestParam Integer stageNumber) {
-        if (studyDirection==null||stageNumber==null){
+        if (studyDirection == null || stageNumber == null) {
             return RespBean.error("删除失败，stageNumber和studyDirection不可以为空");
         }
         StudyRoute studyRoute = iStudyRouteService.selectByStageNumber(studyDirection, stageNumber);
@@ -226,11 +227,11 @@ public class StudyRouteContentBackerGroundController {
     @GetMapping(value = "/studyRouteContentBackerGround/selectByPage")
     @ApiOperation("分页查询学习路线内容表的所有内容")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "pageNumber", value = "页码数",dataTypeClass = Long.class),
-            @ApiImplicitParam(name = "pageSize", value = "每页容量",dataTypeClass = Long.class)
+            @ApiImplicitParam(name = "pageNumber", value = "页码数", dataTypeClass = Long.class),
+            @ApiImplicitParam(name = "pageSize", value = "每页容量", dataTypeClass = Long.class)
     })
-    public RespBean selectByPage(@RequestParam Integer pageNumber,@RequestParam Integer pageSize) {
-        if (pageNumber==null||pageSize==null){
+    public RespBean selectByPage(@RequestParam Integer pageNumber, @RequestParam Integer pageSize) {
+        if (pageNumber == null || pageSize == null) {
             return RespBean.error("删除失败，pageNumber和pageSize不可以为空");
         }
         IPage<StudyRouteContent> iPage = iStudyRouteContentService.selectByPage(pageNumber, pageSize);

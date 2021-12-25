@@ -12,22 +12,41 @@ import java.util.List;
 /**
  * @Author: Ljx
  * @Date: 2021/5/13 22:05
+ * @role: 收藏服务层实现
  */
 @Service
 public class CollectServiceImpl implements ICollectService {
     @Autowired
     private CollectMapper collectMapper;
 
+    /**
+     * 增加收藏文章
+     *
+     * @param collectBean 贴子对象
+     * @return boolean
+     */
     @Override
     public boolean insertCollect(CollectBean collectBean) {
         return collectMapper.insert(collectBean) == 1;
     }
 
+    /**
+     * 根据id删除收藏文章
+     *
+     * @param id 用户id
+     * @return boolean
+     */
     @Override
     public boolean deleteCollect(Integer id) {
         return collectMapper.deleteById(id) == 1;
     }
 
+    /**
+     * 清除用户收藏
+     *
+     * @param userid 用户id
+     * @return boolean
+     */
     @Override
     public boolean deleteCollectByUserId(Integer userid) {
         QueryWrapper wrapper = new QueryWrapper();
@@ -39,6 +58,12 @@ public class CollectServiceImpl implements ICollectService {
         }
     }
 
+    /**
+     * 根据不同用户id查询收藏文章
+     *
+     * @param userid 用户id
+     * @return List
+     */
     @Override
     public List<CollectBean> selectCollectByUserId(Integer userid) {
         QueryWrapper<CollectBean> wrapper = new QueryWrapper<>();

@@ -36,10 +36,10 @@
 //    @Override
 //    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 //        try {
-//            UserInfo userInfo = new ObjectMapper().readValue(request.getInputStream(),UserInfo.class);
-//            UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(userInfo.getUsername(),userInfo.getPassword());
+//            UserInfo userInfo = new ObjectMapper().readValue(request.getInputStream(), UserInfo.class);
+//            UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(userInfo.getUsername(), userInfo.getPassword());
 //            return this.getAuthenticationManager().authenticate(authRequest);
-//        }catch (Exception e){
+//        } catch (Exception e) {
 //            try {
 //                //处理失败请求
 //                response.setContentType("application/json;charset=utf-8");
@@ -68,7 +68,7 @@
 //        user.setPhone(authResult.getName());
 //        user.setAuthorities(authResult.getAuthorities());
 //        String token = JwtUtils.generateTokenExpireInMinutes(user, prop.getPrivateKey(), 10);
-//        response.addHeader("Authorization","Bearer"+token);
+//        response.addHeader("Authorization", "Bearer" + token);
 //        try {
 //            //处理失败请求
 //            response.setContentType("application/json;charset=utf-8");

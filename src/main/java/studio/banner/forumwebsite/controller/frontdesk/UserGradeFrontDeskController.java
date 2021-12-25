@@ -87,14 +87,14 @@ public class UserGradeFrontDeskController {
     }
 
     @GetMapping("/userGradeFrontDesk/selectUserDirectionById")
-    @ApiOperation(value = "根据用户id查询该用户方向",notes = "用户id不为空",httpMethod = "GET")
-    @ApiImplicitParam(type = "query",name = "userId",
-            value = "用户id",required = true,dataTypeClass = Integer.class)
-    public RespBean selectUserDirectionById(Integer userId){
+    @ApiOperation(value = "根据用户id查询该用户方向", notes = "用户id不为空", httpMethod = "GET")
+    @ApiImplicitParam(type = "query", name = "userId",
+            value = "用户id", required = true, dataTypeClass = Integer.class)
+    public RespBean selectUserDirectionById(Integer userId) {
         UserDirectionBean userDirectionBean = userGradeService.selectUserDirectionById(userId);
-        if (userDirectionBean==null){
+        if (userDirectionBean == null) {
             return RespBean.error("查询用户班级失败，请联系管理员");
-        }else {
+        } else {
             return RespBean.ok("查询成功", userDirectionBean);
         }
     }
@@ -126,47 +126,47 @@ public class UserGradeFrontDeskController {
     }
 
     @GetMapping("/userGradeFrontDesk/selectUserContactByUserName")
-    @ApiOperation(value = "跟据姓名查询该用户关系id",notes = "用户姓名不能为空",httpMethod = "GET")
-    @ApiImplicitParam(type = "query",name = "userName",
-            value = "用户姓名",required = true,dataTypeClass = String.class)
-    public RespBean selectUserContactByUserName(String userName){
+    @ApiOperation(value = "跟据姓名查询该用户关系id", notes = "用户姓名不能为空", httpMethod = "GET")
+    @ApiImplicitParam(type = "query", name = "userName",
+            value = "用户姓名", required = true, dataTypeClass = String.class)
+    public RespBean selectUserContactByUserName(String userName) {
         List<UserGradeContactBean> userGradeContactBeans = userGradeService.selectUserContactByUserName(userName);
-        if (userGradeContactBeans==null){
+        if (userGradeContactBeans == null) {
             return RespBean.error("查询失败，请联系管理员！！！");
-        }else {
-            return RespBean.ok("查询成功",userGradeContactBeans);
+        } else {
+            return RespBean.ok("查询成功", userGradeContactBeans);
         }
     }
 
     @GetMapping("/userGradeFrontDesk/selectUserNameByDirectionAndGrade")
-    @ApiOperation(value = "根据用户方向和年级查询姓名",notes = "用户方向和姓名不能为空",httpMethod = "GET")
+    @ApiOperation(value = "根据用户方向和年级查询姓名", notes = "用户方向和姓名不能为空", httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(type = "query",name = "userDirection",
-                    value = "用户方向",required = true,dataTypeClass = String.class),
-            @ApiImplicitParam(type = "query",name = "userGrade",
-                    value = "用户班级",required = true,dataTypeClass = String.class)
+            @ApiImplicitParam(type = "query", name = "userDirection",
+                    value = "用户方向", required = true, dataTypeClass = String.class),
+            @ApiImplicitParam(type = "query", name = "userGrade",
+                    value = "用户班级", required = true, dataTypeClass = String.class)
     })
-    public RespBean selectUserNameByDirectionAndGrade(String userDirection,String userGrade){
+    public RespBean selectUserNameByDirectionAndGrade(String userDirection, String userGrade) {
         List<UserNameBean> userNameBeans = userGradeService.selectUserNameByDirectionAndGrade(userDirection, userGrade);
-        if (userNameBeans==null){
+        if (userNameBeans == null) {
             return RespBean.error("查询失败，请联系管理员！！！");
-        }else {
-            return RespBean.ok("查询成功",userNameBeans);
+        } else {
+            return RespBean.ok("查询成功", userNameBeans);
         }
     }
 
 
     @GetMapping("/userGradeFrontDesk/selectAllUserGrade")
-    @ApiOperation(value = "查询所有年级",httpMethod = "GET")
-    public RespBean selectAllUserGrade(){
+    @ApiOperation(value = "查询所有年级", httpMethod = "GET")
+    public RespBean selectAllUserGrade() {
         List<UserGradeBean> userGradeBeans = userGradeService.selectAllUserGrade();
-        return RespBean.ok("查询成功",userGradeBeans);
+        return RespBean.ok("查询成功", userGradeBeans);
     }
 
     @GetMapping("/userGradeFrontDesk/selectAllUserDirection")
-    @ApiOperation(value = "查询所有方向",httpMethod = "GET")
+    @ApiOperation(value = "查询所有方向", httpMethod = "GET")
     public RespBean selectAllUserDirection() {
         List<UserDirectionBean> userDirectionBeans = userGradeService.selectAllUserDirection();
-        return RespBean.ok("查询成功",userDirectionBeans);
+        return RespBean.ok("查询成功", userDirectionBeans);
     }
 }

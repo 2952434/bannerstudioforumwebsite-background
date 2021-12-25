@@ -7,7 +7,7 @@ import studio.banner.forumwebsite.bean.UserNameBean;
 /**
  * @Author: Ljx
  * @Date: 2021/12/12 21:14
- * @role:
+ * @role: 用户姓名映射
  */
 @Repository
 public interface UserNameMapper extends BaseMapper<UserNameBean> {

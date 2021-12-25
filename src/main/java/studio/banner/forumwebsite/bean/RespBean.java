@@ -3,11 +3,20 @@ package studio.banner.forumwebsite.bean;
 /**
  * @Author: Ljx
  * @Date: 2021/5/13 21:58
- *
+ * @role: 给前端回复数据实体
  */
 public class RespBean {
+    /**
+     * 状态码
+     */
     private Integer status;
+    /**
+     * 响应内容
+     */
     private String msg;
+    /**
+     * 响应数据
+     */
     private Object obj;
 
     public static RespBean build() {
@@ -26,8 +35,8 @@ public class RespBean {
         return new RespBean(200, msg, obj);
     }
 
-    public static  RespBean error(Object obj){
-        return new RespBean(500,null,obj);
+    public static RespBean error(Object obj) {
+        return new RespBean(500, null, obj);
     }
 
     public static RespBean error(String msg) {

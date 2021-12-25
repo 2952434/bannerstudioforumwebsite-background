@@ -7,6 +7,7 @@ import studio.banner.forumwebsite.bean.UserBean;
 /**
  * @Author: Ljx
  * @Date: 2021/5/14 21:05
+ * @role: 监听器映射
  */
 @Repository
 public interface ListenerMapper extends BaseMapper<UserBean> {

@@ -11,6 +11,7 @@ import java.util.Random;
 /**
  * @Author: Ljx
  * @Date: 2021/5/22 9:24
+ * 发邮件类
  */
 @Component
 public class SendMail {
@@ -21,6 +22,12 @@ public class SendMail {
     int min = 10000;
     Random random = new Random();
 
+    /**
+     * 忘记密码时验证邮箱
+     *
+     * @param email 被发送的邮箱
+     * @return String
+     */
     public String sendSimpleMail(String email) {
         int s = random.nextInt(max - min + 1) + min;
         String code = String.valueOf(s);
@@ -34,6 +41,13 @@ public class SendMail {
         return code;
     }
 
+    /**
+     * 生日祝福邮箱
+     *
+     * @param email   被的发送邮箱地址
+     * @param content 邮箱内容
+     * @return boolean
+     */
     public boolean sendBlessMail(String email, String content) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setSubject("生日快乐");
@@ -45,6 +59,13 @@ public class SendMail {
         return true;
     }
 
+    /**
+     * 自动发送邮箱
+     *
+     * @param email    邮箱地址
+     * @param username 被发送人
+     * @return boolean
+     */
     public boolean automaticMail(String email, String username) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setSubject(username + "生日快乐");

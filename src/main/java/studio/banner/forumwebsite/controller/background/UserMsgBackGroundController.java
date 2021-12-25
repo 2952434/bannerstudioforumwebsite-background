@@ -146,13 +146,13 @@ public class UserMsgBackGroundController {
             @ApiImplicitParam(paramType = "query", name = "memberId",
                     value = "用户id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "signature",
-                    value = "个性签名",dataTypeClass = String.class)
+                    value = "个性签名", dataTypeClass = String.class)
     })
-    public RespBean updateUserSignature(Integer memberId,String signature){
+    public RespBean updateUserSignature(Integer memberId, String signature) {
         boolean signature1 = iUserMsgService.updateUserSignature(memberId, signature);
-        if (signature1){
+        if (signature1) {
             return RespBean.ok("更新成功！！！");
-        }else {
+        } else {
             return RespBean.error("更新失败！！！");
         }
     }

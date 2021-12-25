@@ -23,21 +23,39 @@ import java.util.Date;
 @Document(collection = "message")
 @Builder
 public class Message {
+    /**
+     * 消息id
+     */
     @Id
     private ObjectId id;
+    /**
+     * 消息内容
+     */
     private String msg;
     /**
      * 消息状态，1-未读，2-已读
      */
     @Indexed
     private Integer status;
+    /**
+     * 发送消息的时间
+     */
     @Field("send_date")
     @Indexed
     private Date sendDate;
+    /**
+     * 阅读消息的时间
+     */
     @Field("read_date")
     private Date readDate;
+    /**
+     * 发送消息的人
+     */
     @Indexed
     private User from;
+    /**
+     * 接收消息的人
+     */
     @Indexed
     private User to;
 

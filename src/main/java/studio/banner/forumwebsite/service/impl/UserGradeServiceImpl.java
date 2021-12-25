@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * @Author: Ljx
  * @Date: 2021/12/12 19:51
- * @role:
+ * @role: 班级服务类实现
  */
 @Service
 public class UserGradeServiceImpl implements IUserGradeService {
@@ -34,25 +34,37 @@ public class UserGradeServiceImpl implements IUserGradeService {
     @Autowired
     private UserDirectionMapper userDirectionMapper;
 
+    /**
+     * 通过用户id判断用户是否已添加年级和姓名
+     *
+     * @param userId 用户id
+     * @return boolean
+     */
     @Override
     public boolean judgeUserGradeNameById(Integer userId) {
         QueryWrapper<UserGradeContactBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", userId);
         UserGradeContactBean userGradeContactBean = userGradeContactMapper.selectOne(queryWrapper);
-        if (userGradeContactBean == null) {
-            return true;
-        }
-        return false;
+        return userGradeContactBean == null;
     }
 
+    /**
+     * 给用户添加年级和姓名和方向
+     *
+     * @param userId        用户id
+     * @param grade         用户班级
+     * @param userName      用户姓名
+     * @param userDirection 用户方向
+     * @return boolean
+     */
     @Override
     public boolean insertUserGradeDirection(Integer userId, String grade, String userName, String userDirection) {
         QueryWrapper<UserGradeContactBean> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("user_id", userId);
         UserGradeContactBean userGradeContactBean1 = userGradeContactMapper.selectOne(queryWrapper1);
-        if (userGradeContactBean1 != null){
+        if (userGradeContactBean1 != null) {
             return false;
-        }else {
+        } else {
             QueryWrapper<UserDirectionBean> queryWrapper3 = new QueryWrapper<>();
             queryWrapper3.eq("user_direction", userDirection);
             List<UserDirectionBean> userDirectionBeans = userDirectionMapper.selectList(queryWrapper3);
@@ -96,6 +108,12 @@ public class UserGradeServiceImpl implements IUserGradeService {
         }
     }
 
+    /**
+     * 根据用户id查询用户所在班级
+     *
+     * @param userId 用户id
+     * @return UserGradeBean
+     */
     @Override
     public UserGradeBean selectUserGradeById(Integer userId) {
         QueryWrapper<UserGradeContactBean> queryWrapper = new QueryWrapper<>();
@@ -106,11 +124,16 @@ public class UserGradeServiceImpl implements IUserGradeService {
         } else {
             QueryWrapper<UserGradeBean> queryWrapper1 = new QueryWrapper<>();
             queryWrapper1.eq("id", userGradeContactBean.getUserGradeId());
-            UserGradeBean userGradeBean = userGradeMapper.selectOne(queryWrapper1);
-            return userGradeBean;
+            return userGradeMapper.selectOne(queryWrapper1);
         }
     }
 
+    /**
+     * 根据用户id查询用户姓名
+     *
+     * @param userId 用户id
+     * @return UserNameBean
+     */
     @Override
     public UserNameBean selectUserNameById(Integer userId) {
         QueryWrapper<UserGradeContactBean> queryWrapper = new QueryWrapper<>();
@@ -121,26 +144,36 @@ public class UserGradeServiceImpl implements IUserGradeService {
         } else {
             QueryWrapper<UserNameBean> queryWrapper1 = new QueryWrapper<>();
             queryWrapper1.eq("id", userGradeContactBean.getUserNameId());
-            UserNameBean userNameBean = userNameMapper.selectOne(queryWrapper1);
-            return userNameBean;
+            return userNameMapper.selectOne(queryWrapper1);
         }
     }
 
+    /**
+     * 根据用户id查询用户方向
+     *
+     * @param userId 用户id
+     * @return UserDirectionBean
+     */
     @Override
     public UserDirectionBean selectUserDirectionById(Integer userId) {
         QueryWrapper<UserGradeContactBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id",userId);
+        queryWrapper.eq("user_id", userId);
         List<UserGradeContactBean> userGradeContactBeans = userGradeContactMapper.selectList(queryWrapper);
-        if (userGradeContactBeans.size()!=1){
+        if (userGradeContactBeans.size() != 1) {
             return null;
-        }else {
+        } else {
             QueryWrapper<UserDirectionBean> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper1.eq("id",userGradeContactBeans.get(0).getUserDirectionId());
-            UserDirectionBean userDirectionBean = userDirectionMapper.selectOne(queryWrapper1);
-            return userDirectionBean;
+            queryWrapper1.eq("id", userGradeContactBeans.get(0).getUserDirectionId());
+            return userDirectionMapper.selectOne(queryWrapper1);
         }
     }
 
+    /**
+     * 通过年级查询该年级下所有用户名
+     *
+     * @param grade 班级
+     * @return List<UserNameBean>
+     */
     @Override
     public List<UserNameBean> selectUserNameByGrade(String grade) {
         QueryWrapper<UserGradeBean> queryWrapper = new QueryWrapper<>();
@@ -167,24 +200,30 @@ public class UserGradeServiceImpl implements IUserGradeService {
         }
     }
 
+    /**
+     * 根据方向查询所有属于该年级用户的姓名
+     *
+     * @param userDirection 用户方向
+     * @return List<UserNameBean>
+     */
     @Override
     public List<UserNameBean> selectUserNameByDirection(String userDirection) {
         QueryWrapper<UserDirectionBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_direction",userDirection);
+        queryWrapper.eq("user_direction", userDirection);
         List<UserDirectionBean> userDirectionBeans = userDirectionMapper.selectList(queryWrapper);
-        if (userDirectionBeans.size()!=1){
+        if (userDirectionBeans.size() != 1) {
             return null;
-        }else {
+        } else {
             QueryWrapper<UserGradeContactBean> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper1.eq("user_direction_id",userDirectionBeans.get(0).getId());
+            queryWrapper1.eq("user_direction_id", userDirectionBeans.get(0).getId());
             List<UserGradeContactBean> userGradeContactBeans = userGradeContactMapper.selectList(queryWrapper1);
-            if (userDirectionBeans.size()==0){
+            if (userDirectionBeans.size() == 0) {
                 return null;
-            }else {
+            } else {
                 List<UserNameBean> userNameBeans = new ArrayList<>();
                 for (UserGradeContactBean userGradeContactBean : userGradeContactBeans) {
                     QueryWrapper<UserNameBean> queryWrapper2 = new QueryWrapper<>();
-                    queryWrapper2.eq("id",userGradeContactBean.getUserNameId());
+                    queryWrapper2.eq("id", userGradeContactBean.getUserNameId());
                     UserNameBean userNameBean = userNameMapper.selectOne(queryWrapper2);
                     userNameBeans.add(userNameBean);
                 }
@@ -193,194 +232,253 @@ public class UserGradeServiceImpl implements IUserGradeService {
         }
     }
 
+    /**
+     * 根据用户姓名查询用户信息id
+     *
+     * @param userName 用户姓名
+     * @return List<UserGradeContactBean>
+     */
     @Override
     public List<UserGradeContactBean> selectUserContactByUserName(String userName) {
         QueryWrapper<UserNameBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_name",userName);
+        queryWrapper.eq("user_name", userName);
         List<UserNameBean> userNameBeans = userNameMapper.selectList(queryWrapper);
-        if (userNameBeans.size()!=1){
+        if (userNameBeans.size() != 1) {
             return null;
-        }else {
+        } else {
             QueryWrapper<UserGradeContactBean> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper1.eq("user_name_id",userNameBeans.get(0).getId());
-            List<UserGradeContactBean> userGradeContactBeans = userGradeContactMapper.selectList(queryWrapper1);
-            return userGradeContactBeans;
+            queryWrapper1.eq("user_name_id", userNameBeans.get(0).getId());
+            return userGradeContactMapper.selectList(queryWrapper1);
         }
     }
 
+    /**
+     * 根据方向和年级查询用户姓名
+     *
+     * @param userDirection 方向
+     * @param grade         班级
+     * @return List<UserNameBean>
+     */
     @Override
     public List<UserNameBean> selectUserNameByDirectionAndGrade(String userDirection, String grade) {
         QueryWrapper<UserGradeBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_grade",grade);
+        queryWrapper.eq("user_grade", grade);
         List<UserGradeBean> userGradeBeans = userGradeMapper.selectList(queryWrapper);
-        if (userGradeBeans.size()!=1){
+        if (userGradeBeans.size() != 1) {
             return null;
-        }else {
+        } else {
             QueryWrapper<UserDirectionBean> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper1.eq("user_direction",userDirection);
+            queryWrapper1.eq("user_direction", userDirection);
             List<UserDirectionBean> userDirectionBeans = userDirectionMapper.selectList(queryWrapper1);
-            if (userDirectionBeans.size()!=1){
+            if (userDirectionBeans.size() != 1) {
                 return null;
-            }else {
+            } else {
                 QueryWrapper<UserGradeContactBean> queryWrapper2 = new QueryWrapper<>();
                 queryWrapper2
-                        .eq("user_direction_id",userDirectionBeans.get(0).getId())
-                        .eq("user_grade_id",userGradeBeans.get(0).getId());
+                        .eq("user_direction_id", userDirectionBeans.get(0).getId())
+                        .eq("user_grade_id", userGradeBeans.get(0).getId());
 
                 List<UserGradeContactBean> userGradeContactBeans = userGradeContactMapper.selectList(queryWrapper2);
-                if (userDirectionBeans.size()==0){
+                if (userDirectionBeans.size() == 0) {
                     return null;
-                }else {
+                } else {
                     QueryWrapper<UserNameBean> queryWrapper3 = new QueryWrapper<>();
-                    queryWrapper3.eq("id",userGradeContactBeans.get(0).getUserNameId());
-                    List<UserNameBean> userNameBeans = userNameMapper.selectList(queryWrapper3);
-                    return userNameBeans;
+                    queryWrapper3.eq("id", userGradeContactBeans.get(0).getUserNameId());
+                    return userNameMapper.selectList(queryWrapper3);
                 }
             }
         }
     }
 
+    /**
+     * 根据id删除该用户
+     *
+     * @param userId 用户id
+     * @return boolean
+     */
     @Override
     public boolean deleteUserById(Integer userId) {
         QueryWrapper<UserGradeContactBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id",userId);
+        queryWrapper.eq("user_id", userId);
         List<UserGradeContactBean> userGradeContactBeans = userGradeContactMapper.selectList(queryWrapper);
-        if (userGradeContactBeans.size()==0){
+        if (userGradeContactBeans.size() == 0) {
             return false;
-        }else {
+        } else {
             QueryWrapper<UserNameBean> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper1.eq("id",userGradeContactBeans.get(0).getUserNameId());
+            queryWrapper1.eq("id", userGradeContactBeans.get(0).getUserNameId());
             List<UserNameBean> userNameBeans = userNameMapper.selectList(queryWrapper1);
-            if (userNameBeans.size()==0){
+            if (userNameBeans.size() == 0) {
                 return false;
-            }else {
+            } else {
                 UpdateWrapper<UserNameBean> updateWrapper = new UpdateWrapper<>();
-                updateWrapper.eq("id",userGradeContactBeans.get(0).getUserNameId());
+                updateWrapper.eq("id", userGradeContactBeans.get(0).getUserNameId());
                 int delete = userNameMapper.delete(updateWrapper);
                 UpdateWrapper<UserGradeContactBean> updateWrapper1 = new UpdateWrapper<>();
-                updateWrapper.eq("user_id",userId);
+                updateWrapper.eq("user_id", userId);
                 int delete1 = userGradeContactMapper.delete(updateWrapper1);
-                if (delete==1&&delete1==1){
-                    return true;
-                }else {
-                    return false;
-                }
+                return delete == 1 && delete1 == 1;
             }
         }
     }
 
+    /**
+     * 管理员增加用户年级
+     *
+     * @param userGradeBean 班级
+     * @return boolean
+     */
     @Override
     public boolean insertUserGrade(UserGradeBean userGradeBean) {
         QueryWrapper<UserGradeBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_grade",userGradeBean.getUserGrade());
+        queryWrapper.eq("user_grade", userGradeBean.getUserGrade());
         List<UserGradeBean> userGradeBeans = userGradeMapper.selectList(queryWrapper);
-        if (userGradeBeans.size()==0){
+        if (userGradeBeans.size() == 0) {
             int insert = userGradeMapper.insert(userGradeBean);
-            return insert==1;
-        }else {
+            return insert == 1;
+        } else {
             return false;
         }
-
     }
 
+    /**
+     * 查询所有年级
+     *
+     * @return List<UserGradeBean>
+     */
     @Override
     public List<UserGradeBean> selectAllUserGrade() {
-        List<UserGradeBean> userGradeBeans = userGradeMapper.selectList(null);
-        return userGradeBeans;
+        return userGradeMapper.selectList(null);
     }
 
+    /**
+     * 根据id修改年级信息
+     *
+     * @param userGradeBean 班级实体
+     * @return boolean
+     */
     @Override
     public boolean updateUserGradeById(UserGradeBean userGradeBean) {
         int updateById = userGradeMapper.updateById(userGradeBean);
-        return updateById==1;
+        return updateById == 1;
     }
 
+    /**
+     * 根据年级id删除年级
+     *
+     * @param gradeId 年级id
+     * @return boolean
+     */
     @Override
     public boolean deleteUserGradeById(Integer gradeId) {
         QueryWrapper<UserGradeContactBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_grade_id",gradeId);
+        queryWrapper.eq("user_grade_id", gradeId);
         List<UserGradeContactBean> userGradeContactBeans = userGradeContactMapper.selectList(queryWrapper);
         for (UserGradeContactBean userGradeContactBean : userGradeContactBeans) {
             userNameMapper.deleteById(userGradeContactBean.getUserNameId());
         }
         UpdateWrapper<UserGradeContactBean> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("user_grade_id",gradeId);
+        updateWrapper.eq("user_grade_id", gradeId);
         userGradeContactMapper.delete(updateWrapper);
         int delete = userGradeMapper.deleteById(gradeId);
-        return delete==1;
+        return delete == 1;
     }
 
+    /**
+     * 添加学习方向
+     *
+     * @param userDirectionBean 学习方向实体
+     * @return boolean
+     */
     @Override
     public boolean insertUserDirection(UserDirectionBean userDirectionBean) {
         QueryWrapper<UserDirectionBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_direction",userDirectionBean.getUserDirection());
+        queryWrapper.eq("user_direction", userDirectionBean.getUserDirection());
         List<UserDirectionBean> userDirectionBeans = userDirectionMapper.selectList(queryWrapper);
-        if (userDirectionBeans.size()!=0){
+        if (userDirectionBeans.size() != 0) {
             return false;
-        }else {
+        } else {
             int insert = userDirectionMapper.insert(userDirectionBean);
-            return insert==1;
+            return insert == 1;
         }
 
     }
 
+    /**
+     * 查询所有学习方向
+     *
+     * @return List<UserDirectionBean>
+     */
     @Override
     public List<UserDirectionBean> selectAllUserDirection() {
-        List<UserDirectionBean> userDirectionBeans = userDirectionMapper.selectList(null);
-        return userDirectionBeans;
+        return userDirectionMapper.selectList(null);
     }
 
+    /**
+     * 通过方向id更改学习方向
+     *
+     * @param userDirectionBean 方向实体
+     * @return boolean
+     */
     @Override
     public boolean updateUserDirectionById(UserDirectionBean userDirectionBean) {
         QueryWrapper<UserDirectionBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_direction",userDirectionBean.getUserDirection());
+        queryWrapper.eq("user_direction", userDirectionBean.getUserDirection());
         List<UserDirectionBean> userDirectionBeans = userDirectionMapper.selectList(queryWrapper);
-        if (userDirectionBeans.size()!=0){
+        if (userDirectionBeans.size() != 0) {
             return false;
-        }else {
+        } else {
             int updateById = userDirectionMapper.updateById(userDirectionBean);
-            return updateById==1;
+            return updateById == 1;
         }
     }
 
+    /**
+     * 根据方向id删除该方向
+     *
+     * @param userDirectionId 方向id
+     * @return boolean
+     */
     @Override
     public boolean deleteUserDirectionById(Integer userDirectionId) {
         QueryWrapper<UserGradeContactBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_direction_id",userDirectionId);
+        queryWrapper.eq("user_direction_id", userDirectionId);
         List<UserGradeContactBean> userGradeContactBeans = userGradeContactMapper.selectList(queryWrapper);
         for (UserGradeContactBean userGradeContactBean : userGradeContactBeans) {
             int delete = userNameMapper.deleteById(userGradeContactBean.getUserNameId());
-            if (delete==1){
+            if (delete == 1) {
                 int delete1 = userGradeContactMapper.deleteById(userGradeContactBean.getId());
-                if (delete1!=1){
+                if (delete1 != 1) {
                     return false;
                 }
-            }else {
+            } else {
                 return false;
             }
         }
         int delete = userDirectionMapper.deleteById(userDirectionId);
-        if (delete==1){
-            return true;
-        }else {
-            return false;
-        }
+        return delete == 1;
     }
 
+    /**
+     * 根据用户id更改用户所在年级
+     *
+     * @param userId        用户id
+     * @param userDirection 用户方向
+     * @return boolean
+     */
     @Override
-    public boolean updateUserDirectionByUserId(Integer userId,String userDirection) {
+    public boolean updateUserDirectionByUserId(Integer userId, String userDirection) {
         QueryWrapper<UserGradeContactBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id",userId);
+        queryWrapper.eq("user_id", userId);
         List<UserGradeContactBean> userGradeContactBeans = userGradeContactMapper.selectList(queryWrapper);
-        if (userGradeContactBeans.size()==0){
+        if (userGradeContactBeans.size() == 0) {
             return false;
-        }else {
+        } else {
             QueryWrapper<UserDirectionBean> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper1.eq("user_direction",userDirection);
+            queryWrapper1.eq("user_direction", userDirection);
             List<UserDirectionBean> userDirectionBeans = userDirectionMapper.selectList(queryWrapper1);
-            if (userDirectionBeans.size()==0){
+            if (userDirectionBeans.size() == 0) {
                 return false;
-            }else {
+            } else {
                 userGradeContactBeans.get(0).setUserDirectionId(userDirectionBeans.get(0).getId());
                 int updateById = userGradeContactMapper.updateById(userGradeContactBeans.get(0));
                 return updateById == 1;
@@ -388,70 +486,89 @@ public class UserGradeServiceImpl implements IUserGradeService {
         }
     }
 
+    /**
+     * 根据用户id更改用户姓名
+     *
+     * @param userId       用户id
+     * @param userNameBean 用户名字实体
+     * @return boolean
+     */
     @Override
     public boolean updateUserNameByUserId(Integer userId, UserNameBean userNameBean) {
         QueryWrapper<UserGradeContactBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id",userId);
+        queryWrapper.eq("user_id", userId);
         List<UserGradeContactBean> userGradeContactBeans = userGradeContactMapper.selectList(queryWrapper);
-        if (userGradeContactBeans.size()==0){
+        if (userGradeContactBeans.size() == 0) {
             return false;
-        }else {
+        } else {
             QueryWrapper<UserNameBean> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper1.eq("id",userGradeContactBeans.get(0).getUserNameId());
+            queryWrapper1.eq("id", userGradeContactBeans.get(0).getUserNameId());
             List<UserNameBean> userNameBeans = userNameMapper.selectList(queryWrapper1);
-            if (userNameBeans.size()!=0){
+            if (userNameBeans.size() != 0) {
                 return false;
-            }else {
+            } else {
                 userNameBean.setId(userGradeContactBeans.get(0).getUserNameId());
                 int updateById = userNameMapper.updateById(userNameBean);
-                return updateById==1;
+                return updateById == 1;
             }
         }
     }
 
+    /**
+     * 根据用户id更改用户所在方向
+     *
+     * @param userId    用户id
+     * @param userGrade 用户方向
+     * @return boolean
+     */
     @Override
     public boolean updateUserGradeByUserId(Integer userId, String userGrade) {
         QueryWrapper<UserGradeContactBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id",userId);
+        queryWrapper.eq("user_id", userId);
         List<UserGradeContactBean> userGradeContactBeans = userGradeContactMapper.selectList(queryWrapper);
-        if (userGradeContactBeans.size()==0){
+        if (userGradeContactBeans.size() == 0) {
             return false;
-        }else {
+        } else {
             QueryWrapper<UserGradeBean> queryWrapper1 = new QueryWrapper<>();
             queryWrapper1.eq("user_grade", userGrade);
             List<UserGradeBean> userGradeBeans = userGradeMapper.selectList(queryWrapper1);
-            if (userGradeBeans.size()!=1){
+            if (userGradeBeans.size() != 1) {
                 return false;
-            }else {
+            } else {
                 userGradeContactBeans.get(0).setUserGradeId(userGradeBeans.get(0).getId());
                 int updateById = userGradeContactMapper.updateById(userGradeContactBeans.get(0));
-                return updateById==1;
+                return updateById == 1;
             }
         }
     }
 
+    /**
+     * 根据方向、年级、姓名模糊查询用户
+     *
+     * @param dim 模糊查询字段
+     * @return List<UserGradeContactBean>
+     */
     @Override
     public List<UserGradeContactBean> selectDimUserName(String dim) {
         QueryWrapper<UserGradeContactBean> queryWrapper = new QueryWrapper<>();
         QueryWrapper<UserGradeBean> queryWrapper1 = new QueryWrapper<>();
-        queryWrapper1.like("user_grade",dim);
+        queryWrapper1.like("user_grade", dim);
         List<UserGradeBean> userGradeBeans = userGradeMapper.selectList(queryWrapper1);
         for (UserGradeBean userGradeBean : userGradeBeans) {
-            queryWrapper.or().eq("user_grade_id",userGradeBean.getId());
+            queryWrapper.or().eq("user_grade_id", userGradeBean.getId());
         }
         QueryWrapper<UserNameBean> queryWrapper2 = new QueryWrapper<>();
-        queryWrapper2.like("user_name",dim);
+        queryWrapper2.like("user_name", dim);
         List<UserNameBean> userNameBeans = userNameMapper.selectList(queryWrapper2);
         for (UserNameBean userNameBean : userNameBeans) {
-            queryWrapper.or().eq("user_name_id",userNameBean.getId());
+            queryWrapper.or().eq("user_name_id", userNameBean.getId());
         }
         QueryWrapper<UserDirectionBean> queryWrapper3 = new QueryWrapper<>();
-        queryWrapper3.like("user_direction",dim);
+        queryWrapper3.like("user_direction", dim);
         List<UserDirectionBean> userDirectionBeans = userDirectionMapper.selectList(queryWrapper3);
         for (UserDirectionBean userDirectionBean : userDirectionBeans) {
-            queryWrapper.or().eq("user_direction_id",userDirectionBean.getId());
+            queryWrapper.or().eq("user_direction_id", userDirectionBean.getId());
         }
-        List<UserGradeContactBean> userGradeContactBeans = userGradeContactMapper.selectList(queryWrapper);
-        return userGradeContactBeans;
+        return userGradeContactMapper.selectList(queryWrapper);
     }
 }

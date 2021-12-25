@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * @Author: Ljx
  * @Date: 2021/12/12 15:10
- * @role:
+ * @role: 帖子类型操作实现
  */
 @Service
 public class PostTypeServiceImpl implements IPostTypeService {
@@ -35,18 +35,24 @@ public class PostTypeServiceImpl implements IPostTypeService {
     @Autowired
     private PostMapper postMapper;
 
+    /**
+     * 通过帖子id查询帖子所属类型
+     *
+     * @param postId 帖子id
+     * @return String[]
+     */
     @Override
     public String[] selectPostTypeById(Integer postId) {
         QueryWrapper<PostContactBean> postContactBeanQueryWrapper = new QueryWrapper<>();
-        postContactBeanQueryWrapper.eq("post_id",postId);
+        postContactBeanQueryWrapper.eq("post_id", postId);
         List<PostContactBean> postContactBeans = postContactMapper.selectList(postContactBeanQueryWrapper);
-        if (postContactBeans.size()!=0){
+        if (postContactBeans.size() != 0) {
             int i = 0;
-            String [] arr = new String[postContactBeans.size()];
+            String[] arr = new String[postContactBeans.size()];
             for (PostContactBean postContactBean : postContactBeans) {
                 Integer postTypeId = postContactBean.getPostTypeId();
                 QueryWrapper<PostTypeBean> queryWrapper = new QueryWrapper<>();
-                queryWrapper.eq("id",postTypeId);
+                queryWrapper.eq("id", postTypeId);
                 PostTypeBean postTypeBean = postTypeMapper.selectOne(queryWrapper);
                 arr[i] = postTypeBean.getPostType();
                 i++;
@@ -56,56 +62,79 @@ public class PostTypeServiceImpl implements IPostTypeService {
         return null;
     }
 
+    /**
+     * 增加帖子类型
+     *
+     * @param postType 帖子类型
+     * @return boolean
+     */
     @Override
     public boolean insertPostType(PostTypeBean postType) {
         QueryWrapper<PostTypeBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("post_type",postType.getPostType());
+        queryWrapper.eq("post_type", postType.getPostType());
         PostTypeBean postTypeBean = postTypeMapper.selectOne(queryWrapper);
-        if (postTypeBean==null){
+        if (postTypeBean == null) {
             int insert = postTypeMapper.insert(postType);
-            return insert==1;
-        }else {
+            return insert == 1;
+        } else {
             return false;
         }
     }
 
+    /**
+     * 查询所有帖子类型
+     *
+     * @return List<PostTypeBean>
+     */
     @Override
     public List<PostTypeBean> selectAllPostType() {
         return postTypeMapper.selectList(null);
     }
 
+    /**
+     * 删除帖子类型
+     *
+     * @param postType 帖子类型
+     * @return boolean
+     */
     @Override
     public boolean deletePostType(String postType) {
         QueryWrapper<PostTypeBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("post_type",postType);
+        queryWrapper.eq("post_type", postType);
         PostTypeBean postTypeBean = postTypeMapper.selectOne(queryWrapper);
         UpdateWrapper<PostContactBean> updateWrapper1 = new UpdateWrapper<>();
-        if (postTypeBean==null){
+        if (postTypeBean == null) {
             return false;
-        }else {
-            updateWrapper1.eq("post_type_id",postTypeBean.getId());
+        } else {
+            updateWrapper1.eq("post_type_id", postTypeBean.getId());
             postContactMapper.delete(updateWrapper1);
             UpdateWrapper<PostTypeBean> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("post_type",postType);
+            updateWrapper.eq("post_type", postType);
             int delete = postTypeMapper.delete(updateWrapper);
-            return delete==1;
+            return delete == 1;
         }
     }
 
+    /**
+     * 通过类型分页查询该类型的帖子
+     *
+     * @param postType 帖子类型
+     * @return List<PostBean>
+     */
     @Override
     public List<PostBean> selectPostByType(String postType) {
         QueryWrapper<PostTypeBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("post_type",postType);
+        queryWrapper.eq("post_type", postType);
         PostTypeBean postTypeBean = postTypeMapper.selectOne(queryWrapper);
-        if (postTypeBean==null){
+        if (postTypeBean == null) {
             return null;
-        }else {
+        } else {
             QueryWrapper<PostContactBean> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper1.eq("post_type_id",postTypeBean.getId());
+            queryWrapper1.eq("post_type_id", postTypeBean.getId());
             List<PostContactBean> postContactBeans = postContactMapper.selectList(queryWrapper1);
-            if (postContactBeans.size()==0){
+            if (postContactBeans.size() == 0) {
                 return null;
-            }else {
+            } else {
                 List<PostBean> list = new ArrayList<>();
                 for (PostContactBean postContactBean : postContactBeans) {
                     PostBean postBean = postMapper.selectById(postContactBean.getPostId());
@@ -116,33 +145,39 @@ public class PostTypeServiceImpl implements IPostTypeService {
         }
     }
 
+    /**
+     * 通过类型分页查询该类型的帖子根据浏览量逆向排序
+     *
+     * @param postType 帖子类型
+     * @return List<PostBean>
+     */
     @Override
     public List<PostBean> selectPostDescByType(String postType) {
         QueryWrapper<PostTypeBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("post_type",postType);
+        queryWrapper.eq("post_type", postType);
         PostTypeBean postTypeBean = postTypeMapper.selectOne(queryWrapper);
-        if (postTypeBean==null){
+        if (postTypeBean == null) {
             return null;
-        }else {
+        } else {
             QueryWrapper<PostContactBean> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper1.eq("post_type_id",postTypeBean.getId());
+            queryWrapper1.eq("post_type_id", postTypeBean.getId());
             List<PostContactBean> postContactBeans = postContactMapper.selectList(queryWrapper1);
-            if (postContactBeans.size()==0){
+            if (postContactBeans.size() == 0) {
                 return null;
-            }else {
+            } else {
                 List<PostBean> list = new ArrayList<>();
                 for (PostContactBean postContactBean : postContactBeans) {
                     PostBean postBean = postMapper.selectById(postContactBean.getPostId());
                     list.add(postBean);
                 }
-                Comparator<PostBean> comparator = new Comparator<PostBean>(){
+                Comparator<PostBean> comparator = new Comparator<PostBean>() {
                     @Override
                     public int compare(PostBean s1, PostBean s2) {
-                        return s2.getPostPageView()-s1.getPostPageView();
+                        return s2.getPostPageView() - s1.getPostPageView();
                     }
                 };
                 list.sort(comparator);
-                if (list.size()>10){
+                if (list.size() > 10) {
                     List<PostBean> list1 = list.subList(0, 10);
                     return list1;
                 }
