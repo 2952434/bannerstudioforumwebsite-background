@@ -78,11 +78,13 @@ public class PostBackGroundController {
                     value = "帖子点赞数量", required = false, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "postImageAddress",
                     value = "帖子图片地址", required = false, dataTypeClass = String.class),
+            @ApiImplicitParam(paramType = "query",name = "postGrade",
+                    value = "帖子年级",required = true,dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "postType",
                     value = "帖子类型", required = false, dataTypeClass = String.class)
     }
     )
-    public RespBean insertPost(PostBean postBean, BindingResult bindingResult, String... postType) {
+    public RespBean insertPost(PostBean postBean, String postGrade,BindingResult bindingResult, String... postType) {
         System.out.println(postBean);
         /**
          * 将@Valid鉴权的错误信息返给前端
@@ -103,7 +105,7 @@ public class PostBackGroundController {
         String judge2 = "^.{5,10000}$";
         if (postBean.getPostTitle().matches(judge1)) {
             if (postBean.getPostContent().matches(judge2)) {
-                iPostService.insertPost(postBean, postType);
+                iPostService.insertPost(postBean,postGrade, postType);
                 return RespBean.ok("添加帖子成功");
             }
         }
@@ -127,10 +129,12 @@ public class PostBackGroundController {
                     value = "转发帖子者id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "postTime",
                     value = "帖子转发时间", required = true, dataTypeClass = String.class),
+            @ApiImplicitParam(paramType = "query", name = "postGrade",
+                    value = "帖子班级", required = true, dataTypeClass = String.class)
     }
 
     )
-    public RespBean forwardPost(int postId, int postForwardMemberId, String postTime) {
+    public RespBean forwardPost(int postId, int postForwardMemberId, String postTime,String postGrade) {
         if (iPostService.selectPost(postId) != null) {
             PostBean postBean1 = iPostService.selectPost(postId);
             String postContent = postBean1.getPostContent();
@@ -139,7 +143,7 @@ public class PostBackGroundController {
             String postTitle = postBean1.getPostTitle();
             String[] strings = iPostTypeService.selectPostTypeById(postId);
             PostBean postBean = new PostBean(0, postForwardMemberId, postTitle, postContent, postTime, null, null, postForward, null, imageAddress, 0);
-            iPostService.insertPost(postBean, strings);
+            iPostService.insertPost(postBean,postGrade, strings);
             return RespBean.ok("转发成功");
         }
         return RespBean.error("转发失败，未查询到原帖子");

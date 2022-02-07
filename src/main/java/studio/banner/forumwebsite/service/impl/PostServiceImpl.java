@@ -12,14 +12,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import studio.banner.forumwebsite.bean.PostBean;
-import studio.banner.forumwebsite.bean.PostBeanEs;
-import studio.banner.forumwebsite.bean.PostContactBean;
-import studio.banner.forumwebsite.bean.PostTypeBean;
-import studio.banner.forumwebsite.mapper.PostContactMapper;
-import studio.banner.forumwebsite.mapper.PostMapper;
-import studio.banner.forumwebsite.mapper.PostMapperEs;
-import studio.banner.forumwebsite.mapper.PostTypeMapper;
+import studio.banner.forumwebsite.bean.*;
+import studio.banner.forumwebsite.mapper.*;
 import studio.banner.forumwebsite.service.IPostService;
 
 import java.util.Arrays;
@@ -47,6 +41,9 @@ public class PostServiceImpl implements IPostService {
 
     @Autowired
     private PostContactMapper postContactMapper;
+
+    @Autowired
+    private UserGradeMapper userGradeMapper;
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
@@ -60,7 +57,7 @@ public class PostServiceImpl implements IPostService {
      * @return boolean
      */
     @Override
-    public boolean insertPost(PostBean postBean, String... postType) {
+    public boolean insertPost(PostBean postBean,String postGrade, String... postType) {
         if (postBean != null) {
             postMapper.insert(postBean);
             QueryWrapper<PostBean> queryWrapper = new QueryWrapper<>();
@@ -73,9 +70,13 @@ public class PostServiceImpl implements IPostService {
                     QueryWrapper<PostTypeBean> typeBeanQueryWrapper = new QueryWrapper<>();
                     typeBeanQueryWrapper.eq("post_type", s);
                     PostTypeBean postTypeBean = postTypeMapper.selectOne(typeBeanQueryWrapper);
+                    QueryWrapper<UserGradeBean> gradeBean = new QueryWrapper<>();
+                    gradeBean.eq("user_grade",postGrade);
+                    UserGradeBean postGradeBean = userGradeMapper.selectOne(gradeBean);
                     PostContactBean postContactBean = new PostContactBean();
                     postContactBean.setPostId(postBean1.getPostId());
                     postContactBean.setPostTypeId(postTypeBean.getId());
+                    postContactBean.setPostGradeId(postGradeBean.getId());
                     postContactMapper.insert(postContactBean);
                 }
                 PostBeanEs postBeanEs = new PostBeanEs();
@@ -418,7 +419,7 @@ public class PostServiceImpl implements IPostService {
      * 每分钟更新一次es中的数据
      */
     @Override
-//    @Scheduled(cron = "0 */1 * * * ?")
+    @Scheduled(cron = "0 */1 * * * ?")
     public void updateEsPost() {
         List<PostBean> list = postMapper.selectList(null);
         for (PostBean postBean : list) {

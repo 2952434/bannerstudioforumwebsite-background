@@ -32,6 +32,7 @@ import java.util.TimeZone;
 /**
  * @Author: Mo
  * @Date: 2021/5/17 17:21
+ * @role: 用户信息类实现
  */
 @Service
 public class UserMsgServiceImpl implements IUserMsgService {
@@ -47,8 +48,9 @@ public class UserMsgServiceImpl implements IUserMsgService {
     private SendMail sendMail;
 
     /**
-     * 注册账户时调用，初始化用户信息表
+     * 新增用户信息
      *
+     * @param userMsgBean 用户信息实体
      * @return boolean
      */
     @Override
@@ -61,17 +63,17 @@ public class UserMsgServiceImpl implements IUserMsgService {
     }
 
     /**
-     * 根据用户Id更改用户名
+     * 根据Id更改用户昵称
      *
-     * @param memberId
-     * @param memberName
+     * @param memberId      用户id
+     * @param newMemberName 用户新姓名
      * @return boolean
      */
     @Override
-    public boolean updateUserName(Integer memberId, String memberName) {
+    public boolean updateUserName(Integer memberId, String newMemberName) {
         if (selectUserById(memberId) != null) {
             UpdateWrapper<UserMsgBean> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("member_id", memberId).set("member_name", memberName);
+            updateWrapper.eq("member_id", memberId).set("member_name", newMemberName);
             int i = userMsgMapper.update(null, updateWrapper);
             return i == 1;
         } else {
@@ -80,10 +82,10 @@ public class UserMsgServiceImpl implements IUserMsgService {
     }
 
     /**
-     * 根据用户Id更改性别
+     * 根据Id更改用户性别
      *
-     * @param memberId
-     * @param memberSex
+     * @param memberId  用户id
+     * @param memberSex 用户性别
      * @return boolean
      */
     @Override
@@ -99,10 +101,10 @@ public class UserMsgServiceImpl implements IUserMsgService {
     }
 
     /**
-     * 根据用户Id更改年龄
+     * 根据Id更改用户年龄
      *
-     * @param memberId
-     * @param memberAge
+     * @param memberId  用户id
+     * @param memberAge 用户年龄
      * @return boolean
      */
     @Override
@@ -118,10 +120,10 @@ public class UserMsgServiceImpl implements IUserMsgService {
     }
 
     /**
-     * 根据用户Id更改头像
+     * 根据Id更改用户头像
      *
-     * @param memberId
-     * @param memberHead
+     * @param memberId   用户id
+     * @param memberHead 头像地址
      * @return boolean
      */
     @Override
@@ -136,6 +138,12 @@ public class UserMsgServiceImpl implements IUserMsgService {
         }
     }
 
+    /**
+     * 根据Id查询用户信息
+     *
+     * @param memberId 用户id
+     * @return UserMsgBean
+     */
     @Override
     public UserMsgBean selectUserMsg(Integer memberId) {
         QueryWrapper<UserContactBean> wrapper1 = new QueryWrapper<>();
@@ -152,6 +160,12 @@ public class UserMsgServiceImpl implements IUserMsgService {
         return userMsgMapper.selectOne(wrapper4);
     }
 
+    /**
+     * 根据用户id查询用户生日
+     *
+     * @param id 用户id
+     * @return boolean
+     */
     @Override
     public boolean selectBirthdayById(Integer id) {
 //        获得当前时间
@@ -172,6 +186,12 @@ public class UserMsgServiceImpl implements IUserMsgService {
         return false;
     }
 
+    /**
+     * 查询过生日的人
+     *
+     * @param memberId 用户id
+     * @return List
+     */
     @Override
     public List<UserMsgBean> selectBirthday(Integer memberId) {
 //        获得当前时间
@@ -188,7 +208,13 @@ public class UserMsgServiceImpl implements IUserMsgService {
         return list;
     }
 
-
+    /**
+     * 通过邮箱祝福过生日的人
+     *
+     * @param content  祝福内容
+     * @param memberId 被祝福人的id
+     * @return boolean
+     */
     @Override
     public boolean blessUserBirthday(Integer memberId, String content) {
         UserBean userBean = userMapper.selectById(memberId);
@@ -197,7 +223,9 @@ public class UserMsgServiceImpl implements IUserMsgService {
         return b;
     }
 
-
+    /**
+     * 系统每天早上0点自动监测过生日的人并发送祝福邮件
+     */
     @Override
     @Scheduled(cron = "0 0 1 * * ?")
     public void automaticSentMail() {
@@ -219,6 +247,13 @@ public class UserMsgServiceImpl implements IUserMsgService {
         }
     }
 
+    /**
+     * 根据用户id更改个性签名
+     *
+     * @param memberId  用户id
+     * @param signature 个性签名
+     * @return boolean
+     */
     @Override
     public boolean updateUserSignature(Integer memberId, String signature) {
         if (selectUserById(memberId) != null) {
@@ -230,6 +265,12 @@ public class UserMsgServiceImpl implements IUserMsgService {
         return false;
     }
 
+    /**
+     * 根据id查询用户是否存在
+     *
+     * @param memberId 用户id
+     * @return UserMsgBean
+     */
     @Override
     public UserMsgBean selectUserById(Integer memberId) {
         QueryWrapper<UserMsgBean> wrapper = new QueryWrapper<>();

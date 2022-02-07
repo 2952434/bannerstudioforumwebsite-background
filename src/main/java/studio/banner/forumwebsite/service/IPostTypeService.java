@@ -58,4 +58,6 @@ public interface IPostTypeService {
      */
     List<PostBean> selectPostDescByType(String postType);
 
+
+
 }

@@ -41,6 +41,7 @@ public class UsersInformationBean {
      */
     @TableField(value = "users_phone")
     private String usersPhone;
+
     /**
      * 用户QQ号
      */
@@ -71,6 +72,7 @@ public class UsersInformationBean {
      */
     @TableField(value = "users_pay")
     private Integer usersPay;
+
     /**
      * 用户id
      */

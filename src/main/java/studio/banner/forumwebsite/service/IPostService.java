@@ -23,7 +23,7 @@ public interface IPostService {
      * @param postType 帖子类型
      * @return boolean
      */
-    boolean insertPost(PostBean postBean, String... postType);
+    boolean insertPost(PostBean postBean,String postGrade, String... postType);
 
     /**
      * 根据帖子id删除帖子

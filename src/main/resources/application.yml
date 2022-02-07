@@ -54,7 +54,7 @@ spring:
 #    es全文检索
   elasticsearch:
     rest:
-      uris: localhost:9200
+      uris: 82.157.145.197:9200
       read-timeout: 30s
       connection-timeout: 5s
   #  邮箱

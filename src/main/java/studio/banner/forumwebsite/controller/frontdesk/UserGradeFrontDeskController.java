@@ -169,4 +169,21 @@ public class UserGradeFrontDeskController {
         List<UserDirectionBean> userDirectionBeans = userGradeService.selectAllUserDirection();
         return RespBean.ok("查询成功", userDirectionBeans);
     }
+
+    @GetMapping("/userGradeFrontDesk/selectPostByGrade")
+    @ApiOperation(value = "根据年级查询帖子",httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(type = "query", name = "grade",
+                    value = "年级", required = true, dataTypeClass = String.class),
+            @ApiImplicitParam(type = "query", name = "page",
+                    value = "页数", required = true, dataTypeClass = Integer.class)
+    })
+    public RespBean selectPostByGrade(String grade,int page){
+        List<PostBean> list = userGradeService.selectPostByGrade(grade, page);
+        if (list==null){
+            return RespBean.error("页数超出限制查询失败");
+        }else {
+            return RespBean.ok("查询成功",list);
+        }
+    }
 }

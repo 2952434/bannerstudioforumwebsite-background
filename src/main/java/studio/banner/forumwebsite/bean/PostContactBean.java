@@ -34,4 +34,6 @@ public class PostContactBean {
     @NotNull(message = "帖子id不为空")
     private Integer postId;
 
+    @NotNull(message = "帖子年级id不为空")
+    private Integer postGradeId;
 }
