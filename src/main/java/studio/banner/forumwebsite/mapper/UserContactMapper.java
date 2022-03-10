@@ -2,7 +2,7 @@ package studio.banner.forumwebsite.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
-import studio.banner.forumwebsite.bean.UserContactBean;
+import studio.banner.forumwebsite.bean.UserAttentionBean;
 
 /**
  * @Author: ljh
@@ -10,5 +10,5 @@ import studio.banner.forumwebsite.bean.UserContactBean;
  * @role: 用户关联映射
  */
 @Repository
-public interface UserContactMapper extends BaseMapper<UserContactBean> {
+public interface UserContactMapper extends BaseMapper<UserAttentionBean> {
 }

@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import studio.banner.forumwebsite.bean.InformBean;
 import studio.banner.forumwebsite.bean.RespBean;
@@ -18,6 +19,7 @@ import studio.banner.forumwebsite.service.IInformService;
  */
 @RestController
 @Api(tags = "前台通知接口", value = "InformFrontDeskController")
+@RequestMapping("/frontDesk")
 public class InformFrontDeskController {
 
     @Autowired

@@ -2,6 +2,7 @@ package studio.banner.forumwebsite.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import studio.banner.forumwebsite.bean.CommentBean;
+import studio.banner.forumwebsite.bean.RespBean;
 
 import java.util.List;
 
@@ -22,53 +23,34 @@ public interface ICommentService {
     boolean insertComment(CommentBean commentBean);
 
     /**
-     * 根据评论id删除该评论
-     *
+     * 根据评论id,和删除人id删除该评论
      * @param commentId 评论id
-     * @return boolean
+     * @param memberId 删除人id
+     * @return
      */
-    boolean deleteComment(int commentId);
+    RespBean deleteComment(Integer commentId,Integer memberId);
 
     /**
      * 根据帖子id删除该帖子全部评论
      *
      * @param commentPostId 被评论帖子id
-     * @return boolean
      */
-    boolean deleteAllCommnetByPostId(int commentPostId);
+    void deleteAllCommentByPostId(Integer commentPostId);
 
     /**
      * 根据用户id删除该用户所有评论
      *
      * @param commentMemberId 评论用户
-     * @return boolean
      */
-    boolean deleteAllCommentByMemberId(int commentMemberId);
+    void deleteAllCommentByMemberId(Integer commentMemberId);
 
     /**
-     * 根据评论id修改评论内容
-     *
-     * @param commentId  评论id
-     * @param newContent 新评论内容
-     * @return Boolean
+     * 根据帖子id分页查找该帖子下全部评论
+     * @param commentPostId
+     * @param page
+     * @return
      */
-    boolean updateCommentContent(int commentId, String newContent);
-
-    /**
-     * 根据评论id修改评论点赞量
-     *
-     * @param commentId 评论id
-     * @return boolean
-     */
-    boolean updateCommentLikeNumber(int commentId);
-
-    /**
-     * 根据帖子id查找该帖子下全部评论
-     *
-     * @param commentPostId 被评论的帖子id
-     * @return List<CommentBean>
-     */
-    List<CommentBean> selectAllCommentByPostId(int commentPostId);
+    RespBean selectAllCommentByPostId(Integer commentPostId,Integer page);
 
     /**
      * 根据用户id查找该用户全部评论
@@ -76,7 +58,7 @@ public interface ICommentService {
      * @param commentMemberId 用户id
      * @return List<CommentBean>
      */
-    List<CommentBean> selectAllCommentByMemberId(int commentMemberId);
+    List<CommentBean> selectAllCommentByMemberId(Integer commentMemberId);
 
     /**
      * 根据评论id查找该评论
@@ -84,15 +66,26 @@ public interface ICommentService {
      * @param commentId 评论id
      * @return CommentBean
      */
-    CommentBean selectComment(int commentId);
+    CommentBean selectComment(Integer commentId);
 
+    /**
+     * 根据帖子id查询该帖子下评论数量
+     * @param postId
+     * @return
+     */
+    Integer selectCommentNum(Integer postId);
     /**
      * 分页查询全部评论
      *
      * @param page 页数
      * @return IPage<CommentBean>
      */
-    IPage<CommentBean> selectAllComment(int page);
+    IPage<CommentBean> selectAllComment(Integer page);
 
+    /**
+     * 根据帖子id更新帖子评论数
+     * @param postId
+     */
+    void updatePostCommentNum(Integer postId);
 
 }

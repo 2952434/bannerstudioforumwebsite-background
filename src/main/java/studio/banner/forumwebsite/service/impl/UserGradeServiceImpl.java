@@ -2,8 +2,8 @@ package studio.banner.forumwebsite.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import studio.banner.forumwebsite.bean.*;
@@ -21,6 +21,7 @@ import java.util.List;
 @Service
 public class UserGradeServiceImpl implements IUserGradeService {
 
+    protected static Logger logger = LoggerFactory.getLogger(UserGradeServiceImpl.class);
     @Autowired
     private UserGradeMapper userGradeMapper;
     @Autowired
@@ -29,10 +30,10 @@ public class UserGradeServiceImpl implements IUserGradeService {
     private UserNameMapper userNameMapper;
     @Autowired
     private UserDirectionMapper userDirectionMapper;
-    @Autowired
-    private PostContactMapper postContactMapper;
+
     @Autowired
     private PostMapper postMapper;
+
     /**
      * 通过用户id判断用户是否已添加年级和姓名
      *
@@ -48,7 +49,7 @@ public class UserGradeServiceImpl implements IUserGradeService {
     }
 
     /**
-     * 给用户添加年级和姓名和方向
+     * 给用户添加年级、姓名和方向
      *
      * @param userId        用户id
      * @param grade         用户班级
@@ -62,6 +63,12 @@ public class UserGradeServiceImpl implements IUserGradeService {
         queryWrapper1.eq("user_id", userId);
         UserGradeContactBean userGradeContactBean1 = userGradeContactMapper.selectOne(queryWrapper1);
         if (userGradeContactBean1 != null) {
+            updateUserGradeByUserId(userId,grade);
+            UserNameBean userNameBean = new UserNameBean();
+            userNameBean.setUserName(userName);
+            updateUserNameByUserId(userId,userNameBean);
+            updateUserDirectionByUserId(userId, userDirection);
+            logger.info("用户信息更新成功！！！");
             return false;
         } else {
             QueryWrapper<UserDirectionBean> queryWrapper3 = new QueryWrapper<>();
@@ -96,6 +103,7 @@ public class UserGradeServiceImpl implements IUserGradeService {
                                 userGradeContactBean.setUserNameId(userNameBean1.getId());
                                 userGradeContactBean.setUserDirectionId(userDirectionBeans.get(0).getId());
                                 int insert = userGradeContactMapper.insert(userGradeContactBean);
+                                logger.info("用户信息插入成功！！！");
                                 return insert == 1;
                             } else {
                                 return false;
@@ -500,10 +508,9 @@ public class UserGradeServiceImpl implements IUserGradeService {
         if (userGradeContactBeans.size() == 0) {
             return false;
         } else {
-            QueryWrapper<UserNameBean> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper1.eq("id", userGradeContactBeans.get(0).getUserNameId());
-            List<UserNameBean> userNameBeans = userNameMapper.selectList(queryWrapper1);
-            if (userNameBeans.size() != 0) {
+
+            UserNameBean userNameBean1 = userNameMapper.selectById(userGradeContactBeans.get(0).getUserNameId());
+            if (userNameBean1 == null) {
                 return false;
             } else {
                 userNameBean.setId(userGradeContactBeans.get(0).getUserNameId());
@@ -571,30 +578,5 @@ public class UserGradeServiceImpl implements IUserGradeService {
         return userGradeContactMapper.selectList(queryWrapper);
     }
 
-    /**
-     * 根据年级查询帖子
-     * @param grade 年级
-     * @param page 页数
-     * @return List<PostBean>
-     */
-    @Override
-    public List<PostBean> selectPostByGrade(String grade,int page) {
-        QueryWrapper<UserGradeBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_grade",grade);
-        UserGradeBean userGradeBean = userGradeMapper.selectOne(queryWrapper);
-        QueryWrapper<PostContactBean> queryWrapper1 = new QueryWrapper<>();
-        queryWrapper1.eq("post_grade_id",userGradeBean.getId());
-        Page<PostContactBean> page1 = new Page<>(page, 10);
-        IPage<PostContactBean> page2 = postContactMapper.selectPage(page1, queryWrapper1);
-        List<PostContactBean> records = page2.getRecords();
-        if (records.size()==0){
-            return null;
-        }
-        List<PostBean> postBeanList = new ArrayList<>();
-        for (int i = 0; i < records.size(); i++) {
-            PostBean postBean = postMapper.selectById(records.get(i).getPostId());
-            postBeanList.add(postBean);
-        }
-        return postBeanList;
-    }
+
 }

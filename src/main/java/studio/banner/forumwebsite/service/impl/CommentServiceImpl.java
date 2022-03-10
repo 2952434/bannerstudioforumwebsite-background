@@ -7,8 +7,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import studio.banner.forumwebsite.bean.CommentBean;
+import studio.banner.forumwebsite.bean.MemberInformationBean;
+import studio.banner.forumwebsite.bean.PostBean;
+import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.mapper.CommentMapper;
+import studio.banner.forumwebsite.mapper.PostMapper;
 import studio.banner.forumwebsite.service.ICommentService;
+import studio.banner.forumwebsite.service.IMemberInformationService;
+import studio.banner.forumwebsite.service.IReplyService;
+import studio.banner.forumwebsite.utils.TimeUtils;
 
 import java.util.List;
 
@@ -23,6 +30,12 @@ import java.util.List;
 public class CommentServiceImpl implements ICommentService {
     @Autowired
     protected CommentMapper commentMapper;
+    @Autowired
+    private PostMapper postMapper;
+    @Autowired
+    private IReplyService iReplyService;
+    @Autowired
+    private IMemberInformationService iMemberInformationService;
 
     /**
      * 增加评论
@@ -33,7 +46,9 @@ public class CommentServiceImpl implements ICommentService {
     @Override
     public boolean insertComment(CommentBean commentBean) {
         if (commentBean != null) {
+            commentBean.setCommentTime(TimeUtils.getDateString());
             commentMapper.insert(commentBean);
+            updatePostCommentNum(commentBean.getCommentPostId());
             return true;
         }
         return false;
@@ -46,83 +61,43 @@ public class CommentServiceImpl implements ICommentService {
      * @return boolean
      */
     @Override
-    public boolean deleteComment(int commentId) {
-        if (selectComment(commentId) != null) {
-            UpdateWrapper<CommentBean> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("comment_id", commentId);
-            commentMapper.delete(updateWrapper);
-            return true;
+    public RespBean deleteComment(Integer commentId,Integer memberId) {
+        CommentBean commentBean = selectComment(commentId);
+        if (!commentBean.getCommentMemberId().equals(memberId)&&!commentBean.getPostMemberId().equals(memberId)){
+            return RespBean.error("该评论您无权删除");
         }
-        return false;
+        commentMapper.deleteById(commentId);
+        updatePostCommentNum(commentBean.getCommentPostId());
+        iReplyService.deleteAllReplyByCommentId(commentId);
+        return RespBean.ok("删除成功");
     }
 
     /**
      * 根据帖子id删除该帖子全部评论
      *
      * @param commentPostId 被评论帖子id
-     * @return boolean
      */
     @Override
-    public boolean deleteAllCommnetByPostId(int commentPostId) {
-        if (selectAllCommentByPostId(commentPostId) != null) {
-            UpdateWrapper<CommentBean> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("comment_post_id", commentPostId);
-            commentMapper.delete(updateWrapper);
-            return true;
+    public void deleteAllCommentByPostId(Integer commentPostId) {
+        UpdateWrapper<CommentBean> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("comment_post_id", commentPostId);
+        if (commentMapper.delete(updateWrapper)==1) {
+            iReplyService.deleteAllReplyByPostId(commentPostId);
+            updatePostCommentNum(commentPostId);
         }
-        return false;
     }
 
     /**
      * 根据用户id删除该用户所有评论
      *
      * @param commentMemberId 评论用户
-     * @return boolean
      */
     @Override
-    public boolean deleteAllCommentByMemberId(int commentMemberId) {
-        if (selectAllCommentByMemberId(commentMemberId) != null) {
-            UpdateWrapper<CommentBean> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("comment_member_id", commentMemberId);
-            commentMapper.delete(updateWrapper);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 根据评论id修改评论内容
-     *
-     * @param commentId  评论id
-     * @param newContent 新评论内容
-     * @return Boolean
-     */
-    @Override
-    public boolean updateCommentContent(int commentId, String newContent) {
-        if (commentMapper.selectById(commentId) != null) {
-            UpdateWrapper<CommentBean> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("comment_id", commentId).set("comment_content", newContent);
-            commentMapper.update(null, updateWrapper);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 根据评论id修改评论点赞量
-     *
-     * @param commentId 评论id
-     * @return boolean
-     */
-    @Override
-    public boolean updateCommentLikeNumber(int commentId) {
-        if (commentMapper.selectById(commentId) != null) {
-            CommentBean commentBean = selectComment(commentId);
-            UpdateWrapper<CommentBean> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("comment_id", commentId).set("comment_like_number", commentBean.getCommentLikeNumber() + 1);
-            commentMapper.update(null, updateWrapper);
-        }
-        return false;
+    public void deleteAllCommentByMemberId(Integer commentMemberId) {
+        UpdateWrapper<CommentBean> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("comment_member_id", commentMemberId);
+        commentMapper.delete(updateWrapper);
+        iReplyService.deleteAllReplyByMemberId(commentMemberId);
     }
 
     /**
@@ -132,13 +107,18 @@ public class CommentServiceImpl implements ICommentService {
      * @return List<CommentBean>
      */
     @Override
-    public List<CommentBean> selectAllCommentByPostId(int commentPostId) {
+    public RespBean selectAllCommentByPostId(Integer commentPostId,Integer page) {
         QueryWrapper<CommentBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("comment_post_id", commentPostId);
-        if (commentMapper.selectList(queryWrapper).size() != 0) {
-            return commentMapper.selectList(queryWrapper);
+        Page<CommentBean> page1 = new Page<>(page,10);
+        Page<CommentBean> commentBeanPage = commentMapper.selectPage(page1, queryWrapper);
+        List<CommentBean> records = commentBeanPage.getRecords();
+        for (CommentBean record : records) {
+            MemberInformationBean memberInformationBean = iMemberInformationService.selectUserMsg(record.getCommentMemberId());
+            record.setHeadUrl(memberInformationBean.getMemberHead());
+            record.setUserName(memberInformationBean.getMemberName());
         }
-        return null;
+        return RespBean.ok("查询成功",records);
     }
 
     /**
@@ -148,7 +128,7 @@ public class CommentServiceImpl implements ICommentService {
      * @return List<CommentBean>
      */
     @Override
-    public List<CommentBean> selectAllCommentByMemberId(int commentMemberId) {
+    public List<CommentBean> selectAllCommentByMemberId(Integer commentMemberId) {
         QueryWrapper<CommentBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("comment_member_id", commentMemberId);
         if (commentMapper.selectList(queryWrapper).size() != 0) {
@@ -164,11 +144,18 @@ public class CommentServiceImpl implements ICommentService {
      * @return CommentBean
      */
     @Override
-    public CommentBean selectComment(int commentId) {
+    public CommentBean selectComment(Integer commentId) {
         if (commentMapper.selectById(commentId) != null) {
             return commentMapper.selectById(commentId);
         }
         return null;
+    }
+
+    @Override
+    public Integer selectCommentNum(Integer postId) {
+        QueryWrapper<CommentBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("comment_post_id",postId);
+        return commentMapper.selectCount(queryWrapper);
     }
 
     /**
@@ -178,9 +165,16 @@ public class CommentServiceImpl implements ICommentService {
      * @return IPage<CommentBean>
      */
     @Override
-    public IPage<CommentBean> selectAllComment(int page) {
+    public IPage<CommentBean> selectAllComment(Integer page) {
         Page<CommentBean> page1 = new Page<>(page, 10);
         IPage<CommentBean> page2 = commentMapper.selectPage(page1, null);
         return page2;
+    }
+
+    @Override
+    public void updatePostCommentNum(Integer postId) {
+        UpdateWrapper<PostBean> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("post_id",postId).set("post_comment_number",selectCommentNum(postId));
+        postMapper.update(null,updateWrapper);
     }
 }

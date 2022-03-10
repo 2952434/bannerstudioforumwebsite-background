@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @Api(tags = "后台腾讯云上传图片接口", value = "TencentPhotoBackGroundController")
-//@PreAuthorize("hasRole('ROLE_ADMIN')")
+@RequestMapping("/backGround")
 public class TencentPhotoBackGroundController {
     protected static final Logger logger = LoggerFactory.getLogger(TencentPhotoBackGroundController.class);
     @Autowired

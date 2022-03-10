@@ -71,10 +71,6 @@ spring:
 server:
   port: 8084
 
-rsa:
-  key:
-    pubKeyFile: E:\Java2\key\rsa.pub
-    priKeyFile: E:\Java2\key\rsa.pri
 # 腾讯云地址
 qcloud:
   path: https://ljxlwyq-1308186257.cos.ap-beijing.myqcloud.com

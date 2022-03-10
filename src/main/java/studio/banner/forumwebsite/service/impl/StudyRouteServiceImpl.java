@@ -1,169 +1,116 @@
 package studio.banner.forumwebsite.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import studio.banner.forumwebsite.bean.StudyRoute;
+import studio.banner.forumwebsite.bean.MemberInformationBean;
+import studio.banner.forumwebsite.bean.RespBean;
+import studio.banner.forumwebsite.bean.StudyRouteBean;
 import studio.banner.forumwebsite.mapper.StudyRouteMapper;
+import studio.banner.forumwebsite.mapper.MemberInformationMapper;
 import studio.banner.forumwebsite.service.IStudyRouteService;
+import studio.banner.forumwebsite.utils.TimeUtils;
 
-import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author hyy
- * @date 2021/5/14 20:28
- * @role 学习路线Service层实现
+ * @Author: Ljx
+ * @Date: 2022/3/5 21:12
+ * @role:
  */
 @Service
 public class StudyRouteServiceImpl implements IStudyRouteService {
-    protected static final Logger logger = LoggerFactory.getLogger(IStudyRouteService.class);
-    @Resource
+
+    @Autowired
     private StudyRouteMapper studyRouteMapper;
+    @Autowired
+    private MemberInformationMapper memberInformationMapper;
 
-    /**
-     * 插入一条学习路线
-     *
-     * @param studyRoute 学习路线对象
-     * @return boolean
-     */
+
     @Override
-    public boolean insert(StudyRoute studyRoute) {
-        QueryWrapper<StudyRoute> queryWrapper = new QueryWrapper<>();
-        queryWrapper = queryWrapper.eq("study_direction", studyRoute.getStudyDirection())
-                .eq("stage_number", studyRoute.getStageNumber());
-        List<StudyRoute> list = studyRouteMapper.selectList(queryWrapper);
-        if (list.size() == 0) {
-            logger.info("插入成功！");
-            return studyRouteMapper.insert(studyRoute) != 0;
+    public RespBean insertStudyRoute(StudyRouteBean studyRouteBean) {
+        QueryWrapper<StudyRouteBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("study_direction",studyRouteBean.getStudyDirection())
+                .eq("study_title",studyRouteBean.getStudyTitle());
+        if (studyRouteMapper.selectOne(queryWrapper)==null){
+            if (studyRouteMapper.insert(studyRouteBean)==1){
+                return RespBean.ok("学习路线添加成功");
+            }
+            return RespBean.error("学习路线添加失败");
         }
-        logger.info("插入失败！");
-        return false;
+        return RespBean.error("学习路线已存在");
     }
 
-    /**
-     * 根据 学习方向 和 阶段编号 删除指定学习方向的指定阶段的内容
-     *
-     * @param studyDirection 学习方向
-     * @param stageNumber    阶段编号
-     * @return boolean
-     */
     @Override
-    public boolean deleteByNumber(String studyDirection, Integer stageNumber) {
-        QueryWrapper<StudyRoute> queryWrapper = new QueryWrapper<>();
-        queryWrapper = queryWrapper.eq("study_direction", studyDirection)
-                .eq("stage_number", stageNumber);
-        List<StudyRoute> list = studyRouteMapper.selectList(queryWrapper);
-        if (list.size() != 0) {
-            logger.info("删除成功！");
-            return studyRouteMapper.delete(queryWrapper) != 0;
+    public RespBean deleteStudyRouteById(Integer id) {
+        if (studyRouteMapper.deleteById(id)==1){
+            return RespBean.ok("删除学习路线成功");
         }
-        logger.info("删除失败！");
-        return false;
+        return RespBean.error("删除学习路线失败");
     }
 
-    /**
-     * 根据学习方向 删除指定方向的所有内容
-     *
-     * @param studyDirection 学习方向
-     * @return boolean
-     */
     @Override
-    public boolean deleteByDirection(String studyDirection) {
-        QueryWrapper<StudyRoute> queryWrapper = new QueryWrapper<>();
-        queryWrapper = queryWrapper.eq("study_direction", studyDirection);
-        List<StudyRoute> list = studyRouteMapper.selectList(queryWrapper);
-        if (list.size() != 0) {
-            Integer count = studyRouteMapper.delete(queryWrapper);
-            logger.info(String.format("删除了%d条记录", count));
-            return true;
+    public RespBean selectStudyRouteById(Integer id) {
+        StudyRouteBean studyRouteBean = studyRouteMapper.selectById(id);
+        if (studyRouteBean!=null){
+            return RespBean.ok("查询成功",studyRouteBean);
         }
-        logger.info("删除失败！");
-        return false;
+        return RespBean.error("查询失败，无该学习路线");
     }
 
-    /**
-     * 根据 学习方向 和 阶段编号 更新 指定学习方向的指定阶段的内容
-     *
-     * @param studyRoute 学习路线对象
-     * @return boolean
-     */
     @Override
-    public boolean update(StudyRoute studyRoute) {
-        QueryWrapper<StudyRoute> queryWrapper = new QueryWrapper<>();
-        queryWrapper = queryWrapper.eq("study_direction", studyRoute.getStudyDirection())
-                .eq("stage_number", studyRoute.getStageNumber());
-        List<StudyRoute> list = studyRouteMapper.selectList(queryWrapper);
-        if (list.size() != 0) {
-            logger.info("更新成功！");
-            return studyRouteMapper.update(studyRoute, queryWrapper) != 0;
+    public RespBean selectStudyRouteByDirection(String direction,Integer id) {
+        QueryWrapper<StudyRouteBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("study_direction",direction);
+        QueryWrapper<MemberInformationBean> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("member_id",id);
+        MemberInformationBean memberInformationBean = memberInformationMapper.selectOne(queryWrapper1);
+        if (memberInformationBean ==null){
+            return RespBean.error("查询失败");
         }
-        logger.info("更新失败！");
-        return false;
-    }
-
-    /**
-     * 根据 学习方向 和 阶段编号 查询指定学习方向的指定阶段的内容
-     *
-     * @param studyDirection 学习方向
-     * @param stageNumber    阶段编号
-     * @return StudyRoute
-     */
-    @Override
-    public StudyRoute selectByStageNumber(String studyDirection, Integer stageNumber) {
-        QueryWrapper<StudyRoute> queryWrapper = new QueryWrapper<>();
-        queryWrapper = queryWrapper.eq("study_direction", studyDirection)
-                .eq("stage_number", stageNumber);
-        List<StudyRoute> list = studyRouteMapper.selectList(queryWrapper);
-        if (list.size() != 0) {
-            return list.get(0);
+        String memberTime = memberInformationBean.getMemberTime();
+        int age = TimeUtils.getAgeFromBirthTime(memberTime);
+        List<StudyRouteBean> studyRouteBeans = studyRouteMapper.selectList(queryWrapper);
+        List<StudyRouteBean> studyRouteBeans01 = new ArrayList<>();
+        if (studyRouteBeans.size()!=0){
+            if (age>0){
+                return RespBean.ok("查询成功",studyRouteBeans);
+            }
+            for (int i = 0; i < studyRouteBeans.size(); i++) {
+                if (TimeUtils.dateToStamp(studyRouteBeans.get(i).getPublishTime())
+                        .compareTo(TimeUtils.dateToStamp(TimeUtils.getDateString()))<0){
+                    studyRouteBeans01.add(studyRouteBeans.get(i));
+                }
+            }
+            return RespBean.ok("查询成功",studyRouteBeans01);
         }
-        return null;
+        return RespBean.error("暂无该方向学习计划",studyRouteBeans);
     }
 
-    /**
-     * 根据学习方向查询该方向的所有阶段的内容
-     *
-     * @param studyDirection 学习方向
-     * @return List<StudyRoute>
-     */
     @Override
-    public List<StudyRoute> selectByStudyDirection(String studyDirection) {
-        QueryWrapper<StudyRoute> queryWrapper = new QueryWrapper<>();
-        queryWrapper = queryWrapper.eq("study_direction", studyDirection)
-                .orderBy(true, true, "stage_number");
-        List<StudyRoute> list = studyRouteMapper.selectList(queryWrapper);
-        if (list != null) {
-            logger.info("查询成功");
-            return list;
+    public RespBean updateStudyRoute(StudyRouteBean studyRouteBean) {
+        QueryWrapper<StudyRouteBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("study_direction",studyRouteBean.getStudyDirection())
+                .eq("study_title",studyRouteBean.getStudyTitle());
+        StudyRouteBean studyRouteBean1 = studyRouteMapper.selectOne(queryWrapper);
+        if (studyRouteBean.getId()==studyRouteBean1.getId()){
+            if (studyRouteMapper.updateById(studyRouteBean)==1){
+                return RespBean.ok("学习路线更新成功");
+            }
+            return RespBean.error("学习路线更新失败");
         }
-        logger.info("查询失败");
-        return null;
+        return RespBean.error("学习路线产生冲突，更新失败");
+
     }
 
-    /**
-     * 查询所有学习方向内容
-     *
-     * @return List<StudyRoute>
-     */
     @Override
-    public List<StudyRoute> selectAll() {
-        return studyRouteMapper.selectList(null);
+    public RespBean selectAllStudyRoute() {
+        List<StudyRouteBean> studyRouteBeans = studyRouteMapper.selectList(null);
+        if (studyRouteBeans.size()==0){
+            return RespBean.error("暂无学习路线");
+        }
+        return RespBean.ok("查询成功",studyRouteBeans);
     }
 
-    /**
-     * 分页查询所有学习方向内容
-     *
-     * @param pageNumber 页码数
-     * @param pageSize   每页容量
-     * @return IPage<StudyRoute>
-     */
-    @Override
-    public IPage<StudyRoute> selectByPage(Integer pageNumber, Integer pageSize) {
-        Page<StudyRoute> page = new Page<>(pageNumber, pageSize);
-        return studyRouteMapper.selectPage(page, null);
-    }
 }

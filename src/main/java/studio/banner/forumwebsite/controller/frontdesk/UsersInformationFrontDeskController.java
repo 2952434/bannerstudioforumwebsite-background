@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import studio.banner.forumwebsite.bean.FixedInformationBean;
 import studio.banner.forumwebsite.bean.RespBean;
-import studio.banner.forumwebsite.bean.UsersInformationBean;
-import studio.banner.forumwebsite.service.IUsersInformationService;
+import studio.banner.forumwebsite.service.IFixedInformationService;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -27,63 +27,12 @@ import java.util.Map;
  */
 @RestController
 @Api(tags = "前台所有用户信息接口", value = "UsersInformationFrontDeskController")
+@RequestMapping("/frontDesk")
 public class UsersInformationFrontDeskController {
     private static final Logger logger = LoggerFactory.getLogger(UsersInformationFrontDeskController.class);
 
     @Autowired
-    private IUsersInformationService iUsersInformationService;
-
-
-    @PostMapping("/usersInformationFrontDesk/insertUsersInformation")
-    @ApiOperation(value = "增加用户信息", notes = "用户姓名不能为空", httpMethod = "POST")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "usersName",
-                    value = "用户姓名", required = true, dataTypeClass = String.class),
-            @ApiImplicitParam(paramType = "query", name = "usersDirection",
-                    value = "用户方向", dataTypeClass = String.class),
-            @ApiImplicitParam(paramType = "query", name = "usersPhone",
-                    value = "用户手机号", dataTypeClass = String.class),
-            @ApiImplicitParam(paramType = "query", name = "usersQQ",
-                    value = "用户QQ号", dataTypeClass = String.class),
-            @ApiImplicitParam(paramType = "query", name = "usersWeChat",
-                    value = "用户微信号", dataTypeClass = String.class),
-            @ApiImplicitParam(paramType = "query", name = "usersCompany",
-                    value = "用户公司", dataTypeClass = String.class),
-            @ApiImplicitParam(paramType = "query", name = "usersWork",
-                    value = "用户工作岗位", dataTypeClass = String.class),
-            @ApiImplicitParam(paramType = "query", name = "usersAddress",
-                    value = "公司名称", dataTypeClass = String.class),
-            @ApiImplicitParam(paramType = "query", name = "usersPay",
-                    value = "薪资", dataTypeClass = Integer.class),
-            @ApiImplicitParam(paramType = "query", name = "userId",
-                    value = "用户id", required = true, dataTypeClass = Integer.class)
-    })
-    public RespBean insertUsersInformation(UsersInformationBean usersInformationBean) {
-        String phone = usersInformationBean.getUsersPhone();
-        String judge = "((\\d{11})|^((\\d{7,8})|(\\d{4}|\\d{3})-(\\d{7,8})|(\\d{4}|\\d{3})-(\\d{7,8})-(\\d{4}|\\d{3}|\\d{2}|\\d{1})|(\\d{7,8})-(\\d{4}|\\d{3}|\\d{2}|\\d{1}))$)";
-        if (!phone.matches(judge)) {
-            logger.error("电话号不符合要求");
-            return RespBean.error("电话号不符合要求");
-        }
-        String qq = usersInformationBean.getUsersQQ();
-        String judge01 = "[1-9][0-9]{4,}";
-        if (!qq.matches(judge01)) {
-            logger.error("QQ号不符合要求");
-            return RespBean.error("QQ号不符合要求");
-        }
-        if (iUsersInformationService.selectUsersInformationById(usersInformationBean.getUserId())) {
-            logger.error("添加失败");
-            return RespBean.error("用户信息已存在");
-        }
-
-        if (iUsersInformationService.insertUsersInformation(usersInformationBean)) {
-            logger.info("添加用户信息成功");
-            return RespBean.ok("添加用户信息成功");
-        } else {
-            logger.error("添加用户信息失败");
-        }
-        return RespBean.error("添加用户信息失败");
-    }
+    private IFixedInformationService iFixedInformationService;
 
     @PutMapping("/usersInformationFrontDesk/updateUsersInformation")
     @ApiOperation(value = "用户信息更改", notes = "用户不能为空", httpMethod = "PUT")
@@ -109,7 +58,7 @@ public class UsersInformationFrontDeskController {
             @ApiImplicitParam(paramType = "query", name = "userId",
                     value = "用户id", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean updateUsersInformation(@Valid UsersInformationBean usersInformationBean, BindingResult bindingResult) {
+    public RespBean updateUsersInformation(@Valid FixedInformationBean fixedInformationBean, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             Map<String, Object> map = new HashMap<>();
             List<FieldError> errors = bindingResult.getFieldErrors();
@@ -121,7 +70,7 @@ public class UsersInformationFrontDeskController {
             }
             return RespBean.error(map);
         }
-        boolean judgment = iUsersInformationService.updateUsersInformation(usersInformationBean);
+        boolean judgment = iFixedInformationService.updateUsersInformation(fixedInformationBean);
         if (judgment) {
             logger.info("更新成功");
             return RespBean.ok("更新成功");
@@ -131,42 +80,4 @@ public class UsersInformationFrontDeskController {
         }
     }
 
-    @GetMapping("/usersInformationFrontDesk/pageUsersInformation")
-    @ApiOperation(value = "分页查询", notes = "页数不为空", httpMethod = "GET")
-    @ApiImplicitParam(paramType = "query", name = "page",
-            value = "查询页数", required = true, dataTypeClass = Integer.class)
-    public RespBean pageUsersInformation(Integer page) {
-        if (page != null) {
-            IPage<UsersInformationBean> usersInformationBeanIPage = iUsersInformationService.selectUsersInformationBeanPage(page);
-            List<UsersInformationBean> list = usersInformationBeanIPage.getRecords();
-            if (list.size() != 0) {
-                logger.info("分页查询成功");
-                return RespBean.ok("分页查询成功", list);
-            } else {
-                logger.error("分页查询失败");
-                return RespBean.error("无当前页数");
-            }
-        }
-        logger.error("分页查询失败");
-        return RespBean.error("分页查询失败");
-    }
-
-    @GetMapping("/usersInformationFrontDesk/selectInformationDim")
-    @ApiOperation(value = "模糊分页查询", notes = "页数和查询内容不为空", httpMethod = "GET")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "page",
-                    value = "查询页数", required = true, dataTypeClass = Integer.class),
-            @ApiImplicitParam(paramType = "query", name = "dim",
-                    value = "模糊查询字段", required = true, dataTypeClass = String.class)
-    })
-    public RespBean selectInformationDim(Integer page, String dim) {
-
-        IPage<UsersInformationBean> iPage = iUsersInformationService.selectUserInformationDimPage(page, dim);
-        List<UsersInformationBean> records = iPage.getRecords();
-        if (records.size() != 0) {
-            return RespBean.ok("查询成功", records);
-        } else {
-            return RespBean.error("无查询内容");
-        }
-    }
 }

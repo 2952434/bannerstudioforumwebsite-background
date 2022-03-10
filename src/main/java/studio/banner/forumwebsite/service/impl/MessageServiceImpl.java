@@ -12,10 +12,10 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import studio.banner.forumwebsite.bean.MemberInformationBean;
 import studio.banner.forumwebsite.bean.Message;
 import studio.banner.forumwebsite.bean.User;
-import studio.banner.forumwebsite.bean.UserMsgBean;
-import studio.banner.forumwebsite.mapper.UserMsgMapper;
+import studio.banner.forumwebsite.mapper.MemberInformationMapper;
 import studio.banner.forumwebsite.service.IMessageService;
 
 import java.util.*;
@@ -29,7 +29,7 @@ import java.util.*;
 public class MessageServiceImpl implements IMessageService {
 
     @Autowired
-    private UserMsgMapper userMsgMapper;
+    private MemberInformationMapper memberInformationMapper;
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -46,17 +46,17 @@ public class MessageServiceImpl implements IMessageService {
      */
     @Override
     public List<Map<String, Object>> selectUserList(Integer userId, Integer page) {
-        List<UserMsgBean> list = userMsgMapper.selectList(null);
+        List<MemberInformationBean> list = memberInformationMapper.selectList(null);
         List<Map<String, Object>> result = new ArrayList<>();
-        for (UserMsgBean userMsgBean : list) {
+        for (MemberInformationBean memberInformationBean : list) {
             Map<String, Object> map = new HashMap<>();
-            map.put("id", userMsgBean.getMemberId());
-            map.put("avatar", userMsgBean.getMemberHead());
+            map.put("id", memberInformationBean.getMemberId());
+            map.put("avatar", memberInformationBean.getMemberHead());
             map.put("info_type", null);
-            map.put("to_user", userMsgBean.getMemberId());
-            map.put("username", userMsgBean.getMemberName());
+            map.put("to_user", memberInformationBean.getMemberId());
+            map.put("username", memberInformationBean.getMemberName());
             List<Message> messages = messageService.queryMessageList(userId,
-                    userMsgBean.getMemberId(), page, 10);
+                    memberInformationBean.getMemberId(), page, 10);
             if (messages != null && !messages.isEmpty()) {
                 Message message = messages.get(0);
                 map.put("chat_msg", message.getMsg());
@@ -77,12 +77,12 @@ public class MessageServiceImpl implements IMessageService {
      */
     @Override
     public Message saveMessage(Integer userId, Integer toId, String msg) {
-        QueryWrapper<UserMsgBean> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<MemberInformationBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("member_id", userId);
-        List<UserMsgBean> list = userMsgMapper.selectList(queryWrapper);
-        QueryWrapper<UserMsgBean> queryWrapper1 = new QueryWrapper<>();
+        List<MemberInformationBean> list = memberInformationMapper.selectList(queryWrapper);
+        QueryWrapper<MemberInformationBean> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("member_id", toId);
-        List<UserMsgBean> list1 = userMsgMapper.selectList(queryWrapper1);
+        List<MemberInformationBean> list1 = memberInformationMapper.selectList(queryWrapper1);
         if (list.size() == 0 && list1.size() == 0) {
             return null;
         } else {

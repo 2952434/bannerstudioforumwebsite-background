@@ -40,7 +40,7 @@ public class PostBean {
     /**
      * 帖子标题
      */
-    @NotNull(message = "帖子文章不能为空")
+    @NotNull(message = "帖子标题不能为空")
     private String postTitle;
     /**
      * 帖子内容
@@ -50,29 +50,42 @@ public class PostBean {
     /**
      * 帖子发布时间
      */
+    @NotNull(message = "帖子发布时间不能为空")
     private String postTime;
     /**
      * 帖子浏览量
      */
+    @NotNull(message = "帖子浏览量不能为空")
     private Integer postPageView;
     /**
      * 帖子评论量
      */
+    @NotNull(message = "帖子评论量不能为空")
     private Integer postCommentNumber;
-    /**
-     * 帖子是否是转发帖子 0：原创  1：转发
-     */
-    private Integer postForward;
+
     /**
      * 帖子点赞量
      */
+    @NotNull(message = "帖子点赞量不能为空")
     private Integer postLikeNumber;
     /**
      * 图片地址
      */
     private String postImageAddress;
     /**
-     * 帖子是否置顶
+     * 帖子是否置顶1：置顶 0：不置顶
      */
+    @NotNull(message = "帖子是否置顶不能为空")
     private Integer postTop;
+    /**
+     * 帖子标签
+     */
+    @NotNull(message = "帖子发布时间不能为空")
+    private String postType;
+    /**
+     * 帖子收藏数量
+     */
+    @NotNull(message = "帖子发布时间不能为空")
+    private Integer postColNum;
+
 }

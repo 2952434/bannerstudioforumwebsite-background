@@ -2,13 +2,13 @@ package studio.banner.forumwebsite.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
-import studio.banner.forumwebsite.bean.StudyRoute;
+import studio.banner.forumwebsite.bean.StudyRouteBean;
 
 /**
- * @author hyy
- * @date 2021/5/14 16:35
- * @role 学习路线 Dao层
+ * @Author: Ljx
+ * @Date: 2022/3/5 21:08
+ * @role: 学习路线dao层
  */
 @Repository
-public interface StudyRouteMapper extends BaseMapper<StudyRoute> {
+public interface StudyRouteMapper extends BaseMapper<StudyRouteBean> {
 }

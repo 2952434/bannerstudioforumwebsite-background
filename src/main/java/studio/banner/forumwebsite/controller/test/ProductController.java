@@ -3,6 +3,8 @@ package studio.banner.forumwebsite.controller.test;
 //import org.springframework.security.access.annotation.Secured;
 
 import io.swagger.annotations.Api;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @Api(tags = "测试security", value = "ProductController")
+@RequestMapping("/product")
 public class ProductController {
 
 
-    //    @Secured("admin")
-    @RequestMapping("/product/findAll")
+    @GetMapping("/findAll")
     public String findAll() {
         return "列表查询成功！！！";
     }

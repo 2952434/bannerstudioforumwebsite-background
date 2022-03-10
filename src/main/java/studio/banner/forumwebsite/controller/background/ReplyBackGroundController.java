@@ -30,6 +30,7 @@ import java.util.Map;
  */
 @RestController
 @Api(tags = "后台台帖子回复接口", value = "ReplyBackGroundController")
+@RequestMapping("/backGround")
 public class ReplyBackGroundController {
     /**
      * 日志 打印信息
@@ -108,14 +109,9 @@ public class ReplyBackGroundController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "replyId",
                     value = "回复id", required = true, dataTypeClass = Integer.class),
-    }
-    )
-    public RespBean deleteComment(Integer replyId) {
-        if (iReplyService.selectReply(replyId) != null) {
-            iReplyService.deleteReply(replyId);
-            return RespBean.ok("删除成功");
-        }
-        return RespBean.error("删除失败，未找到该评论");
+    })
+    public RespBean deleteComment(Integer replyId,Integer memberId) {
+        return iReplyService.deleteReply(replyId,memberId);
     }
 
     /**
@@ -153,61 +149,9 @@ public class ReplyBackGroundController {
     }
     )
     public RespBean deleteAllCommentByCommentId(Integer commentId) {
-        if (iReplyService.selectAllReplyByCommentId(commentId, 1).getRecords().size() != 0) {
-            iReplyService.deleteAllReplyByCommentId(commentId);
-            return RespBean.ok("删除成功");
-        }
-        return RespBean.error("删除失败，未找到该评论或改评论下无评论可删除");
+        return iReplyService.deleteAllReplyByCommentId(commentId);
     }
 
-    /**
-     * 回复内容修改
-     *
-     * @param replyId
-     * @param newContent
-     * @return RespBean
-     */
-    @PutMapping("/replyBackGround/updateReplyContent")
-    @ApiOperation(value = "回复内容修改", notes = "回复需存在", httpMethod = "PUT")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "replyId",
-                    value = "回复id", required = true, dataTypeClass = Integer.class),
-            @ApiImplicitParam(paramType = "query", name = "newContent",
-                    value = "回复新内容", required = true, dataTypeClass = String.class)
-    }
-    )
-    public RespBean updateCommentContent(Integer replyId, String newContent) {
-        if (iReplyService.selectReply(replyId) != null) {
-            String judge = "^.{2,100}$";
-            if (newContent.matches(judge)) {
-                iReplyService.updateReplyContent(replyId, newContent);
-                return RespBean.ok("修改成功");
-            }
-            RespBean.error("修改失败,回复内容不符合标准");
-        }
-        return RespBean.error("修改失败，未找到该回复");
-    }
-
-    /**
-     * 回复点赞量修改
-     *
-     * @param replyId
-     * @return RespBean
-     */
-    @PutMapping("/replyBackGround/updateReplyLikeNumber")
-    @ApiOperation(value = "回复点赞量修改", notes = "回复需存在", httpMethod = "PUT")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "replyId",
-                    value = "回复id", required = true, dataTypeClass = Integer.class),
-    }
-    )
-    public RespBean updateCommentLikeNumber(Integer replyId) {
-        if (iReplyService.selectReply(replyId) != null) {
-            iReplyService.updateReplyLikeNumber(replyId);
-            return RespBean.ok("修改成功");
-        }
-        return RespBean.error("修改失败，未找到该回复");
-    }
 
     /**
      * 根据评论id查询该评论下全部回复
@@ -222,15 +166,11 @@ public class ReplyBackGroundController {
                     value = "评论id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "page",
                     value = "分页查询页数", required = true, dataTypeClass = Integer.class)
-    }
-    )
-    public RespBean selectAllReplyByCommentId(Integer commentId, int page) {
-        IPage<ReplyBean> iPage = iReplyService.selectAllReplyByCommentId(commentId, page);
-        List<ReplyBean> list = iPage.getRecords();
-        if (list.size() != 0) {
-            return RespBean.ok("查询成功", list);
-        }
-        return RespBean.error("查询失败，未找到该评论或该评论下无此页");
+    })
+    public RespBean selectAllReplyByCommentId(Integer commentId) {
+
+        return iReplyService.selectAllReplyByCommentId(commentId);
+
     }
 
     /**
@@ -258,24 +198,4 @@ public class ReplyBackGroundController {
         return RespBean.error("查询失败，未找到该用户或该用户评论下无此页");
     }
 
-    /**
-     * 根据回复id查询该回复
-     *
-     * @param replyId
-     * @return RespBean
-     */
-    @GetMapping("/replyBackGround/selectReply")
-    @ApiOperation(value = "根据回复id查询回复", notes = "回复需存在", httpMethod = "GET")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "replyId",
-                    value = "回复id", required = true, dataTypeClass = Integer.class)
-    }
-    )
-    public RespBean selectReply(Integer replyId) {
-        if (iReplyService.selectReply(replyId) != null) {
-            ReplyBean replyBean = iReplyService.selectReply(replyId);
-            return RespBean.ok("查询成功", replyBean);
-        }
-        return RespBean.error("查询失败，未找到该回复");
-    }
 }

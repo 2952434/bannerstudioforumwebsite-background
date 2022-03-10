@@ -1,6 +1,5 @@
 package studio.banner.forumwebsite.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import studio.banner.forumwebsite.bean.*;
 
 import java.util.List;
@@ -194,11 +193,5 @@ public interface IUserGradeService {
      */
     List<UserGradeContactBean> selectDimUserName(String dim);
 
-    /**
-     * 根据年级查询帖子
-     * @param grade 年级
-     * @param page 页数
-     * @return List<PostBean>
-     */
-    List<PostBean> selectPostByGrade(String grade,int page);
+
 }

@@ -1,23 +1,129 @@
 package studio.banner.forumwebsite.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import studio.banner.forumwebsite.bean.CollectBean;
+import studio.banner.forumwebsite.bean.CollectFavoriteBean;
+import studio.banner.forumwebsite.bean.RespBean;
+import studio.banner.forumwebsite.mapper.CollectFavoriteMapper;
 import studio.banner.forumwebsite.mapper.CollectMapper;
 import studio.banner.forumwebsite.service.ICollectService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @Author: Ljx
- * @Date: 2021/5/13 22:05
- * @role: 收藏服务层实现
+ * @Date: 2022/3/7 23:43
+ * @role:
  */
 @Service
 public class CollectServiceImpl implements ICollectService {
+
+    protected static Logger logger = LoggerFactory.getLogger(CollectServiceImpl.class);
+
+    @Autowired
+    private CollectFavoriteMapper collectFavoriteMapper;
+
     @Autowired
     private CollectMapper collectMapper;
+
+
+    @Override
+    public RespBean insertCollectFavorite(CollectFavoriteBean collectFavoriteBean) {
+        if (judgeCollectFavorite(collectFavoriteBean.getUserId(), collectFavoriteBean.getFavoriteName())!=null){
+            return RespBean.error("该文件夹以存在");
+        }
+        if (collectFavoriteMapper.insert(collectFavoriteBean)!=1) {
+            return RespBean.error("添加文件夹失败");
+        }
+        return RespBean.ok("添加文件夹成功");
+    }
+
+    @Override
+    public CollectFavoriteBean judgeCollectFavorite(Integer userId, String collectFavoriteName) {
+        QueryWrapper<CollectFavoriteBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("favorite_name",collectFavoriteName)
+                .eq("user_id",userId);
+        return collectFavoriteMapper.selectOne(queryWrapper);
+    }
+
+    @Override
+    public Integer selectCollectNumByUserId(Integer userId) {
+        QueryWrapper<CollectBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("col_user_id",userId);
+        return collectMapper.selectCount(queryWrapper);
+    }
+
+    @Override
+    public Integer selectCollectNumByPostId(Integer postId) {
+        QueryWrapper<CollectBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("col_art_id",postId);
+        return collectMapper.selectCount(queryWrapper);
+    }
+
+    @Override
+    public RespBean updateCollectFavorite(CollectFavoriteBean collectFavoriteBean) {
+        if (judgeCollectFavorite(collectFavoriteBean.getUserId(), collectFavoriteBean.getFavoriteName())!=null){
+            return RespBean.error("该文件夹以存在");
+        }
+        if (collectFavoriteMapper.updateById(collectFavoriteBean)==1){
+            return RespBean.ok("更新收藏夹成功");
+        }
+        return RespBean.error("更新收藏夹失败");
+    }
+
+    @Override
+    public RespBean selectCollectFavoriteById(Integer userId,Integer selectId) {
+        QueryWrapper<CollectFavoriteBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id",userId);
+        List<CollectFavoriteBean> collectFavoriteBeans = collectFavoriteMapper.selectList(queryWrapper);
+        if (userId.equals(selectId)){
+            return RespBean.ok("查询成功",collectFavoriteBeans);
+        }
+        List<CollectFavoriteBean> list = new ArrayList<>();
+        for (CollectFavoriteBean collectFavoriteBean : collectFavoriteBeans) {
+            if (collectFavoriteBean.getPrivacy()==0){
+                list.add(collectFavoriteBean);
+            }
+        }
+        return RespBean.ok("查询成功",list);
+    }
+
+    @Override
+    public RespBean deleteCollectFavorite(Integer favoriteId, Integer moveFavoriteId) {
+        if (moveFavoriteId==null){
+            return RespBean.error("请选择");
+        }
+        if (collectFavoriteMapper.deleteById(favoriteId)==1) {
+            logger.info("删除收藏夹成功");
+        }else {
+            return RespBean.error("删除收藏夹失败");
+        }
+        if (moveFavoriteId==-1){
+            QueryWrapper<CollectBean> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("favorite_id",favoriteId);
+            if (collectMapper.delete(queryWrapper)==1) {
+                logger.info("帖子删除成功");
+            }
+        }else {
+            UpdateWrapper<CollectBean> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("favorite_id",favoriteId).set("favorite_id",moveFavoriteId);
+            collectMapper.update(null,updateWrapper);
+        }
+        return RespBean.ok("收藏夹删除成功");
+    }
+
+    @Override
+    public boolean judgeCollectPost(Integer userId, Integer postId) {
+        QueryWrapper<CollectBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("col_user_id",userId).eq("col_art_id",postId);
+        return collectMapper.selectOne(queryWrapper)==null;
+    }
 
     /**
      * 增加收藏文章
@@ -27,18 +133,27 @@ public class CollectServiceImpl implements ICollectService {
      */
     @Override
     public boolean insertCollect(CollectBean collectBean) {
-        return collectMapper.insert(collectBean) == 1;
+        if (judgeCollectPost(collectBean.getCloUserId(),collectBean.getColId())){
+
+            return collectMapper.insert(collectBean) == 1;
+        }
+        return false;
     }
 
-    /**
-     * 根据id删除收藏文章
-     *
-     * @param id 用户id
-     * @return boolean
-     */
+
     @Override
-    public boolean deleteCollect(Integer id) {
-        return collectMapper.deleteById(id) == 1;
+    public boolean deleteCollect(Integer postId,Integer userId) {
+        QueryWrapper<CollectBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("col_art_id",postId).eq("col_user_id",userId);
+        return collectMapper.delete(queryWrapper) == 1;
+    }
+
+    @Override
+    public RespBean deleteBatchCollectByIds(List<Integer> ids) {
+        if (collectMapper.deleteBatchIds(ids)==1) {
+            return RespBean.ok("删除成功");
+        }
+        return RespBean.error("删除失败");
     }
 
     /**
@@ -49,26 +164,44 @@ public class CollectServiceImpl implements ICollectService {
      */
     @Override
     public boolean deleteCollectByUserId(Integer userid) {
-        QueryWrapper wrapper = new QueryWrapper();
-        wrapper.eq("clo_user_id", userid);
-        if (collectMapper.deleteById(userid) != 0) {
-            return true;
-        } else {
-            return false;
-        }
+        QueryWrapper<CollectBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("clo_user_id", userid);
+        return collectMapper.delete(queryWrapper) == 1;
     }
 
-    /**
-     * 根据不同用户id查询收藏文章
-     *
-     * @param userid 用户id
-     * @return List
-     */
     @Override
-    public List<CollectBean> selectCollectByUserId(Integer userid) {
-        QueryWrapper<CollectBean> wrapper = new QueryWrapper<>();
-        wrapper.eq("clo_user_id", userid);
-        List<CollectBean> artTit = collectMapper.selectList(wrapper);
-        return artTit;
+    public RespBean updateCollectById(Integer colId, Integer favoriteId) {
+        UpdateWrapper<CollectBean> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("col_id",colId).set("favorite_id",favoriteId);
+        if (collectMapper.update(null,updateWrapper)==1) {
+            logger.info("收藏移动成功");
+            return RespBean.ok("收藏移动成功");
+        }
+        return RespBean.error("收藏移动失败");
     }
+
+    @Override
+    public RespBean updateCollectByIds(List<Integer> colIds, Integer favoriteId) {
+        UpdateWrapper<CollectBean> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("col_id",colIds).set("favorite_id",favoriteId);
+        if (collectMapper.update(null,updateWrapper)==1) {
+            logger.info("收藏移动成功");
+            return RespBean.ok("收藏移动成功");
+        }
+        return RespBean.error("收藏移动失败");
+    }
+
+    @Override
+    public RespBean selectCollectByFavoriteId(Integer favoriteId) {
+        QueryWrapper<CollectBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("favorite_id",favoriteId);
+        List<CollectBean> collectBeans = collectMapper.selectList(queryWrapper);
+        if (collectBeans.size()==0){
+            return RespBean.error("该收藏夹中无信息");
+        }
+        return RespBean.ok(collectBeans);
+
+    }
+
+
 }

@@ -29,6 +29,7 @@ import java.util.Map;
  */
 @RestController
 @Api(tags = "后台评论接口", value = "CommentBackGroundController")
+@RequestMapping("/backGround")
 public class CommentBackGroundController {
     private static final Logger logger = LoggerFactory.getLogger(CommentBackGroundController.class);
     @Autowired
@@ -90,31 +91,6 @@ public class CommentBackGroundController {
         return RespBean.error("评论失败，未找到该帖子");
     }
 
-    /**
-     * 根据帖子id删除该帖子下全部评论接口
-     *
-     * @param commentPostId
-     * @return RespBean
-     */
-
-    @DeleteMapping("/commentBackGround/deleteAllCommentByPostId")
-    @ApiOperation(value = "根据帖子id删除该帖子下全部评论", notes = "帖子需存在", httpMethod = "DELETE")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "commentPostId",
-                    value = "评帖子id", required = true, dataTypeClass = Integer.class),
-    }
-    )
-    public RespBean deleteAllCommentByPostId(int commentPostId) {
-        if (iCommentServicel.selectAllCommentByPostId(commentPostId) != null) {
-            List<CommentBean> list = iCommentServicel.selectAllCommentByPostId(commentPostId);
-            for (int i = 0; i < list.size(); i++) {
-                iReplyService.deleteAllReplyByCommentId(list.get(i).getCommentId());
-            }
-            iCommentServicel.deleteAllCommnetByPostId(commentPostId);
-            return RespBean.ok("删除成功");
-        }
-        return RespBean.error("删除失败，未找到该帖子或该帖子下无评论");
-    }
 
     /**
      * 根据用户id删除该用户下全部评论
@@ -127,8 +103,7 @@ public class CommentBackGroundController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "commentMemberId",
                     value = "用户id", required = true, dataTypeClass = Integer.class),
-    }
-    )
+    })
     public RespBean deleteAllCommentByMemberId(int commentMemberId) {
         if (iCommentServicel.selectAllCommentByMemberId(commentMemberId) != null) {
             List<CommentBean> list = iCommentServicel.selectAllCommentByMemberId(commentMemberId);
@@ -154,67 +129,15 @@ public class CommentBackGroundController {
                     value = "评论id", required = true, dataTypeClass = Integer.class),
     }
     )
-    public RespBean deleteComment(int commentId) {
+    public RespBean deleteComment(Integer commentId,Integer memberId) {
         if (iCommentServicel.selectComment(commentId) != null) {
-            iReplyService.deleteAllReplyByCommentId(commentId);
-            iCommentServicel.deleteComment(commentId);
-            return RespBean.ok("删除成功");
+            return iCommentServicel.deleteComment(commentId,memberId);
         }
         return RespBean.error("删除失败，未找到该评论");
     }
 
-    /**
-     * 评论内容修改
-     *
-     * @param commentId
-     * @param newContent
-     * @return RespBean
-     */
 
-    @PutMapping("/commentBackGround/updateCommentContent")
-    @ApiOperation(value = "评论内容修改", notes = "评论需存在", httpMethod = "PUT")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "commentId",
-                    value = "评论id", required = true, dataTypeClass = Integer.class),
-            @ApiImplicitParam(paramType = "query", name = "newContent",
-                    value = "新评论内容2-100字之间", required = true, dataTypeClass = String.class)
 
-    }
-    )
-    public RespBean updateCommentContent(int commentId, String newContent) {
-        if (iCommentServicel.selectComment(commentId) != null) {
-            String judge = "^.{2,100}$";
-            if (newContent.matches(judge)) {
-                iCommentServicel.updateCommentContent(commentId, newContent);
-                return RespBean.ok("修改成功");
-            }
-            return RespBean.error("修改失败,评论内容不符合标准");
-        }
-        return RespBean.error("修改失败，未找到该评论");
-    }
-
-    /**
-     * 评论点赞量修改
-     *
-     * @param commentId
-     * @return RespBean
-     */
-
-    @PutMapping("/commentBackGround/updateCommentLikeNumber")
-    @ApiOperation(value = "评论点赞量修改", notes = "评论需存在", httpMethod = "PUT")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "commentId",
-                    value = "评论id", required = true, dataTypeClass = Integer.class),
-
-    }
-    )
-    public RespBean updateCommentLikeNumber(int commentId) {
-        if (iCommentServicel.selectComment(commentId) != null) {
-            iCommentServicel.updateCommentLikeNumber(commentId);
-            return RespBean.ok("修改成功");
-        }
-        return RespBean.error("修改失败，未找到该评论");
-    }
 
     /**
      * 根据帖子id查询该帖子下全部评论
@@ -231,12 +154,10 @@ public class CommentBackGroundController {
 
     }
     )
-    public RespBean selectAllCommentByPostId(int commentPostId) {
-        if (iCommentServicel.selectAllCommentByPostId(commentPostId) != null) {
-            List<CommentBean> list = iCommentServicel.selectAllCommentByPostId(commentPostId);
-            return RespBean.ok("查询成功", list);
-        }
-        return RespBean.error("查询失败，未找到该帖子或该帖子下无评论");
+    public RespBean selectAllCommentByPostId(Integer commentPostId,Integer page) {
+
+        return iCommentServicel.selectAllCommentByPostId(commentPostId,page);
+
     }
 
     /**

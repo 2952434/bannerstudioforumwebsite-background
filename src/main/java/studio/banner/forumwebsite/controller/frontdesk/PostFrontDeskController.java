@@ -17,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 import studio.banner.forumwebsite.bean.*;
 import studio.banner.forumwebsite.service.ICommentService;
 import studio.banner.forumwebsite.service.IPostService;
-import studio.banner.forumwebsite.service.IPostTypeService;
 import studio.banner.forumwebsite.service.IReplyService;
 
 import java.util.HashMap;
@@ -35,6 +34,7 @@ import java.util.Set;
 
 @RestController
 @Api(tags = "前台帖子接口", value = "PostFrontDeskController")
+@RequestMapping("/frontDesk")
 public class PostFrontDeskController {
     /**
      * 日志 打印信息
@@ -44,8 +44,6 @@ public class PostFrontDeskController {
     private IPostService iPostService;
     @Autowired
     private ICommentService iCommentService;
-    @Autowired
-    private IPostTypeService iPostTypeService;
     @Autowired
     private IReplyService iReplyService;
 
@@ -96,14 +94,8 @@ public class PostFrontDeskController {
                     value = "帖子班级", required = true, dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "postType",
                     value = "帖子类型", required = false, dataTypeClass = String.class)
-    }
-    )
-    public RespBean insertPost(PostBean postBean,String postGrade, BindingResult bindingResult, String... postType) {
-        System.out.println(postBean);
-        /**
-         * 将@Valid鉴权的错误信息返给前端
-         */
-
+    })
+    public RespBean insertPost(PostBean postBean,BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             Map<String, Object> map = new HashMap<>(999);
             List<FieldError> errors = bindingResult.getFieldErrors();
@@ -119,50 +111,11 @@ public class PostFrontDeskController {
         String judge2 = "^.{5,10000}$";
         if (postBean.getPostTitle().matches(judge1)) {
             if (postBean.getPostContent().matches(judge2)) {
-                iPostService.insertPost(postBean,postGrade, postType);
-                return RespBean.ok("添加帖子成功");
+                return iPostService.insertPost(postBean);
             }
         }
         return RespBean.error("添加帖子失败,帖子内容有误");
     }
-
-    /**
-     * 帖子转发接口
-     *
-     * @param postTime
-     * @param postForwardMemberId
-     * @param postId
-     * @return RespBean
-     */
-    @PostMapping("/postFrontDesk/forwardPost")
-    @ApiOperation(value = "帖子转发", notes = "帖子需存在", httpMethod = "POST")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "postId",
-                    value = "原帖子id", required = true, dataTypeClass = Integer.class),
-            @ApiImplicitParam(paramType = "query", name = "postForwardMemberId",
-                    value = "转发帖子者id", required = true, dataTypeClass = Integer.class),
-            @ApiImplicitParam(paramType = "query", name = "postTime",
-                    value = "帖子转发时间", required = true, dataTypeClass = String.class),
-            @ApiImplicitParam(paramType = "query", name = "postGrade",
-                    value = "帖子班级", required = true, dataTypeClass = String.class)
-    }
-
-    )
-    public RespBean forwardPost(int postId, int postForwardMemberId, String postTime,String postGrade) {
-        if (iPostService.selectPost(postId) != null) {
-            PostBean postBean1 = iPostService.selectPost(postId);
-            String postContent = postBean1.getPostContent();
-            String imageAddress = postBean1.getPostImageAddress();
-            int postForward = postBean1.getPostMemberId();
-            String postTitle = postBean1.getPostTitle();
-            String[] strings = iPostTypeService.selectPostTypeById(postId);
-            PostBean postBean = new PostBean(0, postForwardMemberId, postTitle, postContent, postTime, null, null, postForward, null, imageAddress, 0);
-            iPostService.insertPost(postBean,postGrade, strings);
-            return RespBean.ok("转发成功");
-        }
-        return RespBean.error("转发失败，未查询到原帖子");
-    }
-
     /**
      * 帖子删除接口
      *
@@ -178,19 +131,7 @@ public class PostFrontDeskController {
     }
     )
     public RespBean deletePost(int postId) {
-        if (iPostService.deletePost(postId)) {
-            if (iCommentService.selectAllCommentByPostId(postId) != null) {
-                List<CommentBean> list = iCommentService.selectAllCommentByPostId(postId);
-                for (int i = 0; i < list.size(); i++) {
-                    int commentId = list.get(i).getCommentId();
-                    iReplyService.deleteAllReplyByCommentId(commentId);
-                }
-
-            }
-            iCommentService.deleteAllCommnetByPostId(postId);
-            return RespBean.ok("删除成功");
-        }
-        return RespBean.error("删除失败,未查询到该文章");
+        return iPostService.deletePostById(postId);
     }
 
     /**
@@ -204,102 +145,30 @@ public class PostFrontDeskController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postMemberId",
                     value = "用户id", required = true, dataTypeClass = String.class),
-    }
-    )
+    })
     public RespBean deleteAllPost(int postMemberId) {
-        if (iPostService.selectAllPostByDescById(postMemberId) != null) {
-            List<PostBean> List = iPostService.selectAllPostByDescById(postMemberId);
-            for (int j = 0; j < List.size(); j++) {
-                if (iCommentService.selectAllCommentByPostId(List.get(j).getPostId()) != null) {
-                    List<CommentBean> list = iCommentService.selectAllCommentByPostId(List.get(j).getPostId());
-                    for (int i = 0; i < list.size(); i++) {
-                        int commentId = list.get(i).getCommentId();
-                        iReplyService.deleteAllReplyByCommentId(commentId);
-                    }
-                }
-            }
-            iPostService.deleteAllPost(postMemberId);
-            iCommentService.deleteAllCommentByMemberId(postMemberId);
-            return RespBean.ok("删除成功");
-        }
-        return RespBean.error("删除失败,未查询到该用户或用户已无文章");
+        return iPostService.deleteAllPost(postMemberId);
     }
 
-    /**
-     * 根据帖子id修改帖子标题
-     *
-     * @param postId
-     * @param newTitle
-     * @return RespBean
-     */
-    @PutMapping("/postFrontDesk/updatePostTitle")
-    @ApiOperation(value = "帖子标题修改", notes = "帖子需存在,标题长度需在5-20个字符之间", httpMethod = "PUT")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "postId",
-                    value = "帖子id", required = true, dataTypeClass = Integer.class),
-            @ApiImplicitParam(paramType = "query", name = "newTitle",
-                    value = "帖子新标题", required = true, dataTypeClass = String.class),
-
+    @PostMapping("/updatePostById")
+    @ApiOperation(value = "修改帖子信息", httpMethod = "POST")
+    public RespBean updatePostById(PostBean postBean) {
+        return iPostService.updatePostById(postBean);
     }
-    )
-    public RespBean udpatePostTitle(int postId, String newTitle) {
-        if (iPostService.selectPost(postId) != null) {
-            String judge = "^.{5,20}$";
-            if (newTitle.matches(judge)) {
-                iPostService.updatePostTitle(postId, newTitle);
-                return RespBean.ok("更改成功");
-            }
-            return RespBean.error("更改失败,标题不符合规则");
-        }
-        return RespBean.error("更改失败，未查询到改帖子");
-    }
-
-
-    /**
-     * 帖子内容修改接口
-     *
-     * @param postId
-     * @param newContent
-     * @return RespBean
-     */
-    @PutMapping("/postFrontDesk/updatePostContent")
-    @ApiOperation(value = "帖子内容修改", notes = "帖子需存在,帖子内容需小于10000字", httpMethod = "PUT")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "postId",
-                    value = "帖子id", required = true, dataTypeClass = Integer.class),
-            @ApiImplicitParam(paramType = "query", name = "newContent",
-                    value = "帖子新内容", required = true, dataTypeClass = String.class),
-
-    }
-    )
-    public RespBean udpatePostContent(int postId, String newContent) {
-        if (iPostService.selectPost(postId) != null) {
-            String judge = "^.{1,10000}$";
-            if (newContent.matches(judge)) {
-                iPostService.updatePostContent(postId, newContent);
-                return RespBean.ok("更改成功");
-            }
-            return RespBean.error("更改失败,内容不符合规则");
-        }
-        return RespBean.error("更改失败，未查询到改帖子");
-    }
-
     /**
      * 更改帖子浏览量
      *
      * @param postId
      * @return RespBean
      */
-    @PutMapping("/postFrontDesk/updatePostPageview")
+    @PutMapping("/updatePostPageView")
     @ApiOperation(value = "帖子浏览量修改", notes = "帖子需存在", httpMethod = "PUT")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
                     value = "帖子id", required = true, dataTypeClass = Integer.class),
 
-    }
-
-    )
-    public RespBean udpatePostPageview(int postId) {
+    })
+    public RespBean updatePostPageView(Integer postId) {
         if (iPostService.updatePostPageView(postId)) {
             return RespBean.ok("更改成功");
         }
@@ -312,39 +181,19 @@ public class PostFrontDeskController {
      * @param postId
      * @return RespBean
      */
-    @PutMapping("/postFrontDesk/updatePostCommentNumber")
+    @PutMapping("/updatePostCommentNumber")
     @ApiOperation(value = "帖子评论量修改", notes = "帖子需存在", httpMethod = "PUT")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
                     value = "帖子id", required = true, dataTypeClass = Integer.class),
-    }
-    )
-    public RespBean udpatePostCommentNumber(int postId) {
+    })
+    public RespBean updatePostCommentNumber(Integer postId) {
         if (iPostService.updatePostCommentNumber(postId)) {
             return RespBean.ok("更改成功");
         }
         return RespBean.error("更改失败，未查询到改帖子");
     }
 
-    /**
-     * 修改帖子点赞量
-     *
-     * @param postId
-     * @return RespBean
-     */
-    @PutMapping("/postFrontDesk/updatePostLikeNumber")
-    @ApiOperation(value = "帖子点赞量修改", notes = "帖子需存在", httpMethod = "PUT")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "postId",
-                    value = "帖子id", required = true, dataTypeClass = Integer.class),
-    }
-    )
-    public RespBean udpatePostLikeNumber(int postId) {
-        if (iPostService.updatePostLikeNumber(postId)) {
-            return RespBean.ok("更改成功");
-        }
-        return RespBean.error("更改失败，未查询到改帖子");
-    }
 
     /**
      * 根据帖子id查找帖子

@@ -2,6 +2,7 @@ package studio.banner.forumwebsite.controller.frontdesk;
 
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import studio.banner.forumwebsite.bean.RespBean;
 
@@ -18,6 +19,7 @@ import java.util.TimeZone;
  */
 @Api(tags = "前台得到当前时间接口", value = "GetTimeFrontDeskController")
 @RestController
+@RequestMapping("/frontDesk")
 public class GetTimeFrontDeskController {
     /**
      * 得到当前时间

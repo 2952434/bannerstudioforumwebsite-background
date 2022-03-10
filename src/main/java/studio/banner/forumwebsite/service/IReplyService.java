@@ -2,6 +2,7 @@ package studio.banner.forumwebsite.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import studio.banner.forumwebsite.bean.ReplyBean;
+import studio.banner.forumwebsite.bean.RespBean;
 
 import java.util.List;
 
@@ -19,15 +20,15 @@ public interface IReplyService {
      * @param replyBean 回复实体
      * @return boolean
      */
-    boolean insertReply(ReplyBean replyBean);
+    RespBean insertReply(ReplyBean replyBean);
 
     /**
-     * 根据回复id删除回复
-     *
-     * @param replyId 回复id
-     * @return boolean
+     * 根据回复id和要删除的用户id删除回复
+     * @param replyId
+     * @param memberId
+     * @return
      */
-    boolean deleteReply(Integer replyId);
+    RespBean deleteReply(Integer replyId,Integer memberId);
 
     /**
      * 根据用户id删除该用户全部回复
@@ -35,7 +36,13 @@ public interface IReplyService {
      * @param memberId 用户id
      * @return boolean
      */
-    boolean deleteAllReplyByMemberId(Integer memberId);
+    RespBean deleteAllReplyByMemberId(Integer memberId);
+
+    /**
+     * 通过帖子id删除该帖子下的全部回复
+     * @param postId
+     */
+    void deleteAllReplyByPostId(Integer postId);
 
     /**
      * 根据评论id删除该评论下全部回复
@@ -43,33 +50,16 @@ public interface IReplyService {
      * @param commentId 评论id
      * @return boolean
      */
-    boolean deleteAllReplyByCommentId(Integer commentId);
+    RespBean deleteAllReplyByCommentId(Integer commentId);
+
 
     /**
-     * 修改回复内容
-     *
-     * @param replyId    回复id
-     * @param newContent 新回复内容
-     * @return boolean
-     */
-    boolean updateReplyContent(Integer replyId, String newContent);
-
-    /**
-     * 修改回复点赞数量
-     *
-     * @param replyId 回复id
-     * @return boolean
-     */
-    boolean updateReplyLikeNumber(Integer replyId);
-
-    /**
-     * 根据评论id分页查询该评论下全部回复
+     * 根据评论id查询该评论下全部回复
      *
      * @param commentId 评论id
-     * @param page      第几页
      * @return IPage<ReplyBean>
      */
-    IPage<ReplyBean> selectAllReplyByCommentId(Integer commentId, int page);
+    RespBean selectAllReplyByCommentId(Integer commentId);
 
     /**
      * 根据用户分页查询该用户下全部回复
@@ -81,11 +71,11 @@ public interface IReplyService {
     IPage<ReplyBean> selectAllReplyByMemberId(Integer memberId, int page);
 
     /**
-     * 根据回复id查询
-     *
-     * @param replyId 回复id
-     * @return ReplyBean
+     * 通过被回复人id查询回复
+     * @param beReplyMemberId
+     * @return
      */
-    ReplyBean selectReply(Integer replyId);
+    RespBean selectReplyByBeReplyMemberId(Integer beReplyMemberId);
+
 
 }

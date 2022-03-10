@@ -31,6 +31,7 @@ import java.util.Map;
  */
 @RestController
 @Api(tags = "前台评论接口", value = "CommentFrontDeskController")
+@RequestMapping("/frontDesk")
 public class CommentFrontDeskController {
     private static final Logger logger = LoggerFactory.getLogger(CommentFrontDeskController.class);
     @Autowired
@@ -73,8 +74,9 @@ public class CommentFrontDeskController {
         if (iPostService.selectPost(commentBean.getCommentPostId()) != null) {
             String judge = "^.{2,100}$";
             if (commentBean.getCommentContent().matches(judge)) {
-                iCommentServicel.insertComment(commentBean);
-                return RespBean.ok("评论成功");
+                if (iCommentServicel.insertComment(commentBean)){
+                    return RespBean.ok("评论成功");
+                }
             }
             return RespBean.error("评论失败，评论内容不符合标准");
         }
@@ -87,29 +89,13 @@ public class CommentFrontDeskController {
             @ApiImplicitParam(paramType = "query", name = "commentId",
                     value = "评论id", required = true, dataTypeClass = Integer.class),
     })
-    public RespBean deleteComment(int commentId) {
+    public RespBean deleteComment(Integer commentId,Integer memberId) {
         if (iCommentServicel.selectComment(commentId) != null) {
-            iReplyService.deleteAllReplyByCommentId(commentId);
-            iCommentServicel.deleteComment(commentId);
-            return RespBean.ok("删除成功");
+            return iCommentServicel.deleteComment(commentId,memberId);
         }
         return RespBean.error("删除失败，未找到该评论");
     }
 
-    @PutMapping("/commentFrontDesk/updateCommentLikeNumber")
-    @ApiOperation(value = "评论点赞量修改", notes = "评论需存在", httpMethod = "PUT")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "commentId",
-                    value = "评论id", required = true, dataTypeClass = Integer.class),
-
-    })
-    public RespBean updateCommentLikeNumber(int commentId) {
-        if (iCommentServicel.selectComment(commentId) != null) {
-            iCommentServicel.updateCommentLikeNumber(commentId);
-            return RespBean.ok("修改成功");
-        }
-        return RespBean.error("修改失败，未找到该评论");
-    }
 
 
     @GetMapping("/commentFrontDesk/selectAllCommentByPostId")
@@ -119,12 +105,10 @@ public class CommentFrontDeskController {
                     value = "帖子id", required = true, dataTypeClass = Integer.class)
 
     })
-    public RespBean selectAllCommentByPostId(int commentPostId) {
-        if (iCommentServicel.selectAllCommentByPostId(commentPostId) != null) {
-            List<CommentBean> list = iCommentServicel.selectAllCommentByPostId(commentPostId);
-            return RespBean.ok("查询成功", list);
-        }
-        return RespBean.error("查询失败，未找到该帖子或该帖子下无评论");
+    public RespBean selectAllCommentByPostId(Integer commentPostId,Integer page) {
+
+        return iCommentServicel.selectAllCommentByPostId(commentPostId,page);
+
     }
 
     @GetMapping("/commentFrontDesk/selectComment")

@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @Api(tags = "前台腾讯云上传图片接口", value = "TencentPhotoFrontDeskController")
+@RequestMapping("/frontDesk")
 public class TencentPhotoFrontDeskController {
     protected static final Logger logger = LoggerFactory.getLogger(TencentPhotoFrontDeskController.class);
     @Autowired

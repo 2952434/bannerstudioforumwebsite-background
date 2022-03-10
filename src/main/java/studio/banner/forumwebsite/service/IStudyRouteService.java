@@ -1,80 +1,54 @@
 package studio.banner.forumwebsite.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import studio.banner.forumwebsite.bean.StudyRoute;
-
-import java.util.List;
+import studio.banner.forumwebsite.bean.RespBean;
+import studio.banner.forumwebsite.bean.StudyRouteBean;
 
 /**
- * @author hyy
- * @date 2021/5/14 16:39
- * @role 学习路线Service层接口
+ * @Author: Ljx
+ * @Date: 2022/3/5 21:09
+ * @role: 学习路线服务接口
  */
 public interface IStudyRouteService {
-    /**
-     * 插入一条学习路线
-     *
-     * @param studyRoute 学习路线对象
-     * @return boolean
-     */
-    boolean insert(StudyRoute studyRoute);
 
     /**
-     * 根据 学习方向 和 阶段编号 删除指定学习方向的指定阶段的内容
-     *
-     * @param studyDirection 学习方向
-     * @param stageNumber    阶段编号
-     * @return boolean
+     * 增加学习路线
+     * @param studyRouteBean
+     * @return
      */
-    boolean deleteByNumber(String studyDirection, Integer stageNumber);
+    RespBean insertStudyRoute(StudyRouteBean studyRouteBean);
 
     /**
-     * 根据学习方向 删除指定方向的所有内容
-     *
-     * @param studyDirection 学习方向
-     * @return boolean
+     * 根据id删除学习路线
+     * @param id
+     * @return
      */
-    boolean deleteByDirection(String studyDirection);
+    RespBean deleteStudyRouteById(Integer id);
 
     /**
-     * 根据 学习方向 和 阶段编号 更新 指定学习方向的指定阶段的内容
-     *
-     * @param studyRoute 学习路线对象
-     * @return boolean
+     * 根据id查询学习路线
+     * @param id
+     * @return
      */
-    boolean update(StudyRoute studyRoute);
+    RespBean selectStudyRouteById(Integer id);
 
     /**
-     * 根据 学习方向 和 阶段编号 查询指定学习方向的指定阶段的内容
-     *
-     * @param studyDirection 学习方向
-     * @param stageNumber    阶段编号
-     * @return StudyRoute
+     * 根据方向和id查询学习路线
+     * @param direction
+     * @param id
+     * @return
      */
-    StudyRoute selectByStageNumber(String studyDirection, Integer stageNumber);
+    RespBean selectStudyRouteByDirection(String direction,Integer id);
 
     /**
-     * 根据学习方向查询该方向的所有阶段的内容
-     *
-     * @param studyDirection 学习方向
-     * @return List<StudyRoute>
+     * 更改学习路线
+     * @param studyRouteBean
+     * @return
      */
-    List<StudyRoute> selectByStudyDirection(String studyDirection);
+    RespBean updateStudyRoute(StudyRouteBean studyRouteBean);
 
     /**
-     * 查询所有学习方向内容
-     *
-     * @return List<StudyRoute>
+     * 查询所有学习路线
+     * @return
      */
-    List<StudyRoute> selectAll();
-
-    /**
-     * 分页查询所有学习方向内容
-     *
-     * @param pageNumber 页码数
-     * @param pageSize   每页容量
-     * @return IPage<StudyRoute>
-     */
-    IPage<StudyRoute> selectByPage(Integer pageNumber, Integer pageSize);
-
+    RespBean selectAllStudyRoute();
 }

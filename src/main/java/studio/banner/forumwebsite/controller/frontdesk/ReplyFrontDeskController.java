@@ -30,6 +30,7 @@ import java.util.Map;
  */
 @RestController
 @Api(tags = "前台帖子回复接口", value = "ReplyFrontDeskController")
+@RequestMapping("/frontDesk")
 public class ReplyFrontDeskController {
     /**
      * 日志 打印信息
@@ -108,12 +109,10 @@ public class ReplyFrontDeskController {
             @ApiImplicitParam(paramType = "query", name = "replyId",
                     value = "回复id", required = true, dataTypeClass = Integer.class),
     })
-    public RespBean deleteComment(Integer replyId) {
-        if (iReplyService.selectReply(replyId) != null) {
-            iReplyService.deleteReply(replyId);
-            return RespBean.ok("删除成功");
-        }
-        return RespBean.error("删除失败，未找到该评论");
+    public RespBean deleteComment(Integer replyId,Integer memberId) {
+
+        return iReplyService.deleteReply(replyId,memberId);
+
     }
 
 
@@ -130,32 +129,11 @@ public class ReplyFrontDeskController {
                     value = "评论id", required = true, dataTypeClass = Integer.class),
     })
     public RespBean deleteAllCommentByCommentId(Integer commentId) {
-        if (iReplyService.selectAllReplyByCommentId(commentId, 1).getRecords().size() != 0) {
-            iReplyService.deleteAllReplyByCommentId(commentId);
-            return RespBean.ok("删除成功");
-        }
-        return RespBean.error("删除失败，未找到该评论或改评论下无评论可删除");
+        return iReplyService.deleteAllReplyByCommentId(commentId);
+
     }
 
-    /**
-     * 回复点赞量修改
-     *
-     * @param replyId
-     * @return RespBean
-     */
-    @PutMapping("/replyFrontDesk/updateReplyLikeNumber")
-    @ApiOperation(value = "回复点赞量修改", notes = "回复需存在", httpMethod = "PUT")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "replyId",
-                    value = "回复id", required = true, dataTypeClass = Integer.class),
-    })
-    public RespBean updateCommentLikeNumber(Integer replyId) {
-        if (iReplyService.selectReply(replyId) != null) {
-            iReplyService.updateReplyLikeNumber(replyId);
-            return RespBean.ok("修改成功");
-        }
-        return RespBean.error("修改失败，未找到该回复");
-    }
+
 
     /**
      * 根据评论id查询该评论下全部回复
@@ -171,33 +149,11 @@ public class ReplyFrontDeskController {
             @ApiImplicitParam(paramType = "query", name = "page",
                     value = "分页查询页数", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean selectAllReplyByCommentId(Integer commentId, int page) {
-        IPage<ReplyBean> iPage = iReplyService.selectAllReplyByCommentId(commentId, page);
-        List<ReplyBean> list = iPage.getRecords();
-        if (list.size() != 0) {
-            return RespBean.ok("查询成功", list);
-        }
-        return RespBean.error("查询失败，未找到该评论或该评论下无此页");
+    public RespBean selectAllReplyByCommentId(Integer commentId) {
+
+        return iReplyService.selectAllReplyByCommentId(commentId);
+
     }
 
 
-    /**
-     * 根据回复id查询该回复
-     *
-     * @param replyId
-     * @return RespBean
-     */
-    @GetMapping("/replyFrontDesk/selectReply")
-    @ApiOperation(value = "根据回复id查询回复", notes = "回复需存在", httpMethod = "GET")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "replyId",
-                    value = "回复id", required = true, dataTypeClass = Integer.class)
-    })
-    public RespBean selectReply(Integer replyId) {
-        if (iReplyService.selectReply(replyId) != null) {
-            ReplyBean replyBean = iReplyService.selectReply(replyId);
-            return RespBean.ok("查询成功", replyBean);
-        }
-        return RespBean.error("查询失败，未找到该回复");
-    }
 }

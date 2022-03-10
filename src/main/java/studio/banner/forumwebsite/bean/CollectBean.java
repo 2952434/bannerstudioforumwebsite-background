@@ -31,17 +31,19 @@ public class CollectBean {
     /**
      * 收藏的文章id
      */
-    @TableField(value = "col_art_id")
     private Integer colArtId;
     /**
      * 收藏文章标题
      */
-    @TableField(value = "col_art_tit")
     private String colArtTit;
     /**
-     * 收藏文章的用户id
+     * 收藏文件夹id
      */
-    @TableField(value = "clo_user_id")
+    private Integer favoriteId;
+
+    /**
+     * 收藏用户id
+     */
     private Integer cloUserId;
 
 }

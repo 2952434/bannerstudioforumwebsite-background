@@ -23,4 +23,5 @@ public interface PostMapperEs extends ElasticsearchRepository<PostBeanEs, Intege
      * @return List<PostBeanEs>
      */
     List<PostBeanEs> findByTitleOrContext(String title, String context, Pageable pageable);
+
 }

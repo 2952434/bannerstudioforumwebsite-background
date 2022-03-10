@@ -55,6 +55,12 @@ public class ReplyBean {
      * 回复时间
      */
     private String replyTime;
-
-
+    /**
+     * 帖子用户id
+     */
+    private Integer postMemberId;
+    /**
+     * 帖子id
+     */
+    private Integer postId;
 }

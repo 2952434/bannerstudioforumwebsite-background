@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.data.redis.core.ZSetOperations;
 import studio.banner.forumwebsite.bean.PostBean;
 import studio.banner.forumwebsite.bean.PostBeanEs;
+import studio.banner.forumwebsite.bean.RespBean;
 
 import java.util.List;
 import java.util.Set;
@@ -16,14 +17,13 @@ import java.util.Set;
  * @Description: 帖子操作的接口
  */
 public interface IPostService {
+
     /**
      * 增加帖子
-     *
      * @param postBean 帖子实体
-     * @param postType 帖子类型
-     * @return boolean
+     * @return
      */
-    boolean insertPost(PostBean postBean,String postGrade, String... postType);
+    RespBean insertPost(PostBean postBean);
 
     /**
      * 根据帖子id删除帖子
@@ -31,7 +31,7 @@ public interface IPostService {
      * @param postId 帖子id
      * @return boolean
      */
-    boolean deletePost(int postId);
+    RespBean deletePostById(Integer postId);
 
     /**
      * 根据用户id删除用户全部帖子
@@ -39,28 +39,14 @@ public interface IPostService {
      * @param postMemberId 用户id
      * @return boolean
      */
-    boolean deleteAllPost(int postMemberId);
+    RespBean deleteAllPost(Integer postMemberId);
 
     /**
-     * 根据帖子id更改帖子标题
-     *
-     * @param postId   帖子id
-     * @param newTitle 新标题
-     * @return boolean
+     * 修改帖子内容
+     * @param postBean
+     * @return
      */
-
-    boolean updatePostTitle(int postId, String newTitle);
-
-
-    /**
-     * 根据帖子id更改帖子内容
-     *
-     * @param postId     帖子id
-     * @param newContent 新内容
-     * @return boolean
-     */
-
-    boolean updatePostContent(int postId, String newContent);
+    RespBean updatePostById(PostBean postBean);
 
     /**
      * 根据帖子id更改浏览量
@@ -69,7 +55,7 @@ public interface IPostService {
      * @return boolean
      */
 
-    boolean updatePostPageView(int postId);
+    boolean updatePostPageView(Integer postId);
 
     /**
      * 根据帖子id更改评论量
@@ -78,7 +64,7 @@ public interface IPostService {
      * @return boolean
      */
 
-    boolean updatePostCommentNumber(int postId);
+    boolean updatePostCommentNumber(Integer postId);
 
     /**
      * 根据帖子id更改点赞量
@@ -87,7 +73,14 @@ public interface IPostService {
      * @return boolean
      */
 
-    boolean updatePostLikeNumber(int postId);
+    boolean updatePostLikeNumber(Integer postId);
+
+    /**
+     * 通过帖子id更改收藏量
+     * @param postId
+     * @return
+     */
+    boolean updatePostColNumByPostId(Integer postId);
 
     /**
      * 根据帖子id查询帖子
@@ -96,7 +89,14 @@ public interface IPostService {
      * @return PostBean
      */
 
-    PostBean selectPost(int postId);
+    PostBean selectPost(Integer postId);
+
+    /**
+     * 通过用户id查询其帖子数量
+     * @param memberId
+     * @return
+     */
+    Integer selectPostNumByMemberId(Integer memberId);
 
     /**
      * 根据用户id查询某用户全部帖子(根据时间返向排序)
@@ -105,7 +105,7 @@ public interface IPostService {
      * @return List
      */
 
-    List<PostBean> selectAllPostByDescById(int postMemberId);
+    List<PostBean> selectAllPostByDescById(Integer postMemberId);
 
     /**
      * 根据用户id查询某用户全部帖子(根据时间正向排序)
@@ -114,15 +114,20 @@ public interface IPostService {
      * @return List
      */
 
-    List<PostBean> selectAllPostByAscById(int postMemberId);
+    List<PostBean> selectAllPostByAscById(Integer postMemberId);
 
+    /**
+     * 查询所有帖子数量
+     * @return
+     */
+    Integer selectAllPostNum();
     /**
      * 分页查询所有帖子
      *
      * @param page 页数
      * @return IPage
      */
-    IPage<PostBean> selectAllPost(int page);
+    IPage<PostBean> selectAllPost(Integer page);
 
     /**
      * 全文检索帖子和作者
@@ -131,7 +136,7 @@ public interface IPostService {
      * @param dim  查询字段
      * @return List<PostBeanEs>
      */
-    List<PostBeanEs> selectDimPost(int page, String dim);
+    List<PostBeanEs> selectDimPost(Integer page, String dim);
 
     /**
      * 将数据库中的帖子导入到Redis中

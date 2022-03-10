@@ -6,10 +6,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import studio.banner.forumwebsite.bean.InformBean;
 import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.service.IInformService;
@@ -21,6 +18,7 @@ import studio.banner.forumwebsite.service.IInformService;
  */
 @RestController
 @Api(tags = "后台通知接口", value = "InformBackGroundController")
+@RequestMapping("/backGround")
 public class InformBackGroundController {
 
     @Autowired

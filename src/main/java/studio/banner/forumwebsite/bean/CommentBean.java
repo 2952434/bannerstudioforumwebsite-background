@@ -55,5 +55,21 @@ public class CommentBean {
     @NotNull(message = "评论时间不能为空")
     private String commentTime;
 
+    /**
+     * 发帖人id
+     */
+    @NotNull(message = "发帖人id不能为空")
+    private Integer postMemberId;
+    /**
+     * 用户昵称
+     */
+    @TableField(exist = false)
+    private String userName;
+    /**
+     * 用户头像
+     */
+    @TableField(exist = false)
+    private String headUrl;
+
 
 }
