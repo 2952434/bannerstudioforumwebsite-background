@@ -1,6 +1,7 @@
 package studio.banner.forumwebsite.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +10,7 @@ import org.springframework.stereotype.Service;
 import studio.banner.forumwebsite.bean.MemberInformationBean;
 import studio.banner.forumwebsite.manager.SendMail;
 import studio.banner.forumwebsite.mapper.MemberInformationMapper;
-import studio.banner.forumwebsite.service.IMemberInformationService;
-import studio.banner.forumwebsite.service.IPostService;
-import studio.banner.forumwebsite.service.IUserAttentionService;
+import studio.banner.forumwebsite.service.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,6 +34,10 @@ public class MemberInformationServiceImpl implements IMemberInformationService {
     private IUserAttentionService iUserAttentionService;
     @Autowired
     private IPostService iPostService;
+    @Autowired
+    private ICollectService iCollectService;
+    @Autowired
+    private IPostLikeService iPostLikeService;
 
     /**
      * 新增用户信息
@@ -71,12 +74,11 @@ public class MemberInformationServiceImpl implements IMemberInformationService {
     public MemberInformationBean selectUserMsg(Integer memberId) {
         QueryWrapper<MemberInformationBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("member_id",memberId);
-        MemberInformationBean memberInformationBean = memberInformationMapper.selectOne(queryWrapper);
-        memberInformationBean.setMemberFans(iUserAttentionService.selectFansByMemberId(memberId));
-        memberInformationBean.setMemberAttention(iUserAttentionService.selectStarsByMemberId(memberId));
-        memberInformationBean.setMemberPostNum(iPostService.selectPostNumByMemberId(memberId));
-        memberInformationMapper.update(memberInformationBean,queryWrapper);
-        return memberInformationBean;
+        //        memberInformationBean.setMemberFans(iUserAttentionService.selectFansByMemberId(memberId));
+//        memberInformationBean.setMemberAttention(iUserAttentionService.selectStarsByMemberId(memberId));
+//        memberInformationBean.setMemberPostNum(iPostService.selectPostNumByMemberId(memberId));
+//        memberInformationMapper.update(memberInformationBean,queryWrapper);
+        return memberInformationMapper.selectOne(queryWrapper);
     }
 
     /**
@@ -176,5 +178,19 @@ public class MemberInformationServiceImpl implements IMemberInformationService {
         QueryWrapper<MemberInformationBean> wrapper = new QueryWrapper<>();
         wrapper.eq("member_id", memberId);
         return memberInformationMapper.selectOne(wrapper);
+    }
+
+    @Override
+    public void updateColNum(Integer memberId) {
+        UpdateWrapper<MemberInformationBean> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("member_id",memberId).set("member_collect_num",iCollectService.selectCollectNumByUserId(memberId));
+        memberInformationMapper.update(null,updateWrapper);
+    }
+
+    @Override
+    public void updateLikeNum(Integer memberId) {
+        UpdateWrapper<MemberInformationBean> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("member_id",memberId).set("member_like_num",iPostLikeService.selectPostLikeNumByUserId(memberId));
+        memberInformationMapper.update(null,updateWrapper);
     }
 }

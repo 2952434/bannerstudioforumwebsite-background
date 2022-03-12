@@ -3,6 +3,8 @@ package studio.banner.forumwebsite.service;
 import studio.banner.forumwebsite.bean.PostLikeBean;
 import studio.banner.forumwebsite.bean.RespBean;
 
+import java.util.List;
+
 /**
  * @Author: Ljx
  * @Date: 2022/3/10 20:04
@@ -53,19 +55,19 @@ public interface IPostLikeService {
      * @param page
      * @return
      */
-    RespBean selectPostLikeByUserId(Integer userId,Integer page);
+    List<PostLikeBean> selectPostLikeByUserId(Integer userId, Integer page);
 
     /**
      * 根据点赞id取消显示
      * @param likeId
      * @return
      */
-    RespBean deletePostLikeInformation(Integer likeId);
+    boolean deletePostLikeInformation(Integer likeId);
 
     /**
      * 通过用户id取消点赞信息全部展示
      * @param userId
      * @return
      */
-    RespBean deletePostLikeAllInformation(Integer userId);
+    boolean deletePostLikeAllInformation(Integer userId);
 }

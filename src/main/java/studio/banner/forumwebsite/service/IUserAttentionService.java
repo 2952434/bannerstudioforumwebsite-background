@@ -22,18 +22,18 @@ public interface IUserAttentionService {
 
     /**
      * 取消关注
-     *
-     * @param attentionId 关注id
-     * @return boolean
+     * @param attentionId
+     * @param beAttentionId
+     * @return
      */
     boolean deleteContact(Integer attentionId,Integer beAttentionId);
 
     /**
-     * 查询是否存在关注关系，返回对象
+     * 查询是否存在关注关系
      *
      * @param memberFan  粉丝id
      * @param memberStar 被关注者id
-     * @return List<UserAttentionBean>
+     * @return
      */
     boolean contacted(Integer memberFan, Integer memberStar);
 
@@ -44,6 +44,15 @@ public interface IUserAttentionService {
      */
     Integer selectFansByMemberId(Integer memberId);
 
+
+    /**
+     * 根据Id分页查询其关注的人
+     * @param memberFan
+     * @param page
+     * @return
+     */
+    List<UserAttentionBean> stars(Integer memberFan,Integer page);
+
     /**
      * 根据用户Id查询其粉丝
      * @param memberStar
@@ -52,19 +61,34 @@ public interface IUserAttentionService {
      */
     List<UserAttentionBean> fans(Integer memberStar,Integer page);
 
+    /**
+     * 根据用户Id查询其粉丝信息
+     * @param memberId
+     * @param page
+     * @return
+     */
+    List<UserAttentionBean> selectAttentionInformation(Integer memberId,Integer page);
 
     /**
-     * 通过用户id查询其粉丝数
+     * 通过用户id查询其关注数数
      * @param memberId
      * @return
      */
     Integer selectStarsByMemberId(Integer memberId);
 
     /**
-     * 根据Id查询其关注的人
-     * @param memberFan
-     * @param page
+     * 根据关注id取消关注信息展示
+     * @param id
      * @return
      */
-    List<UserAttentionBean> stars(Integer memberFan,Integer page);
+    RespBean deleteAttentionInformation(Integer id);
+
+    /**
+     * 根据用户id取消所有关注信息展示
+     * @param userId
+     * @return
+     */
+    RespBean deleteAllAttentionInformation(Integer userId);
+
+
 }

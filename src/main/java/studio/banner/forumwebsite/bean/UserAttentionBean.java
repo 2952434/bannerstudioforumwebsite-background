@@ -30,7 +30,6 @@ public class UserAttentionBean {
     /**
      * 被关注人id
      */
-    @TableField
     private Integer beAttentionId;
     /**
      * 关注人id
@@ -58,5 +57,9 @@ public class UserAttentionBean {
      */
     @TableField(exist = false)
     private String attentionHead;
-
+    /**
+     * 个性签名
+     */
+    @TableField(exist = false)
+    private String memberSignature;
 }

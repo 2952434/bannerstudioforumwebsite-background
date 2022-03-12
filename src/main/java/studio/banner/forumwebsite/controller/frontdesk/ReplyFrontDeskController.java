@@ -149,9 +149,9 @@ public class ReplyFrontDeskController {
             @ApiImplicitParam(paramType = "query", name = "page",
                     value = "分页查询页数", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean selectAllReplyByCommentId(Integer commentId) {
+    public RespBean selectAllReplyByCommentId(Integer commentId,Integer page) {
 
-        return iReplyService.selectAllReplyByCommentId(commentId);
+        return iReplyService.selectAllReplyByCommentId(commentId,page);
 
     }
 

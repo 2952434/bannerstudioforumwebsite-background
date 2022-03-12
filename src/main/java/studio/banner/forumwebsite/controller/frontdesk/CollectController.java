@@ -143,11 +143,15 @@ public class CollectController {
 
 
     @DeleteMapping("/deleteBatchCollectByIds")
-    @ApiOperation(value = "删除收藏", notes = "id不能为空", httpMethod = "DELETE")
-    @ApiImplicitParam(paramType = "query", name = "colIds",
-            value = "删除id", required = true, dataTypeClass = Integer.class)
-    public RespBean deleteBatchCollectByIds(List<Integer> colIds){
-        return iCollectService.deleteBatchCollectByIds(colIds);
+    @ApiOperation(value = "批量删除收藏", notes = "id不能为空", httpMethod = "DELETE")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "colIds",
+                    value = "收藏集合id", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "userId",
+                    value = "用户id", required = true, dataTypeClass = Integer.class)
+    })
+    public RespBean deleteBatchCollectByIds(List<Integer> colIds,Integer userId){
+        return iCollectService.deleteBatchCollectByIds(colIds,userId);
     }
 
 

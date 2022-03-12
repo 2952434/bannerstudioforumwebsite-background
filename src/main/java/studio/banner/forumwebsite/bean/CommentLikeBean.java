@@ -1,6 +1,7 @@
 package studio.banner.forumwebsite.bean;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -29,23 +30,38 @@ public class CommentLikeBean {
      */
     private Integer likeUserId;
     /**
-     * 被点赞人id
+     * 评论id
+     */
+    private Integer commentId;
+    /**
+     * 被点赞者id
      */
     private Integer beLikeUserId;
     /**
-     * 点赞时间
+     * 帖子id
      */
-    private String commentLikeTime;
+    private Integer postId;
     /**
-     * 点赞的内容
+     * 回复内容
      */
     private String commentContent;
     /**
-     * 评论帖子id
+     * 点赞时间
      */
-    private Integer commentPostId;
+    private String likeTime;
     /**
-     * 是否展示信息 不展示：0 展示：1
+     * 是否展示
      */
-    private Integer commentShow;
+    private Integer show;
+
+    /**
+     * 用户名
+     */
+    @TableField(exist = false)
+    private String userName;
+    /**
+     *
+     */
+    @TableField(exist = false)
+    private String headUrl;
 }

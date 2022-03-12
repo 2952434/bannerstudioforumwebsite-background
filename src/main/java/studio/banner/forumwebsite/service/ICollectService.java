@@ -90,20 +90,21 @@ public interface ICollectService {
     boolean deleteCollect(Integer postId,Integer userId);
 
     /**
-     * 通过收藏id批量取消收藏
+     * 通过收藏id和用户id批量取消收藏
      * @param ids
+     * @param userId
      * @return
      */
-    RespBean deleteBatchCollectByIds(List<Integer> ids);
+    RespBean deleteBatchCollectByIds(List<Integer> ids,Integer userId);
 
 
     /**
      * 清除用户收藏
      *
-     * @param userid 用户id
+     * @param userId 用户id
      * @return boolean
      */
-    boolean deleteCollectByUserId(Integer userid);
+    boolean deleteCollectByUserId(Integer userId);
 
     /**
      * 通过收藏帖子id 收藏夹id 更改帖子收藏夹
@@ -127,5 +128,6 @@ public interface ICollectService {
      * @return
      */
     RespBean selectCollectByFavoriteId(Integer favoriteId);
+
 
 }

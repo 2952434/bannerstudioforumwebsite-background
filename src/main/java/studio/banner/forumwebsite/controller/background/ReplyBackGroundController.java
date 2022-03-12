@@ -128,11 +128,8 @@ public class ReplyBackGroundController {
     }
     )
     public RespBean deleteAllCommentByMemberId(Integer replyMemberId) {
-        if (iReplyService.selectAllReplyByMemberId(replyMemberId, 1).getRecords().size() != 0) {
-            iReplyService.deleteAllReplyByMemberId(replyMemberId);
-            return RespBean.ok("删除成功");
-        }
-        return RespBean.error("删除失败，未找到该用户或该用户无评论");
+
+        return iReplyService.deleteAllReplyByMemberId(replyMemberId);
     }
 
     /**
@@ -167,35 +164,12 @@ public class ReplyBackGroundController {
             @ApiImplicitParam(paramType = "query", name = "page",
                     value = "分页查询页数", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean selectAllReplyByCommentId(Integer commentId) {
+    public RespBean selectAllReplyByCommentId(Integer commentId,Integer page) {
 
-        return iReplyService.selectAllReplyByCommentId(commentId);
+        return iReplyService.selectAllReplyByCommentId(commentId,page);
 
     }
 
-    /**
-     * 根据用户id查询该用户下全部回复
-     *
-     * @param replyMemberId
-     * @return RespBean
-     */
-    @GetMapping("/replyBackGround/selectAllReplyByMemberId")
-    @ApiOperation(value = "根据用户id查找该用户下全部回复", notes = "用户需存在", httpMethod = "GET")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "replyMemberId",
-                    value = "用户id", required = true, dataTypeClass = Integer.class),
-            @ApiImplicitParam(paramType = "query", name = "page",
-                    value = "分页查询页数", required = true, dataTypeClass = Integer.class)
-    }
-    )
-    public RespBean selectAllReplyByMemberId(Integer replyMemberId, int page) {
-        IPage<ReplyBean> iPage = iReplyService.selectAllReplyByMemberId(replyMemberId, page);
-        List<ReplyBean> list = iPage.getRecords();
-        if (list.size() != 0) {
 
-            return RespBean.ok("查询成功", list);
-        }
-        return RespBean.error("查询失败，未找到该用户或该用户评论下无此页");
-    }
 
 }

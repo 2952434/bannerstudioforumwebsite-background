@@ -101,7 +101,6 @@ public class StudyRouteServiceImpl implements IStudyRouteService {
             return RespBean.error("学习路线更新失败");
         }
         return RespBean.error("学习路线产生冲突，更新失败");
-
     }
 
     @Override

@@ -88,4 +88,37 @@ public interface ICommentService {
      */
     void updatePostCommentNum(Integer postId);
 
+    /**
+     * 根据评论id更新评论点赞量
+     * @param commentId
+     */
+    void updateCommentLikeNum(Integer commentId);
+
+    /**
+     * 根据评论id更新回复数量
+     * @param commentId
+     */
+    void updateReplyNumByCommentId(Integer commentId);
+
+    /**
+     * 根据用户id分页查询被评论信息
+     * @param memberId
+     * @param page
+     * @return
+     */
+    List<CommentBean> selectCommentByMemberId(Integer memberId,Integer page);
+
+    /**
+     * 根据评论id取消显示信息
+     * @param commentId
+     * @return
+     */
+    boolean deleteCommentInformationById(Integer commentId);
+
+    /**
+     * 根据用户id取消全部显示信息
+     * @param memberId
+     * @return
+     */
+    boolean deleteAllCommentInformationById(Integer memberId);
 }

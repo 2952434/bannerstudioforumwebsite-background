@@ -66,4 +66,17 @@ public interface IMemberInformationService {
      * @return MemberInformationBean
      */
     MemberInformationBean selectUserById(Integer memberId);
+
+    /**
+     * 更新收藏量根据用户id
+     * @param memberId
+     */
+    void  updateColNum(Integer memberId);
+
+    /**
+     * 根据用户id更新收藏量
+     * @param memberId
+     */
+    void  updateLikeNum(Integer memberId);
+
 }

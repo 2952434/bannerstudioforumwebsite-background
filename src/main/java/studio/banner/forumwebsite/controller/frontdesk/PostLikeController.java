@@ -102,23 +102,8 @@ public class PostLikeController {
                     value = "用户id", required = true, dataTypeClass = Integer.class)
     })
     public RespBean selectPostLikeByUserId(Integer userId, Integer page) {
-        return iPostLikeService.selectPostLikeByUserId(userId, page);
+        return RespBean.ok("查询成功",iPostLikeService.selectPostLikeByUserId(userId, page));
     }
 
-    @PostMapping("/deletePostLikeInformation")
-    @ApiOperation(value = "根据点赞id取消点赞信息显示", httpMethod = "POST")
-    @ApiImplicitParam(paramType = "query", name = "likeId",
-            value = "点赞id", required = true, dataTypeClass = Integer.class)
-    public RespBean deletePostLikeInformation(Integer likeId) {
-        return iPostLikeService.deletePostLikeInformation(likeId);
-    }
-
-    @PostMapping("/deletePostLikeAllInformation")
-    @ApiOperation(value = "通过用户id取消点赞信息全部展示", httpMethod = "POST")
-    @ApiImplicitParam(paramType = "query", name = "userId",
-            value = "用户id", required = true, dataTypeClass = Integer.class)
-    public RespBean deletePostLikeAllInformation(Integer userId) {
-        return iPostLikeService.deletePostLikeAllInformation(userId);
-    }
 
 }

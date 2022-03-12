@@ -3,7 +3,7 @@ package studio.banner.forumwebsite.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.data.redis.core.ZSetOperations;
 import studio.banner.forumwebsite.bean.PostBean;
-import studio.banner.forumwebsite.bean.PostBeanEs;
+import studio.banner.forumwebsite.bean.PostEsBean;
 import studio.banner.forumwebsite.bean.RespBean;
 
 import java.util.List;
@@ -129,48 +129,7 @@ public interface IPostService {
      */
     IPage<PostBean> selectAllPost(Integer page);
 
-    /**
-     * 全文检索帖子和作者
-     *
-     * @param page 第几页
-     * @param dim  查询字段
-     * @return List<PostBeanEs>
-     */
-    List<PostBeanEs> selectDimPost(Integer page, String dim);
 
-    /**
-     * 将数据库中的帖子导入到Redis中
-     *
-     * @return Set<ZSetOperations.TypedTuple < String>>
-     */
-    Set<ZSetOperations.TypedTuple<String>> addRedis();
-
-    /**
-     * 每天早上1点自动更新Redis数据库中的帖子排名
-     *
-     * @return Set<ZSetOperations.TypedTuple < String>>
-     */
-    Set<ZSetOperations.TypedTuple<String>> updateRedisPostRank();
-
-    /**
-     * 帖子排行榜查询
-     *
-     * @return Set<ZSetOperations.TypedTuple < String>>
-     */
-    Set<ZSetOperations.TypedTuple<String>> selectPostRank();
-
-    /**
-     * 每分钟更新一次es中的数据
-     */
-    void updateEsPost();
-
-    /**
-     * 根据作者id查询昨天的总浏览量
-     *
-     * @param memberId 用户id
-     * @return String
-     */
-    String selectYesterdayView(Integer memberId);
 
     /**
      * 根据帖子id实现置顶功能

@@ -259,49 +259,49 @@ public class PostBackGroundController {
         return RespBean.error("查询失败，未找到该页数");
     }
 
-    @GetMapping("/postBackGround/selectDimPost")
-    @ApiOperation(value = "全文检索帖子", httpMethod = "GET")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "page",
-                    value = "分页查询页数", required = true, dataTypeClass = Integer.class),
-            @ApiImplicitParam(paramType = "query", name = "dim",
-                    value = "全文检索字段", required = true, dataTypeClass = String.class)
-    })
-    public RespBean selectDimPost(int page, String dim) {
-        List<PostBeanEs> list = iPostService.selectDimPost(page - 1, dim);
-        System.out.println(list);
-        if (list.size() != 0) {
-            return RespBean.ok("查询成功", list);
-        } else {
-            IPage<PostBean> iPage1 = iPostService.selectAllPost(page);
-            List<PostBean> list1 = iPage1.getRecords();
-            if (list1.size() != 0) {
-                return RespBean.ok(list1);
-            }
-        }
-        return RespBean.error("未查询到相关内容");
-    }
-
-
-    @GetMapping("/postBackGround/selectPostRank")
-    @ApiOperation(value = "帖子排行榜查询", httpMethod = "GET")
-    public RespBean selectPostRank() {
-        Set<ZSetOperations.TypedTuple<String>> rank = iPostService.selectPostRank();
-        return RespBean.ok(rank);
-    }
-
-
-    @GetMapping("/postBackGround/selectYesterdayView")
-    @ApiOperation(value = "根据作者id获得昨天帖子浏览总量")
-    @ApiImplicitParam(paramType = "query", name = "memberId",
-            value = "用户id", required = true, dataTypeClass = Integer.class)
-    public RespBean selectYesterdayView(Integer memberId) {
-        String view = iPostService.selectYesterdayView(memberId);
-        if (view == null) {
-            view = "0";
-        }
-        return RespBean.ok("昨天的浏览总量为：" + view);
-    }
+//    @GetMapping("/postBackGround/selectDimPost")
+//    @ApiOperation(value = "全文检索帖子", httpMethod = "GET")
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(paramType = "query", name = "page",
+//                    value = "分页查询页数", required = true, dataTypeClass = Integer.class),
+//            @ApiImplicitParam(paramType = "query", name = "dim",
+//                    value = "全文检索字段", required = true, dataTypeClass = String.class)
+//    })
+//    public RespBean selectDimPost(int page, String dim) {
+//        List<PostEsBean> list = iPostService.selectDimPost(page - 1, dim);
+//        System.out.println(list);
+//        if (list.size() != 0) {
+//            return RespBean.ok("查询成功", list);
+//        } else {
+//            IPage<PostBean> iPage1 = iPostService.selectAllPost(page);
+//            List<PostBean> list1 = iPage1.getRecords();
+//            if (list1.size() != 0) {
+//                return RespBean.ok(list1);
+//            }
+//        }
+//        return RespBean.error("未查询到相关内容");
+//    }
+//
+//
+//    @GetMapping("/postBackGround/selectPostRank")
+//    @ApiOperation(value = "帖子排行榜查询", httpMethod = "GET")
+//    public RespBean selectPostRank() {
+//        Set<ZSetOperations.TypedTuple<String>> rank = iPostService.selectPostRank();
+//        return RespBean.ok(rank);
+//    }
+//
+//
+//    @GetMapping("/postBackGround/selectYesterdayView")
+//    @ApiOperation(value = "根据作者id获得昨天帖子浏览总量")
+//    @ApiImplicitParam(paramType = "query", name = "memberId",
+//            value = "用户id", required = true, dataTypeClass = Integer.class)
+//    public RespBean selectYesterdayView(Integer memberId) {
+//        String view = iPostService.selectYesterdayView(memberId);
+//        if (view == null) {
+//            view = "0";
+//        }
+//        return RespBean.ok("昨天的浏览总量为：" + view);
+//    }
 
 
     @PostMapping("/postBackGround/updatePostTopById")

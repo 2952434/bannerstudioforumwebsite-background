@@ -55,6 +55,7 @@ public class PostLikeServiceImpl implements IPostLikeService {
             postLikeBean.setLikeTime(TimeUtils.getDateString());
             if (postLikeMapper.insert(postLikeBean)==1) {
                 iPostService.updatePostLikeNumber(postLikeBean.getLikePostId());
+                iMemberInformationService.updateLikeNum(postLikeBean.getBeUserLikeId());
                 return RespBean.ok("新增点赞成功");
             }
             return RespBean.ok("新增点赞失败");
@@ -66,8 +67,10 @@ public class PostLikeServiceImpl implements IPostLikeService {
     public RespBean deletePostLikeById(Integer postId, Integer userId) {
         QueryWrapper<PostLikeBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_like_id",userId).eq("like_post_id",postId);
+        PostLikeBean postLikeBean = postLikeMapper.selectOne(queryWrapper);
         if (postLikeMapper.delete(queryWrapper)==1) {
             iPostService.updatePostLikeNumber(postId);
+            iMemberInformationService.updateLikeNum(postLikeBean.getBeUserLikeId());
             return RespBean.ok("取消点赞成功");
         }
         return RespBean.error("取消点赞失败");
@@ -81,8 +84,8 @@ public class PostLikeServiceImpl implements IPostLikeService {
     }
 
     @Override
-    public RespBean selectPostLikeByUserId(Integer userId, Integer page) {
-        Page<PostLikeBean> page1 = new Page<>(page,12);
+    public List<PostLikeBean> selectPostLikeByUserId(Integer userId, Integer page) {
+        Page<PostLikeBean> page1 = new Page<>(page,5);
         QueryWrapper<PostLikeBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("be_user_like_id",userId).eq("like_show",0);
         Page<PostLikeBean> postLikeBeanPage = postLikeMapper.selectPage(page1, queryWrapper);
@@ -92,26 +95,20 @@ public class PostLikeServiceImpl implements IPostLikeService {
             record.setHeadUrl(memberInformationBean.getMemberHead());
             record.setUserName(memberInformationBean.getMemberName());
         }
-        return RespBean.ok("查询成功",records);
+        return records;
     }
 
     @Override
-    public RespBean deletePostLikeInformation(Integer likeId) {
+    public boolean deletePostLikeInformation(Integer likeId) {
         UpdateWrapper<PostLikeBean> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("like_id",likeId).set("like_show",1);
-        if (postLikeMapper.update(null, updateWrapper)==1) {
-            return RespBean.ok("取消展示成功");
-        }
-        return RespBean.error("取消展示失败");
+        return postLikeMapper.update(null, updateWrapper)==1;
     }
 
     @Override
-    public RespBean deletePostLikeAllInformation(Integer userId) {
+    public boolean deletePostLikeAllInformation(Integer userId) {
         UpdateWrapper<PostLikeBean> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("be_user_like_id",userId).set("like_show",1);
-        if (postLikeMapper.update(null, updateWrapper)==1) {
-            return RespBean.ok("取消展示成功");
-        }
-        return RespBean.error("取消展示失败");
+        updateWrapper.eq("be_user_like_id", userId).set("like_show", 1);
+        return postLikeMapper.update(null, updateWrapper) == 1;
     }
 }

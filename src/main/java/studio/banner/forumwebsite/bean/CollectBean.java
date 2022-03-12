@@ -33,17 +33,16 @@ public class CollectBean {
      */
     private Integer colArtId;
     /**
-     * 收藏文章标题
-     */
-    private String colArtTit;
-    /**
      * 收藏文件夹id
      */
     private Integer favoriteId;
-
     /**
      * 收藏用户id
      */
     private Integer cloUserId;
-
+    /**
+     * 收藏文章标题
+     */
+    @TableField(exist = false)
+    private String colArtTit;
 }

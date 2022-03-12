@@ -34,7 +34,6 @@ public class PostBean {
      * 发帖用户id
      */
     @TableField
-    @Valid
     @NotNull(message = "用户id不能为空")
     private Integer postMemberId;
     /**
@@ -80,12 +79,12 @@ public class PostBean {
     /**
      * 帖子标签
      */
-    @NotNull(message = "帖子发布时间不能为空")
+    @NotNull(message = "帖子发布类型不能为空")
     private String postType;
     /**
      * 帖子收藏数量
      */
-    @NotNull(message = "帖子发布时间不能为空")
+    @NotNull(message = "收藏量不能为空")
     private Integer postColNum;
 
 }

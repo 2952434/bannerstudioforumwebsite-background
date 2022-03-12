@@ -6,6 +6,8 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import javax.validation.constraints.NotNull;
+
 
 /**
  * @Author: Ljx
@@ -14,33 +16,42 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
  */
 @Data
 @Document(indexName = "post")
-public class PostBeanEs {
+public class PostEsBean {
     /**
      * 帖子id
      */
     @Id
     @Field(index = false, type = FieldType.Integer)
-    private Integer id;
+    private Integer postId;
+
+    /**
+     * 作者id
+     */
+    @Field(index = false, store = true, type = FieldType.Integer)
+    private Integer postMemberId;
     /**
      * 帖子标题
      */
     @Field(analyzer = "ik_smart", searchAnalyzer = "ik_smart", store = true, type = FieldType.Text)
-    private String title;
+    private String postTitle;
     /**
      * 帖子内容
      */
     @Field(analyzer = "ik_smart", searchAnalyzer = "ik_smart", store = true, type = FieldType.Text)
-    private String context;
-    /**
-     * 帖子浏览量
-     */
-    @Field(index = false, store = true, type = FieldType.Integer)
-    private Integer hits;
+    private String postContent;
+
     /**
      * 帖子发布时间
      */
     @Field(index = false, store = true, type = FieldType.Text)
-    private String time;
+    private String postTime;
+
+    /**
+     * 帖子浏览量
+     */
+    @Field(index = false, store = true, type = FieldType.Integer)
+    private Integer postPageView;
+
     /**
      * 帖子评论量
      */
@@ -52,18 +63,26 @@ public class PostBeanEs {
     @Field(index = false, store = true, type = FieldType.Integer)
     private Integer likeNumber;
     /**
-     * 作者id
+     * 帖子标签
      */
-    @Field(index = false, store = true, type = FieldType.Integer)
-    private Integer uid;
+    @Field(analyzer = "ik_smart", searchAnalyzer = "ik_smart", store = true, type = FieldType.Text)
+    private String postType;
     /**
-     * 帖子是否是转发帖子 0：原创  1：转发
+     * 帖子收藏数量
      */
     @Field(index = false, store = true, type = FieldType.Integer)
-    private Integer forward;
-    /**
-     * 帖子图片地址
-     */
-    @Field(index = false, store = true, type = FieldType.Integer)
-    private String postImageAddress;
+    private Integer postColNum;
+
+    public PostEsBean(PostBean postBean) {
+        this.postId = postBean.getPostId();
+        this.postMemberId = postBean.getPostMemberId();
+        this.postTitle = postBean.getPostTitle();
+        this.postContent = postBean.getPostContent();
+        this.postTime = postBean.getPostTime();
+        this.postPageView = postBean.getPostPageView();
+        this.commentNumber = postBean.getPostCommentNumber();
+        this.likeNumber = postBean.getPostLikeNumber();
+        this.postType = postBean.getPostType();
+        this.postColNum = postBean.getPostColNum();
+    }
 }

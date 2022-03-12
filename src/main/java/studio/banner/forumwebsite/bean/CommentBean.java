@@ -61,6 +61,14 @@ public class CommentBean {
     @NotNull(message = "发帖人id不能为空")
     private Integer postMemberId;
     /**
+     * 回复数量
+     */
+    private Integer replyNumber;
+    /**
+     * 是否展示
+     */
+    private Integer commentShow;
+    /**
      * 用户昵称
      */
     @TableField(exist = false)
@@ -70,6 +78,11 @@ public class CommentBean {
      */
     @TableField(exist = false)
     private String headUrl;
+    /**
+     * 帖子标题
+     */
+    @TableField(exist = false)
+    private String postTitle;
 
 
 }

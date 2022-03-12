@@ -1,5 +1,6 @@
 package studio.banner.forumwebsite.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -16,10 +17,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import studio.banner.forumwebsite.bean.*;
 import studio.banner.forumwebsite.mapper.*;
-import studio.banner.forumwebsite.service.ICollectService;
-import studio.banner.forumwebsite.service.ICommentService;
-import studio.banner.forumwebsite.service.IPostLikeService;
-import studio.banner.forumwebsite.service.IPostService;
+import studio.banner.forumwebsite.service.*;
 import studio.banner.forumwebsite.utils.TimeUtils;
 
 import java.util.*;
@@ -46,17 +44,14 @@ public class PostServiceImpl implements IPostService {
     private ICollectService iCollectService;
 
     @Autowired
-    private PostMapperEs postMapperEs;
+    private IPostEsService iPostEsService;
 
     @Autowired
     private IPostLikeService iPostLikeService;
     @Autowired
     private MemberInformationMapper memberInformationMapper;
 
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
 
-    public static final String POST_RANK = "post_rank";
 
     /**
      * 增加帖子
@@ -97,6 +92,7 @@ public class PostServiceImpl implements IPostService {
         UpdateWrapper<MemberInformationBean> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("member_id",postMemberId).setSql("`member_post_num`=`member_post_num`-1");
         memberInformationMapper.update(null,updateWrapper);
+        iPostEsService.deleteEsPostById(postId);
         return RespBean.ok("帖子删除成功");
     }
 
@@ -119,6 +115,7 @@ public class PostServiceImpl implements IPostService {
         memberInformationMapper.update(null,updateWrapper);
         logger.info("删除该用户帖子成功");
         iCommentService.deleteAllCommentByMemberId(postMemberId);
+        iPostEsService.deleteEsPostByMemberId(postMemberId);
         return RespBean.ok("删除该用户帖子成功");
     }
 
@@ -210,6 +207,9 @@ public class PostServiceImpl implements IPostService {
         postBean.setPostColNum(iCollectService.selectCollectNumByPostId(postId));
         postBean.setPostCommentNumber(iCommentService.selectCommentNum(postId));
         postMapper.updateById(postBean);
+        UpdateWrapper<MemberInformationBean> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("member_id",postBean.getPostMemberId()).setSql("'member_view_num'='member_view_num'+1");
+        memberInformationMapper.update(null,updateWrapper);
         return postBean;
     }
 
@@ -278,101 +278,6 @@ public class PostServiceImpl implements IPostService {
         return null;
     }
 
-    /**
-     * 全文检索帖子和作者
-     *
-     * @param page 第几页
-     * @param dim  查询字段
-     * @return List<PostBeanEs>
-     */
-    @Override
-    public List<PostBeanEs> selectDimPost(Integer page, String dim) {
-        PageRequest pageRequest = PageRequest.of(page, 20);
-        List<PostBeanEs> postBeanList = postMapperEs.findByTitleOrContext(dim, dim, pageRequest);
-        return postBeanList;
-    }
-
-    /**
-     * 将数据库中的帖子导入到Redis中
-     *
-     * @return Set<ZSetOperations.TypedTuple < String>>
-     */
-    @Override
-    public Set<ZSetOperations.TypedTuple<String>> addRedis() {
-        redisTemplate.opsForZSet().removeRangeByScore(POST_RANK, 0, 1000000);
-        QueryWrapper<PostBean> queryWrapper = new QueryWrapper();
-        queryWrapper.select("post_id", "post_title", "post_page_view");
-        List<PostBean> list = postMapper.selectList(queryWrapper);
-        Set<ZSetOperations.TypedTuple<String>> tuples = new HashSet<>();
-        if (CollectionUtils.isNotEmpty(list)) {
-            for (PostBean postBean : list) {
-                String key = postBean.getPostTitle() + "," + postBean.getPostId();
-                DefaultTypedTuple<String> tuple = new DefaultTypedTuple<>(key, (double) postBean.getPostPageView());
-                tuples.add(tuple);
-            }
-        }
-        Long add = redisTemplate.opsForZSet().add(POST_RANK, tuples);
-        Set<ZSetOperations.TypedTuple<String>> rangeWithScores = redisTemplate.opsForZSet().reverseRangeWithScores(POST_RANK, 0, 10);
-        return rangeWithScores;
-    }
-
-    /**
-     * 每天早上1点自动更新Redis数据库中的帖子排名
-     *
-     * @return Set<ZSetOperations.TypedTuple < String>>
-     */
-    @Override
-    @Scheduled(cron = "0 0 1 * * ?")
-    public Set<ZSetOperations.TypedTuple<String>> updateRedisPostRank() {
-        redisTemplate.opsForZSet().removeRangeByScore(POST_RANK, 0, 1000000);
-        QueryWrapper<PostBean> queryWrapper = new QueryWrapper();
-        queryWrapper.select("post_id", "post_title", "post_page_view");
-        List<PostBean> list = postMapper.selectList(queryWrapper);
-        Set<ZSetOperations.TypedTuple<String>> tuples = new HashSet<>();
-        if (CollectionUtils.isNotEmpty(list)) {
-            for (PostBean postBean : list) {
-                String key = postBean.getPostTitle() + "," + postBean.getPostId();
-                DefaultTypedTuple<String> tuple = new DefaultTypedTuple<>(key, (double) postBean.getPostPageView());
-                tuples.add(tuple);
-            }
-        }
-        Long add = redisTemplate.opsForZSet().add(POST_RANK, tuples);
-        Set<ZSetOperations.TypedTuple<String>> rangeWithScores = redisTemplate.opsForZSet().reverseRangeWithScores(POST_RANK, 0, 10);
-        return rangeWithScores;
-    }
-
-    /**
-     * 帖子排行榜查询
-     *
-     * @return Set<ZSetOperations.TypedTuple < String>>
-     */
-    @Override
-    public Set<ZSetOperations.TypedTuple<String>> selectPostRank() {
-        Set<ZSetOperations.TypedTuple<String>> rangeWithScores = redisTemplate.opsForZSet().reverseRangeWithScores(POST_RANK, 0, 10);
-        return rangeWithScores;
-    }
-
-    /**
-     * 每分钟更新一次es中的数据
-     */
-    @Override
-    @Scheduled(cron = "0 */1 * * * ?")
-    public void updateEsPost() {
-        List<PostBean> list = postMapper.selectList(null);
-
-    }
-
-    /**
-     * 根据作者id查询昨天的总浏览量
-     *
-     * @param memberId 用户id
-     * @return String
-     */
-    @Override
-    public String selectYesterdayView(Integer memberId) {
-        String view = (String) redisTemplate.opsForHash().get(String.valueOf(memberId), "view");
-        return view;
-    }
 
     /**
      * 根据帖子id实现置顶功能

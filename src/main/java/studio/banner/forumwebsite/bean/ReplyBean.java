@@ -63,4 +63,24 @@ public class ReplyBean {
      * 帖子id
      */
     private Integer postId;
+    /**
+     * 是否展示信息
+     */
+    private Integer replyShow;
+    /**
+     * 回复者昵称
+     */
+    @TableField(exist = false)
+    private String userName;
+    /**
+     * 回复头像
+     */
+    @TableField(exist = false)
+    private String headUrl;
+    /**
+     * 评论内容
+     */
+    @TableField(exist = false)
+    private String commentContent;
+
 }

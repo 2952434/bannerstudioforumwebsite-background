@@ -6,10 +6,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import studio.banner.forumwebsite.bean.PostBean;
-import studio.banner.forumwebsite.bean.ReplyBean;
-import studio.banner.forumwebsite.bean.RespBean;
+import studio.banner.forumwebsite.bean.*;
 import studio.banner.forumwebsite.mapper.ReplyMapper;
+import studio.banner.forumwebsite.service.ICommentService;
+import studio.banner.forumwebsite.service.IMemberInformationService;
+import studio.banner.forumwebsite.service.IReplyLikeService;
 import studio.banner.forumwebsite.service.IReplyService;
 import studio.banner.forumwebsite.utils.TimeUtils;
 
@@ -24,8 +25,15 @@ import java.util.List;
  */
 @Service
 public class ReplyServiceImpl implements IReplyService {
+
     @Autowired
-    ReplyMapper replyMapper;
+    private ReplyMapper replyMapper;
+    @Autowired
+    private ICommentService iCommentService;
+    @Autowired
+    private IReplyLikeService iReplyLikeService;
+    @Autowired
+    private IMemberInformationService iMemberInformationService;
 
     /**
      * 添加回复
@@ -38,6 +46,7 @@ public class ReplyServiceImpl implements IReplyService {
         if (replyBean != null) {
             replyBean.setReplyTime(TimeUtils.getDateString());
             if (replyMapper.insert(replyBean)==1) {
+                iCommentService.updateReplyNumByCommentId(replyBean.getCommentId());
                 return RespBean.ok("回复评论成功");
             }
             return RespBean.error("回复评论失败");
@@ -56,6 +65,8 @@ public class ReplyServiceImpl implements IReplyService {
         ReplyBean replyBean = replyMapper.selectById(replyId);
         if (replyBean.getPostMemberId().equals(memberId)||replyBean.getReplyMemberId().equals(memberId)||replyBean.getReplyCommentMemberId().equals(memberId)){
             if (replyMapper.deleteById(replyId)==1) {
+                iReplyLikeService.deleteAllReplyLikeByReplyId(replyId);
+                iCommentService.updateReplyNumByCommentId(replyBean.getCommentId());
                 return RespBean.ok("删除成功");
             }
             return RespBean.error("删除失败");
@@ -84,6 +95,7 @@ public class ReplyServiceImpl implements IReplyService {
         UpdateWrapper<ReplyBean> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("post_id",postId);
         replyMapper.delete(updateWrapper);
+        iReplyLikeService.deleteReplyLikeByPostId(postId);
     }
 
     /**
@@ -102,6 +114,20 @@ public class ReplyServiceImpl implements IReplyService {
         return RespBean.error("删除失败");
     }
 
+    @Override
+    public void updateReplyLikeByReplyId(Integer replyId) {
+        UpdateWrapper<ReplyBean> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("reply_id",replyId).set("reply_like_number",iReplyLikeService.selectReplyLikeNum(replyId));
+        replyMapper.update(null,updateWrapper);
+    }
+
+    @Override
+    public Integer selectReplyNumByCommentId(Integer commentId) {
+        QueryWrapper<ReplyBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("comment_id",commentId);
+        return replyMapper.selectCount(queryWrapper);
+    }
+
     /**
      * 根据评论id分页查询该评论下全部回复
      *
@@ -109,43 +135,53 @@ public class ReplyServiceImpl implements IReplyService {
      * @return IPage<ReplyBean>
      */
     @Override
-    public RespBean selectAllReplyByCommentId(Integer commentId) {
+    public RespBean selectAllReplyByCommentId(Integer commentId,Integer page) {
         QueryWrapper<ReplyBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("comment_id", commentId);
-        List<ReplyBean> replyBeans = replyMapper.selectList(queryWrapper);
-        if (replyBeans.size()==0){
+        queryWrapper.eq("comment_id", commentId).orderByDesc("reply_time");
+        Page<ReplyBean> page1 = new Page<>(page,6);
+        List<ReplyBean> records = replyMapper.selectPage(page1, queryWrapper).getRecords();
+        for (ReplyBean record : records) {
+            MemberInformationBean memberInformationBean = iMemberInformationService.selectUserMsg(record.getReplyCommentMemberId());
+            record.setHeadUrl(memberInformationBean.getMemberHead());
+            record.setUserName(memberInformationBean.getMemberName());
+        }
+        if (records.size()==0){
             return RespBean.error("该评论下无回复");
         }
-        return RespBean.ok("查询成功",replyBeans);
+        return RespBean.ok("查询成功",records);
     }
 
-    /**
-     * 根据用户分页查询该用户下全部回复
-     *
-     * @param memberId 用户id
-     * @param page     第几页
-     * @return IPage<ReplyBean>
-     */
+
+
     @Override
-    public IPage<ReplyBean> selectAllReplyByMemberId(Integer memberId, int page) {
+    public List<ReplyBean> selectReplyInformationById(Integer memberId, Integer page) {
         QueryWrapper<ReplyBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("reply_member_id", memberId);
-        Page<ReplyBean> page1 = new Page<>(page, 10);
-        IPage<ReplyBean> page2 = replyMapper.selectPage(page1, queryWrapper);
-        if (page2.getSize() != 0) {
-            return page2;
+        queryWrapper.eq("reply_comment_member_id",memberId).eq("reply_show",0).orderByDesc("reply_time");
+        Page<ReplyBean> page1 = new Page<>(page,7);
+        Page<ReplyBean> replyBeanPage = replyMapper.selectPage(page1, queryWrapper);
+        List<ReplyBean> records = replyBeanPage.getRecords();
+        for (ReplyBean record : records) {
+            CommentBean commentBean = iCommentService.selectComment(record.getCommentId());
+            record.setCommentContent(commentBean.getCommentContent());
+            MemberInformationBean memberInformationBean = iMemberInformationService.selectUserMsg(record.getReplyCommentMemberId());
+            record.setHeadUrl(memberInformationBean.getMemberHead());
+            record.setUserName(memberInformationBean.getMemberName());
         }
-        return null;
+        return records;
     }
 
     @Override
-    public RespBean selectReplyByBeReplyMemberId(Integer beReplyMemberId) {
-        QueryWrapper<ReplyBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("reply_comment_member_id",beReplyMemberId);
-        List<ReplyBean> replyBeans = replyMapper.selectList(queryWrapper);
-        if (replyBeans.size()==0){
-            return RespBean.error("该用户下无用户回复");
-        }
-        return RespBean.ok("查询成功",replyBeans);
+    public boolean deleteReplyInformationById(Integer replyId) {
+        UpdateWrapper<ReplyBean> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("reply_id",replyId).set("reply_show",1);
+        return replyMapper.update(null,updateWrapper)==1;
     }
+
+    @Override
+    public boolean deleteAllReplyInformationById(Integer memberId) {
+        UpdateWrapper<ReplyBean> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("reply_comment_member_id",memberId).set("reply_show",1);
+        return replyMapper.update(null,updateWrapper)==1;
+    }
+
 }

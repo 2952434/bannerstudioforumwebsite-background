@@ -45,7 +45,7 @@ public class UserAttentionServiceImpl implements IUserAttentionService {
     public RespBean insertContact(UserAttentionBean userAttentionBean) {
         if (userAttentionBean.getBeAttentionId() != null) {
             userAttentionBean.setContactTime(TimeUtils.getDateString());
-            userAttentionBean.setAttentionShow(1);
+            userAttentionBean.setAttentionShow(0);
             if (userContactMapper.insert(userAttentionBean)!=1){
                 logger.error("添加关注失败");
                 return RespBean.error("添加关注失败");
@@ -83,11 +83,11 @@ public class UserAttentionServiceImpl implements IUserAttentionService {
     }
 
     /**
-     * 查询是否存在关注关系，返回对象
+     * 查询是否存在关注关系
      *
      * @param memberFan  粉丝id
      * @param memberStar 被关注者id
-     * @return List<UserAttentionBean>
+     * @return
      */
     @Override
     public boolean contacted(Integer memberFan, Integer memberStar) {
@@ -102,34 +102,6 @@ public class UserAttentionServiceImpl implements IUserAttentionService {
     public Integer selectFansByMemberId(Integer memberId) {
         QueryWrapper<UserAttentionBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("be_attention_id", memberId);
-        return userContactMapper.selectCount(queryWrapper);
-    }
-
-    /**
-     * 根据用户Id查询其粉丝
-     *
-     * @param memberStar 用户id
-     * @return List<UserAttentionBean>
-     */
-    @Override
-    public List<UserAttentionBean> fans(Integer memberStar,Integer page) {
-        Page<UserAttentionBean> page1 = new Page<>(page, 12);
-        QueryWrapper<UserAttentionBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("be_attention_id", memberStar).orderByDesc("attention_time");
-        Page<UserAttentionBean> userAttentionBeanPage = userContactMapper.selectPage(page1, queryWrapper);
-        List<UserAttentionBean> records = userAttentionBeanPage.getRecords();
-        for (UserAttentionBean record : records) {
-            MemberInformationBean memberInformationBean = iMemberInformationService.selectUserMsg(record.getAttentionId());
-            record.setAttentionHead(memberInformationBean.getMemberHead());
-            record.setAttentionName(memberInformationBean.getMemberName());
-        }
-        return records;
-    }
-
-    @Override
-    public Integer selectStarsByMemberId(Integer memberId) {
-        QueryWrapper<UserAttentionBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("attention_id", memberId);
         return userContactMapper.selectCount(queryWrapper);
     }
 
@@ -150,7 +122,74 @@ public class UserAttentionServiceImpl implements IUserAttentionService {
             MemberInformationBean memberInformationBean = iMemberInformationService.selectUserMsg(record.getBeAttentionId());
             record.setAttentionHead(memberInformationBean.getMemberHead());
             record.setAttentionName(memberInformationBean.getMemberName());
+            record.setMemberSignature(memberInformationBean.getMemberSignature());
         }
         return records;
     }
+
+    /**
+     * 根据用户Id查询其粉丝
+     *
+     * @param memberStar 用户id
+     * @return List<UserAttentionBean>
+     */
+    @Override
+    public List<UserAttentionBean> fans(Integer memberStar,Integer page) {
+        Page<UserAttentionBean> page1 = new Page<>(page, 12);
+        QueryWrapper<UserAttentionBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("be_attention_id", memberStar).orderByDesc("attention_time");
+        Page<UserAttentionBean> userAttentionBeanPage = userContactMapper.selectPage(page1, queryWrapper);
+        List<UserAttentionBean> records = userAttentionBeanPage.getRecords();
+        for (UserAttentionBean record : records) {
+            MemberInformationBean memberInformationBean = iMemberInformationService.selectUserMsg(record.getAttentionId());
+            record.setAttentionHead(memberInformationBean.getMemberHead());
+            record.setAttentionName(memberInformationBean.getMemberName());
+            record.setMemberSignature(memberInformationBean.getMemberSignature());
+        }
+        return records;
+    }
+
+    @Override
+    public List<UserAttentionBean> selectAttentionInformation(Integer memberId, Integer page) {
+        Page<UserAttentionBean> page1 = new Page<>(page, 12);
+        QueryWrapper<UserAttentionBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("be_attention_id", memberId).eq("attention_show",0).orderByDesc("attention_time");
+        Page<UserAttentionBean> userAttentionBeanPage = userContactMapper.selectPage(page1, queryWrapper);
+        List<UserAttentionBean> records = userAttentionBeanPage.getRecords();
+        for (UserAttentionBean record : records) {
+            MemberInformationBean memberInformationBean = iMemberInformationService.selectUserMsg(record.getAttentionId());
+            record.setAttentionHead(memberInformationBean.getMemberHead());
+            record.setAttentionName(memberInformationBean.getMemberName());
+        }
+        return records;
+    }
+
+    @Override
+    public Integer selectStarsByMemberId(Integer memberId) {
+        QueryWrapper<UserAttentionBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("attention_id", memberId);
+        return userContactMapper.selectCount(queryWrapper);
+    }
+
+    @Override
+    public RespBean deleteAttentionInformation(Integer id) {
+        UpdateWrapper<UserAttentionBean> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id",id).set("attention_show",1);
+        if (userContactMapper.update(null,updateWrapper)==1) {
+            return RespBean.ok("删除成功");
+        }
+        return RespBean.error("删除失败");
+    }
+
+    @Override
+    public RespBean deleteAllAttentionInformation(Integer userId) {
+        UpdateWrapper<UserAttentionBean> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("be_attention_id",userId).set("attention_show",1);
+        if (userContactMapper.update(null,updateWrapper)==1) {
+            return RespBean.ok("删除成功");
+        }
+        return RespBean.error("删除失败");
+    }
+
+
 }

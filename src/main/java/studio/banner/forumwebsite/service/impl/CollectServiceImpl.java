@@ -8,10 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import studio.banner.forumwebsite.bean.CollectBean;
 import studio.banner.forumwebsite.bean.CollectFavoriteBean;
+import studio.banner.forumwebsite.bean.PostBean;
 import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.mapper.CollectFavoriteMapper;
 import studio.banner.forumwebsite.mapper.CollectMapper;
 import studio.banner.forumwebsite.service.ICollectService;
+import studio.banner.forumwebsite.service.IMemberInformationService;
+import studio.banner.forumwebsite.service.IPostService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +34,10 @@ public class CollectServiceImpl implements ICollectService {
 
     @Autowired
     private CollectMapper collectMapper;
+    @Autowired
+    private IPostService iPostService;
+    @Autowired
+    private IMemberInformationService iMemberInformationService;
 
 
     @Override
@@ -134,8 +141,11 @@ public class CollectServiceImpl implements ICollectService {
     @Override
     public boolean insertCollect(CollectBean collectBean) {
         if (judgeCollectPost(collectBean.getCloUserId(),collectBean.getColId())){
-
-            return collectMapper.insert(collectBean) == 1;
+            if (collectMapper.insert(collectBean) == 1) {
+                iMemberInformationService.updateColNum(collectBean.getCloUserId());
+                return true;
+            }
+            return false;
         }
         return false;
     }
@@ -145,12 +155,17 @@ public class CollectServiceImpl implements ICollectService {
     public boolean deleteCollect(Integer postId,Integer userId) {
         QueryWrapper<CollectBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("col_art_id",postId).eq("col_user_id",userId);
-        return collectMapper.delete(queryWrapper) == 1;
+        if (collectMapper.delete(queryWrapper) == 1) {
+            iMemberInformationService.updateColNum(userId);
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public RespBean deleteBatchCollectByIds(List<Integer> ids) {
+    public RespBean deleteBatchCollectByIds(List<Integer> ids,Integer userId) {
         if (collectMapper.deleteBatchIds(ids)==1) {
+            iMemberInformationService.updateColNum(userId);
             return RespBean.ok("删除成功");
         }
         return RespBean.error("删除失败");
@@ -159,14 +174,18 @@ public class CollectServiceImpl implements ICollectService {
     /**
      * 清除用户收藏
      *
-     * @param userid 用户id
+     * @param userId 用户id
      * @return boolean
      */
     @Override
-    public boolean deleteCollectByUserId(Integer userid) {
+    public boolean deleteCollectByUserId(Integer userId) {
         QueryWrapper<CollectBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("clo_user_id", userid);
-        return collectMapper.delete(queryWrapper) == 1;
+        queryWrapper.eq("clo_user_id", userId);
+        if (collectMapper.delete(queryWrapper) == 1) {
+            iMemberInformationService.updateColNum(userId);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -198,6 +217,10 @@ public class CollectServiceImpl implements ICollectService {
         List<CollectBean> collectBeans = collectMapper.selectList(queryWrapper);
         if (collectBeans.size()==0){
             return RespBean.error("该收藏夹中无信息");
+        }
+        for (CollectBean collectBean : collectBeans) {
+            PostBean postBean = iPostService.selectPost(collectBean.getColArtId());
+            collectBean.setColArtTit(postBean.getPostTitle());
         }
         return RespBean.ok(collectBeans);
 

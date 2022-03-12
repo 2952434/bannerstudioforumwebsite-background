@@ -52,30 +52,46 @@ public interface IReplyService {
      */
     RespBean deleteAllReplyByCommentId(Integer commentId);
 
+    /**
+     * 根据回复id更新回复点赞数量
+     * @param replyId
+     */
+    void updateReplyLikeByReplyId(Integer replyId);
+
+    /**
+     * 根据评论id查询回复数量
+     * @param commentId
+     * @return
+     */
+    Integer selectReplyNumByCommentId(Integer commentId);
 
     /**
      * 根据评论id查询该评论下全部回复
-     *
-     * @param commentId 评论id
-     * @return IPage<ReplyBean>
-     */
-    RespBean selectAllReplyByCommentId(Integer commentId);
-
-    /**
-     * 根据用户分页查询该用户下全部回复
-     *
-     * @param memberId 用户id
-     * @param page     第几页
-     * @return IPage<ReplyBean>
-     */
-    IPage<ReplyBean> selectAllReplyByMemberId(Integer memberId, int page);
-
-    /**
-     * 通过被回复人id查询回复
-     * @param beReplyMemberId
+     * @param commentId
+     * @param page
      * @return
      */
-    RespBean selectReplyByBeReplyMemberId(Integer beReplyMemberId);
+    RespBean selectAllReplyByCommentId(Integer commentId,Integer page);
 
+    /**
+     * 根据用户id分页查询回复信息
+     * @param memberId
+     * @param page
+     * @return
+     */
+    List<ReplyBean> selectReplyInformationById(Integer memberId,Integer page);
 
+    /**
+     * 通过评论id取消该评论展示
+     * @param replyId
+     * @return
+     */
+    boolean deleteReplyInformationById(Integer replyId);
+
+    /**
+     * 通过用户id取消全部评论展示
+     * @param memberId
+     * @return
+     */
+    boolean deleteAllReplyInformationById(Integer memberId);
 }
