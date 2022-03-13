@@ -94,11 +94,31 @@ public class MemberInformationBean {
     /**
      * 用户微信号
      */
-
+    @TableField(value = "member_wechat")
     private String memberWeChat;
     /**
      * 用户邮箱
      */
     private String memberEmail;
 
+    public MemberInformationBean(AuthUser authUser) {
+        this.memberId = authUser.getId();
+        this.memberName = authUser.getUserName();
+        this.memberSex = authUser.getSex();
+        this.memberAge = TimeUtils.getAgeFromBirthTime(authUser.getBirthday());
+        this.memberTime = authUser.getCreatTime();
+        this.memberHead = authUser.getHeadPortraitUrl();
+        this.memberFans = 0;
+        this.memberAttention = 0;
+        this.memberBirthday = authUser.getBirthday();
+        this.memberSignature = authUser.getPersonalizedSignature();
+        this.memberPostNum = 0;
+        this.memberLikeNum = 0;
+        this.memberCollectNum = 0;
+        this.memberViewNum = 0;
+        this.memberPhone = authUser.getPhone();
+        this.memberQq = authUser.getMemberQQ();
+        this.memberWeChat = authUser.getMemberWeChat();
+        this.memberEmail = authUser.getEmail();
+    }
 }

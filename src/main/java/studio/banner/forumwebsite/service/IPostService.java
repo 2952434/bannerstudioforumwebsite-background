@@ -1,13 +1,10 @@
 package studio.banner.forumwebsite.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import org.springframework.data.redis.core.ZSetOperations;
 import studio.banner.forumwebsite.bean.PostBean;
-import studio.banner.forumwebsite.bean.PostEsBean;
 import studio.banner.forumwebsite.bean.RespBean;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -48,39 +45,14 @@ public interface IPostService {
      */
     RespBean updatePostById(PostBean postBean);
 
-    /**
-     * 根据帖子id更改浏览量
-     *
-     * @param postId 帖子id
-     * @return boolean
-     */
-
-    boolean updatePostPageView(Integer postId);
-
-    /**
-     * 根据帖子id更改评论量
-     *
-     * @param postId 帖子id
-     * @return boolean
-     */
-
-    boolean updatePostCommentNumber(Integer postId);
 
     /**
      * 根据帖子id更改点赞量
      *
      * @param postId 帖子id
-     * @return boolean
      */
+    void updatePostLikeNumber(Integer postId);
 
-    boolean updatePostLikeNumber(Integer postId);
-
-    /**
-     * 通过帖子id更改收藏量
-     * @param postId
-     * @return
-     */
-    boolean updatePostColNumByPostId(Integer postId);
 
     /**
      * 根据帖子id查询帖子
@@ -128,8 +100,6 @@ public interface IPostService {
      * @return IPage
      */
     IPage<PostBean> selectAllPost(Integer page);
-
-
 
     /**
      * 根据帖子id实现置顶功能

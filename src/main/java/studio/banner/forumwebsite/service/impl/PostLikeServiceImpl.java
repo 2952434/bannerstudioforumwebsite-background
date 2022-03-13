@@ -55,7 +55,7 @@ public class PostLikeServiceImpl implements IPostLikeService {
             postLikeBean.setLikeTime(TimeUtils.getDateString());
             if (postLikeMapper.insert(postLikeBean)==1) {
                 iPostService.updatePostLikeNumber(postLikeBean.getLikePostId());
-                iMemberInformationService.updateLikeNum(postLikeBean.getBeUserLikeId());
+                iMemberInformationService.increaseLikeNum(postLikeBean.getBeUserLikeId());
                 return RespBean.ok("新增点赞成功");
             }
             return RespBean.ok("新增点赞失败");
@@ -70,7 +70,7 @@ public class PostLikeServiceImpl implements IPostLikeService {
         PostLikeBean postLikeBean = postLikeMapper.selectOne(queryWrapper);
         if (postLikeMapper.delete(queryWrapper)==1) {
             iPostService.updatePostLikeNumber(postId);
-            iMemberInformationService.updateLikeNum(postLikeBean.getBeUserLikeId());
+            iMemberInformationService.underLikeNum(postLikeBean.getBeUserLikeId());
             return RespBean.ok("取消点赞成功");
         }
         return RespBean.error("取消点赞失败");
@@ -106,9 +106,9 @@ public class PostLikeServiceImpl implements IPostLikeService {
     }
 
     @Override
-    public boolean deletePostLikeAllInformation(Integer userId) {
+    public void deletePostLikeAllInformation(Integer userId) {
         UpdateWrapper<PostLikeBean> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("be_user_like_id", userId).set("like_show", 1);
-        return postLikeMapper.update(null, updateWrapper) == 1;
+        postLikeMapper.update(null, updateWrapper);
     }
 }

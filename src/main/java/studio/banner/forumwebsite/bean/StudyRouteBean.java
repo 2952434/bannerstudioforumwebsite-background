@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
 public class StudyRouteBean {
 
     @TableId(type = IdType.AUTO)
-    private int id;
+    private Integer id;
 
     @NotNull(message = "学习方向不能为空")
     private String studyDirection;

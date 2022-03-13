@@ -2,7 +2,6 @@ package studio.banner.forumwebsite.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -178,10 +177,10 @@ public class ReplyServiceImpl implements IReplyService {
     }
 
     @Override
-    public boolean deleteAllReplyInformationById(Integer memberId) {
+    public void deleteAllReplyInformationById(Integer memberId) {
         UpdateWrapper<ReplyBean> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("reply_comment_member_id",memberId).set("reply_show",1);
-        return replyMapper.update(null,updateWrapper)==1;
+        replyMapper.update(null, updateWrapper);
     }
 
 }

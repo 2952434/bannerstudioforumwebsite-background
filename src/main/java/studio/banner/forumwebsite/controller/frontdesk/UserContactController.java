@@ -19,10 +19,10 @@ import java.util.List;
  * @Date: 2021/5/18 18:30
  */
 @RestController
-@Api(tags = "前台关注接口", value = "UserContactFrontDeskController")
+@Api(tags = "前台关注接口", value = "UserContactController")
 @RequestMapping("/frontDesk")
-public class UserContactFrontDeskController {
-    private static final Logger logger = LoggerFactory.getLogger(UserContactFrontDeskController.class);
+public class UserContactController {
+    private static final Logger logger = LoggerFactory.getLogger(UserContactController.class);
 
     @Autowired
     protected IUserAttentionService iUserAttentionService;
@@ -31,10 +31,8 @@ public class UserContactFrontDeskController {
     @PostMapping("/userContactFrontDesk/insertContact")
     public RespBean insert(UserAttentionBean userAttentionBean) {
         if (!iUserAttentionService.contacted(userAttentionBean.getAttentionId(), userAttentionBean.getBeAttentionId())) {
-            iUserAttentionService.insertContact(userAttentionBean);
-            return RespBean.ok("成功关注");
+            return iUserAttentionService.insertContact(userAttentionBean);
         } else {
-
             return RespBean.error("已关注");
         }
     }
@@ -96,9 +94,7 @@ public class UserContactFrontDeskController {
                     value = "memberStar", required = true, dataTypeClass = Integer.class),
     })
     public Integer selectFans(Integer memberStar) {
-
         return iUserAttentionService.selectFansByMemberId(memberStar);
-
     }
 
 

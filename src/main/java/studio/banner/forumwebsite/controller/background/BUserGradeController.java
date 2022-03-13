@@ -17,9 +17,9 @@ import java.util.List;
  * @role:
  */
 @RestController
-@Api(tags = "后台用户年级姓名方向接口", value = "UserGradeBackGroundController")
+@Api(tags = "后台用户年级姓名方向接口", value = "BUserGradeController")
 @RequestMapping("/backGround")
-public class UserGradeBackGroundController {
+public class BUserGradeController {
 
     @Autowired
     private IUserGradeService userGradeService;

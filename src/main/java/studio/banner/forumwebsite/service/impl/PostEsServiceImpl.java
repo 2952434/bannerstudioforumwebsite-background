@@ -55,8 +55,11 @@ public class PostEsServiceImpl implements IPostEsService {
 
     @Override
     public RespBean findAllWithPage(Integer page) {
-        PageRequest pageable = PageRequest.of(page, 15);
+        PageRequest pageable = PageRequest.of(page-1, 15);
         Page<PostEsBean> all = postEsMapper.findAll(pageable);
+        if (all.getContent().size()==0){
+            return RespBean.error("未查询到相关内容",all);
+        }
         return RespBean.ok("查询成功",all);
     }
 
@@ -68,7 +71,7 @@ public class PostEsServiceImpl implements IPostEsService {
                 .should(QueryBuilders.matchQuery("postTitle",condition))
                 .should(QueryBuilders.matchQuery("postContent",condition))
                 .should(QueryBuilders.matchQuery("postType",condition));
-        Pageable pageable = PageRequest.of(page, 1);
+        Pageable pageable = PageRequest.of(page-1, 1);
         //构建高亮查询
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(boolQueryBuilder)
@@ -90,11 +93,14 @@ public class PostEsServiceImpl implements IPostEsService {
             //高亮的内容
             Map<String, List<String>> highlightFields = searchHit.getHighlightFields();
             //将高亮的内容填充到content中
-            searchHit.getContent().setPostTitle(highlightFields.get("postTitle")==null ? searchHit.getContent().getPostTitle():highlightFields.get("title").get(0));
-            searchHit.getContent().setPostContent(highlightFields.get("postContent")==null ? searchHit.getContent().getPostContent():highlightFields.get("context").get(0));
-            searchHit.getContent().setPostType(highlightFields.get("postType")==null ? searchHit.getContent().getPostType():highlightFields.get("context").get(0));
+            searchHit.getContent().setPostTitle(highlightFields.get("postTitle")==null ? searchHit.getContent().getPostTitle():highlightFields.get("postTitle").get(0));
+            searchHit.getContent().setPostContent(highlightFields.get("postContent")==null ? searchHit.getContent().getPostContent():highlightFields.get("postContent").get(0));
+            searchHit.getContent().setPostType(highlightFields.get("postType")==null ? searchHit.getContent().getPostType():highlightFields.get("postType").get(0));
             //放到实体类中
             postEsBeans.add(searchHit.getContent());
+        }
+        if (postEsBeans.size()==0){
+            return RespBean.error("未查询到相关内容",postEsBeans);
         }
         return RespBean.ok("查询成功",postEsBeans);
     }

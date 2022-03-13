@@ -20,12 +20,7 @@ public class MybatisPlusConfig {
         /**
          * 将实体中驼峰命名法和表中的下划线对应
          */
-        return new ConfigurationCustomizer() {
-            @Override
-            public void customize(MybatisConfiguration configuration) {
-                configuration.setMapUnderscoreToCamelCase(true);
-            }
-        };
+        return configuration -> configuration.setMapUnderscoreToCamelCase(true);
     }
 
     /**

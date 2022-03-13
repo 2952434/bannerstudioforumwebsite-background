@@ -1,6 +1,5 @@
 package studio.banner.forumwebsite.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import studio.banner.forumwebsite.bean.ReplyBean;
 import studio.banner.forumwebsite.bean.RespBean;
 
@@ -91,7 +90,6 @@ public interface IReplyService {
     /**
      * 通过用户id取消全部评论展示
      * @param memberId
-     * @return
      */
-    boolean deleteAllReplyInformationById(Integer memberId);
+    void deleteAllReplyInformationById(Integer memberId);
 }

@@ -28,12 +28,13 @@ public interface ICommentLikeService {
     RespBean insertCommentLike(CommentLikeBean commentLikeBean);
 
     /**
-     * 根据用户id和评论id取消点赞
+     * 根据用户id，评论id，评论者id取消点赞
      * @param userId
      * @param commentId
+     * @param commentUserId
      * @return
      */
-    RespBean deleteCommentLike(Integer userId,Integer commentId);
+    RespBean deleteCommentLike(Integer userId,Integer commentId,Integer commentUserId);
 
     /**
      * 根据评论id删除该评论下所有点赞信息

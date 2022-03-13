@@ -1,4 +1,4 @@
-package studio.banner.forumwebsite.controller.test;
+package studio.banner.forumwebsite.controller.frontdesk;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -22,9 +22,9 @@ import java.util.Map;
  * @author jijunxiang
  */
 @RestController
-@Api(tags = "测试websocket", value = "IndexController")
+@Api(tags = "websocket接口", value = "WebSocketController")
 @RequestMapping("/frontDesk")
-public class IndexController {
+public class WebSocketController {
     @Autowired
     private IMessageService messageService;
 

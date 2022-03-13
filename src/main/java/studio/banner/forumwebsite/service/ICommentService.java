@@ -74,13 +74,6 @@ public interface ICommentService {
      * @return
      */
     Integer selectCommentNum(Integer postId);
-    /**
-     * 分页查询全部评论
-     *
-     * @param page 页数
-     * @return IPage<CommentBean>
-     */
-    IPage<CommentBean> selectAllComment(Integer page);
 
     /**
      * 根据帖子id更新帖子评论数

@@ -25,11 +25,11 @@ import java.util.Map;
  * @role:
  */
 @RestController
-@Api(tags = "后台学习计划接口", value = "StudyBackGroundController")
+@Api(tags = "后台学习计划接口", value = "BStudyController")
 @RequestMapping("/backGround")
-public class StudyBackGroundController {
+public class BStudyController {
 
-    protected static final Logger logger = LoggerFactory.getLogger(StudyBackGroundController.class);
+    protected static final Logger logger = LoggerFactory.getLogger(BStudyController.class);
     @Autowired
     private IStudyRouteService iStudyRouteService;
 

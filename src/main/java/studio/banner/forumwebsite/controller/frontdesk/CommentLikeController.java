@@ -61,10 +61,12 @@ public class CommentLikeController {
             @ApiImplicitParam(paramType = "query", name = "userId",
                     value = "用户id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "commentId",
-                    value = "评论id", required = true, dataTypeClass = Integer.class)
+                    value = "评论id", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "commentUserId",
+                    value = "评论者id", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean deleteCommentLike(Integer userId, Integer commentId) {
-        return iCommentLikeService.deleteCommentLike(userId, commentId);
+    public RespBean deleteCommentLike(Integer userId, Integer commentId,Integer commentUserId) {
+        return iCommentLikeService.deleteCommentLike(userId, commentId,commentUserId);
     }
 
 }

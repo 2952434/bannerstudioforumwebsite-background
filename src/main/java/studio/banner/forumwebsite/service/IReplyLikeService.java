@@ -1,6 +1,5 @@
 package studio.banner.forumwebsite.service;
 
-import studio.banner.forumwebsite.bean.CommentLikeBean;
 import studio.banner.forumwebsite.bean.ReplyLikeBean;
 import studio.banner.forumwebsite.bean.RespBean;
 
@@ -29,19 +28,19 @@ public interface IReplyLikeService {
     RespBean insertReplyLike(ReplyLikeBean replyLikeBean);
 
     /**
-     * 根据用户id和回复id取消点赞
+     * 根据用户id，回复id，回复用户id取消点赞
      * @param userId
      * @param replyId
+     * @param replyUserId
      * @return
      */
-    RespBean deleteReplyLike(Integer userId,Integer replyId);
+    RespBean deleteReplyLike(Integer userId,Integer replyId,Integer replyUserId);
 
     /**
      * 通过帖子id删除全部点赞
      * @param postId
-     * @return
      */
-    RespBean deleteReplyLikeByPostId(Integer postId);
+    void deleteReplyLikeByPostId(Integer postId);
 
     /**
      * 根据回复id删除该评论下所有点赞信息
@@ -56,12 +55,6 @@ public interface IReplyLikeService {
      */
     Integer selectReplyLikeNum(Integer replyId);
 
-    /**
-     * 通过被点赞者id查询用户被点赞量
-     * @param beLikeUserId
-     * @return
-     */
-    Integer selectUserLikeNum(Integer beLikeUserId);
 
     /**
      * 根据用户id查询被点赞信息
@@ -81,8 +74,7 @@ public interface IReplyLikeService {
     /**
      * 根据用户id删除所有点赞信息
      * @param userId
-     * @return
      */
-    boolean deleteAllReplyLikeByBeLikeUserId(Integer userId);
+    void deleteAllReplyLikeByBeLikeUserId(Integer userId);
 
 }

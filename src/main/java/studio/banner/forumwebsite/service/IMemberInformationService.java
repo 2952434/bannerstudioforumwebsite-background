@@ -1,6 +1,7 @@
 package studio.banner.forumwebsite.service;
 
 import studio.banner.forumwebsite.bean.MemberInformationBean;
+import studio.banner.forumwebsite.bean.RespBean;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface IMemberInformationService {
      * @param memberInformationBean 用户信息实体
      * @return boolean
      */
-    boolean insertUserMsg(MemberInformationBean memberInformationBean);
+    RespBean insertUserMsg(MemberInformationBean memberInformationBean);
 
 
     /**
@@ -74,9 +75,15 @@ public interface IMemberInformationService {
     void  updateColNum(Integer memberId);
 
     /**
-     * 根据用户id更新收藏量
+     * 点赞量加1
      * @param memberId
      */
-    void  updateLikeNum(Integer memberId);
+    void increaseLikeNum(Integer memberId);
+
+    /**
+     * 点赞量减1
+     * @param memberId
+     */
+    void underLikeNum(Integer memberId);
 
 }

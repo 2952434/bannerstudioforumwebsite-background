@@ -1,6 +1,5 @@
 package studio.banner.forumwebsite.controller.frontdesk;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -26,10 +25,10 @@ import java.util.Map;
  * @Date: 2021/5/15 16:15
  */
 @RestController
-@Api(tags = "前台所有用户信息接口", value = "UsersInformationFrontDeskController")
+@Api(tags = "前台所有用户信息接口", value = "UsersInformationController")
 @RequestMapping("/frontDesk")
-public class UsersInformationFrontDeskController {
-    private static final Logger logger = LoggerFactory.getLogger(UsersInformationFrontDeskController.class);
+public class UsersInformationController {
+    private static final Logger logger = LoggerFactory.getLogger(UsersInformationController.class);
 
     @Autowired
     private IFixedInformationService iFixedInformationService;

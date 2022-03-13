@@ -67,7 +67,6 @@ public interface IPostLikeService {
     /**
      * 通过用户id取消点赞信息全部展示
      * @param userId
-     * @return
      */
-    boolean deletePostLikeAllInformation(Integer userId);
+    void deletePostLikeAllInformation(Integer userId);
 }

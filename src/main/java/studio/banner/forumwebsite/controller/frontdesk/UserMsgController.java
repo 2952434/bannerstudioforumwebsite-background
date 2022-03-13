@@ -8,11 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import studio.banner.forumwebsite.bean.*;
 import studio.banner.forumwebsite.service.IMemberInformationService;
+import studio.banner.forumwebsite.service.IRedisService;
 import studio.banner.forumwebsite.service.IUserGradeService;
 import studio.banner.forumwebsite.service.IFixedInformationService;
 
@@ -26,19 +27,21 @@ import java.util.List;
  */
 
 @RestController
-@Api(tags = "前台用户信息接口", value = "UserMsgFrontDeskController")
+@Api(tags = "前台用户信息接口", value = "BUserMsgController")
 @RequestMapping("/frontDesk")
-public class UserMsgFrontDeskController {
-    private static final Logger logger = LoggerFactory.getLogger(UserMsgFrontDeskController.class);
+public class UserMsgController {
+    private static final Logger logger = LoggerFactory.getLogger(UserMsgController.class);
 
     @Autowired
-    RestTemplate restTemplate;
+    private RestTemplate restTemplate;
     @Autowired
     private IMemberInformationService iMemberInformationService;
     @Autowired
-    private IFixedInformationService iFixedInformationService;
+    private IRedisService iRedisService;
     @Autowired
     private IUserGradeService iUserGradeService;
+    @Autowired
+    private IFixedInformationService iFixedInformationService;
 
     @ApiOperation(value = "初始化用户信息", notes = "用户默认信息都为空", httpMethod = "POST")
     @PostMapping("/userMsgFrontDesk/insertUserMsg")
@@ -70,18 +73,7 @@ public class UserMsgFrontDeskController {
     )
 
     public RespBean insert(MemberInformationBean memberInformationBean) {
-
-        try {
-            if (iMemberInformationService.insertUserMsg(memberInformationBean)) {
-                logger.info("Id为" + memberInformationBean.getMemberId() + "的用户数据初始化成功");
-                return RespBean.ok("Id为" + memberInformationBean.getMemberId() + "的用户数据初始化成功");
-            } else {
-                logger.info("Id为" + memberInformationBean.getMemberId() + "的用户数据初始化失败");
-                return RespBean.error("Id为" + memberInformationBean.getMemberId() + "的用户数据初始化失败");
-            }
-        } catch (IllegalArgumentException e) {
-            return RespBean.error("日期格式错误！！！");
-        }
+        return iMemberInformationService.insertUserMsg(memberInformationBean);
     }
 
     @ApiOperation(value = "根据Id查询用户信息", notes = "同时更新关注人数和粉丝人数")
@@ -143,18 +135,33 @@ public class UserMsgFrontDeskController {
 
 
 
-    @GetMapping("/userMsgFrontDesk/getInformation")
-    @ApiOperation(value = "访问授权服务器信息更新资源服务器用户信息")
-    public RespBean getInformationByUserName(HttpServletRequest request){
-        String header = request.getHeader("Authorization");
-        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", header);
-        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
-        ResponseEntity<AuthUser> entity = restTemplate.exchange("http://localhost:8090/admin/getInformation/"+username, HttpMethod.GET, httpEntity, AuthUser.class);
-        AuthUser authUser = entity.getBody();
-//        更新数据库操作
+//    @GetMapping("/userMsgFrontDesk/getInformation")
+//    @ApiOperation(value = "访问授权服务器信息更新资源服务器用户信息")
+//    public RespBean getInformationByUserName(HttpServletRequest request){
+//        String header = request.getHeader("Authorization");
+//        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Authorization", header);
+//        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+//        ResponseEntity<AuthUser> entity = restTemplate.exchange("http://localhost:8090/admin/getInformation/"+username, HttpMethod.GET, httpEntity, AuthUser.class);
+//        AuthUser authUser = entity.getBody();
+////        更新数据库操作
+//        assert authUser != null;
+//        iFixedInformationService.insertUsersInformation(new FixedInformationBean(authUser));
+//        iUserGradeService.insertUserGradeDirection(authUser.getId(),authUser.getGrade(),authUser.getUserName(),authUser.getDirection());
+//        iMemberInformationService.insertUserMsg(new MemberInformationBean(authUser));
+//        return RespBean.ok("数据库更新成功");
+//    }
 
-        return RespBean.ok("数据库更新成功");
+    @GetMapping("/selectEveryDayAddViewNum")
+    @ApiOperation(value = "根据用户id查询15天每天浏览增长量",httpMethod = "GET")
+    @ApiImplicitParam(paramType = "query",name = "memberId",
+            value = "用户id",required = true,dataTypeClass = Integer.class)
+    public RespBean selectEveryDayAddViewNum(Integer memberId) {
+        List<Integer> list = iRedisService.selectEveryDayAddViewNum(memberId);
+        if (list.size()==0){
+            return RespBean.error("暂无数据");
+        }
+        return RespBean.ok("查询成功",list);
     }
 }

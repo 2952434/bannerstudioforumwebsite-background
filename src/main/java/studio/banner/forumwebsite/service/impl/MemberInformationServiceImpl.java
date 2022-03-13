@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import studio.banner.forumwebsite.bean.MemberInformationBean;
+import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.manager.SendMail;
 import studio.banner.forumwebsite.mapper.MemberInformationMapper;
 import studio.banner.forumwebsite.service.*;
+import studio.banner.forumwebsite.utils.TimeUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,13 +33,8 @@ public class MemberInformationServiceImpl implements IMemberInformationService {
     @Autowired
     private SendMail sendMail;
     @Autowired
-    private IUserAttentionService iUserAttentionService;
-    @Autowired
-    private IPostService iPostService;
-    @Autowired
     private ICollectService iCollectService;
-    @Autowired
-    private IPostLikeService iPostLikeService;
+
 
     /**
      * 新增用户信息
@@ -46,20 +43,18 @@ public class MemberInformationServiceImpl implements IMemberInformationService {
      * @return boolean
      */
     @Override
-    public boolean insertUserMsg(MemberInformationBean memberInformationBean) {
+    public RespBean insertUserMsg(MemberInformationBean memberInformationBean) {
         if (selectUserById(memberInformationBean.getMemberId())==null){
+            memberInformationBean.setMemberBirthday(TimeUtils.getDateString01());
             if (memberInformationMapper.insert(memberInformationBean) == 1) {
                 logger.info("成员插入成功");
-                return true;
+                return RespBean.ok("成员插入成功");
             }else {
                 logger.error("成员插入失败");
-                return false;
+                return RespBean.error("成员插入失败");
             }
         }else {
-            QueryWrapper<MemberInformationBean> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("member_id", memberInformationBean.getMemberId());
-            logger.info("成员信息已更新成功");
-            return memberInformationMapper.update(memberInformationBean,queryWrapper)==1;
+            return RespBean.error("已存在该用户");
         }
     }
 
@@ -89,17 +84,12 @@ public class MemberInformationServiceImpl implements IMemberInformationService {
      */
     @Override
     public boolean selectBirthdayById(Integer id) {
-//        获得当前时间
-        SimpleDateFormat bjSdf = new SimpleDateFormat("yyyy-MM-dd");
-        bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
-        Date date = new Date();
-        String time = bjSdf.format(date);
+        String time = TimeUtils.getDateString01();
         String[] split1 = time.split("-");
-//        获取数据库生日
         QueryWrapper<MemberInformationBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("member_id", id);
         MemberInformationBean memberInformationBean = memberInformationMapper.selectOne(queryWrapper);
-        String birthday = bjSdf.format(memberInformationBean.getMemberBirthday());
+        String birthday = memberInformationBean.getMemberBirthday();
         String[] split = birthday.split("-");
         if (split[1].equals(split1[1]) && split[2].equals(split1[2])) {
             return true;
@@ -107,18 +97,10 @@ public class MemberInformationServiceImpl implements IMemberInformationService {
         return false;
     }
 
-    /**
-     * 查询过生日的人
-     *
-     * @param memberId 用户id
-     * @return List
-     */
+
     @Override
     public List<MemberInformationBean> selectBirthday(Integer memberId) {
-        SimpleDateFormat bjSdf = new SimpleDateFormat("yyyy-MM-dd");
-        bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
-        Date date = new Date();
-        String time = bjSdf.format(date);
+        String time = TimeUtils.getDateString01();
         String[] split = time.split("-");
         String time01 = split[1] + "-" + split[2];
         QueryWrapper<MemberInformationBean> queryWrapper = new QueryWrapper<>();
@@ -149,19 +131,15 @@ public class MemberInformationServiceImpl implements IMemberInformationService {
     @Override
     @Scheduled(cron = "0 0 1 * * ?")
     public void automaticSentMail() {
-        //        获得当前时间
-        SimpleDateFormat bjSdf = new SimpleDateFormat("yyyy-MM-dd");
-        bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
-        Date date = new Date();
-        String time = bjSdf.format(date);
+        String time = TimeUtils.getDateString01();
         String[] split = time.split("-");
         String time01 = split[1] + "-" + split[2];
         QueryWrapper<MemberInformationBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("member_birthday", time01);
         List<MemberInformationBean> list = memberInformationMapper.selectList(queryWrapper);
         if (list.size() != 0) {
-            for (int i = 0; i < list.size(); i++) {
-                sendMail.automaticMail(list.get(i).getMemberEmail(), list.get(i).getMemberName());
+            for (MemberInformationBean memberInformationBean : list) {
+                sendMail.automaticMail(memberInformationBean.getMemberEmail(), memberInformationBean.getMemberName());
             }
         }
     }
@@ -188,9 +166,18 @@ public class MemberInformationServiceImpl implements IMemberInformationService {
     }
 
     @Override
-    public void updateLikeNum(Integer memberId) {
+    public void increaseLikeNum(Integer memberId) {
         UpdateWrapper<MemberInformationBean> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("member_id",memberId).set("member_like_num",iPostLikeService.selectPostLikeNumByUserId(memberId));
+        updateWrapper.eq("member_id",memberId).set("member_like_num",selectUserMsg(memberId).getMemberLikeNum()+1);
         memberInformationMapper.update(null,updateWrapper);
     }
+
+    @Override
+    public void underLikeNum(Integer memberId) {
+        UpdateWrapper<MemberInformationBean> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("member_id",memberId).set("member_like_num",selectUserMsg(memberId).getMemberLikeNum()-1);
+        memberInformationMapper.update(null,updateWrapper);
+    }
+
+
 }

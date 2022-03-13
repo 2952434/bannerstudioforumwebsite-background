@@ -37,6 +37,7 @@ public class FixedInformationBean {
     @TableField(value = "users_direction")
     private String usersDirection;
 
+
     private String userGrade;
 
     /**
@@ -66,5 +67,14 @@ public class FixedInformationBean {
     @TableField(value = "user_id")
     private Integer userId;
 
-
+    public FixedInformationBean(AuthUser authUser) {
+        this.usersName = authUser.getUserName();
+        this.usersDirection = authUser.getDirection();
+        this.userGrade = authUser.getGrade();
+        this.usersCompany = authUser.getMemberCompany();
+        this.usersWork = authUser.getMemberWork();
+        this.usersAddress = authUser.getMemberAddress();
+        this.usersPay = authUser.getMemberPay();
+        this.userId = authUser.getId();
+    }
 }

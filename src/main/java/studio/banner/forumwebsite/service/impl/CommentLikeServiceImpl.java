@@ -44,17 +44,19 @@ public class CommentLikeServiceImpl implements ICommentLikeService {
             commentLikeBean.setLikeTime(TimeUtils.getDateString());
             commentLikeMapper.insert(commentLikeBean);
             iCommentService.updateCommentLikeNum(commentLikeBean.getCommentId());
+            iMemberInformationService.increaseLikeNum(commentLikeBean.getBeLikeUserId());
             return RespBean.ok("点赞成功");
         }
         return RespBean.error("以存在点赞关系");
     }
 
     @Override
-    public RespBean deleteCommentLike(Integer userId, Integer commentId) {
+    public RespBean deleteCommentLike(Integer userId, Integer commentId,Integer commentUserId) {
         QueryWrapper<CommentLikeBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("like_user_id",userId).eq("comment_id",commentId);
         if (commentLikeMapper.delete(queryWrapper)==1) {
             iCommentService.updateCommentLikeNum(commentId);
+            iMemberInformationService.underLikeNum(commentUserId);
             return RespBean.ok("取消点赞成功");
         }
         return RespBean.error("取消点赞失败");
@@ -91,7 +93,7 @@ public class CommentLikeServiceImpl implements ICommentLikeService {
     @Override
     public List<CommentLikeBean> selectCommentLikeByBeLikeUserId(Integer userId, Integer page) {
         QueryWrapper<CommentLikeBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("be_like_user_id",userId).eq("show",0).orderByDesc("like_time");
+        queryWrapper.eq("be_like_user_id",userId).eq("show_information",0).orderByDesc("like_time");
         Page<CommentLikeBean> page1 = new Page<>(page,5);
         Page<CommentLikeBean> commentLikeBeanPage = commentLikeMapper.selectPage(page1, queryWrapper);
         List<CommentLikeBean> records = commentLikeBeanPage.getRecords();

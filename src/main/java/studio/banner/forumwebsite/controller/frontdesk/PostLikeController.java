@@ -16,7 +16,7 @@ import studio.banner.forumwebsite.service.IPostLikeService;
  * @role:
  */
 @RestController
-@Api(tags = "前台帖子点赞接口", value = "PostFrontDeskController")
+@Api(tags = "前台帖子点赞接口", value = "BPostController")
 @RequestMapping("/frontDesk")
 public class PostLikeController {
 
@@ -93,17 +93,6 @@ public class PostLikeController {
         return RespBean.ok(iPostLikeService.selectPostLikeNumByUserId(userId));
     }
 
-    @GetMapping("/selectPostLikeByUserId")
-    @ApiOperation(value = "根据用户id分页查询点赞信息", httpMethod = "GET")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "page",
-                    value = "页数", required = true, dataTypeClass = Integer.class),
-            @ApiImplicitParam(paramType = "query", name = "userId",
-                    value = "用户id", required = true, dataTypeClass = Integer.class)
-    })
-    public RespBean selectPostLikeByUserId(Integer userId, Integer page) {
-        return RespBean.ok("查询成功",iPostLikeService.selectPostLikeByUserId(userId, page));
-    }
 
 
 }

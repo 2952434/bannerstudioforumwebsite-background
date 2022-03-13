@@ -1,21 +1,11 @@
 package studio.banner.forumwebsite.bean;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import java.util.Collection;
-import java.util.Collections;
 
 /**
  * @Author: Ben
@@ -26,25 +16,39 @@ import java.util.Collections;
 @AllArgsConstructor
 @ToString
 public class AuthUser {
-    
+
     /**
      * id
      */
     private Integer id;
     /**
-     * 姓名
+     * 用户名
      */
     private String userName;
+
 
     /**
      * 邮箱
      */
+
     private String email;
 
     /**
      * 手机号
      */
+
     private String phone;
+
+    /**
+     * 用户注册时间
+     */
+    private String creatTime;
+
+
+    /**
+     * 成员性别
+     */
+    private String sex;
 
     /**
      * 成员方向
@@ -55,6 +59,21 @@ public class AuthUser {
      * 成员年级
      */
     private String grade;
+
+    /**
+     * 成员生日
+     */
+    private String birthday;
+
+    /**
+     * 成员头像
+     */
+    private String headPortraitUrl;
+
+    /**
+     * 成员个性签名
+     */
+    private String personalizedSignature;
 
     /**
      * 成员QQ号

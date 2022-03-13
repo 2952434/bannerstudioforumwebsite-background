@@ -17,9 +17,9 @@ import studio.banner.forumwebsite.service.IStudyRouteService;
  * @role: 前台学习路线接口
  */
 @RestController
-@Api(tags = "前台学习路线接口", value = "StudyFrontDeskController")
+@Api(tags = "前台学习路线接口", value = "BStudyController")
 @RequestMapping("/frontDesk")
-public class StudyFrontDeskController {
+public class StudyController {
 
     @Autowired
     private IStudyRouteService iStudyRouteService;

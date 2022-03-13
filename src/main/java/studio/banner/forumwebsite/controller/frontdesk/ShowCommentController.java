@@ -87,8 +87,8 @@ public class ShowCommentController {
     @ApiImplicitParam(paramType = "query", name = "userId",
             value = "用户id", required = true, dataTypeClass = Integer.class)
     public RespBean deleteCommentAllInformation(Integer userId) {
-        iCommentService.deleteAllCommentByMemberId(userId);
-        iReplyService.deleteAllReplyByMemberId(userId);
+        iCommentService.deleteAllCommentInformationById(userId);
+        iReplyService.deleteAllReplyInformationById(userId);
         return RespBean.ok("删除成功");
     }
 }

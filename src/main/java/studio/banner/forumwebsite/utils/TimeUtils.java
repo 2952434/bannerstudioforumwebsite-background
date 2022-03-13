@@ -104,6 +104,15 @@ public class TimeUtils {
     }
 
     /**
+     * 获取当前时间的字符串
+     * @return
+     */
+    public static String getDateString01(){
+        Date date = new Date();
+        SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormat.format(date);
+    }
+    /**
      * 计算天数
      * @param startDate
      * @param endDate

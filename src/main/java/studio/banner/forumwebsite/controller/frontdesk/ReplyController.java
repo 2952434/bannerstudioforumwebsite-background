@@ -1,6 +1,5 @@
-package studio.banner.forumwebsite.controller.background;
+package studio.banner.forumwebsite.controller.frontdesk;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -12,8 +11,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import studio.banner.forumwebsite.bean.ReplyBean;
+import studio.banner.forumwebsite.bean.ReplyLikeBean;
 import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.service.ICommentService;
+import studio.banner.forumwebsite.service.IReplyLikeService;
 import studio.banner.forumwebsite.service.IReplyService;
 
 import javax.validation.Valid;
@@ -29,27 +30,20 @@ import java.util.Map;
  * @Description: 回复接口
  */
 @RestController
-@Api(tags = "后台台帖子回复接口", value = "ReplyBackGroundController")
-@RequestMapping("/backGround")
-public class ReplyBackGroundController {
-    /**
-     * 日志 打印信息
-     */
-    private static final Logger logger = LoggerFactory.getLogger(ReplyBackGroundController.class);
-    @Autowired
-    protected IReplyService iReplyService;
-    @Autowired
-    protected ICommentService iCommentService;
+@Api(tags = "前台帖子回复接口", value = "BReplyController")
+@RequestMapping("/frontDesk")
+public class ReplyController {
 
-    /**
-     * 回复增加
-     *
-     * @param replyBean
-     * @param bindingResult
-     * @return RespBean
-     */
+    private static final Logger logger = LoggerFactory.getLogger(ReplyController.class);
+    @Autowired
+    private IReplyService iReplyService;
+    @Autowired
+    private ICommentService iCommentService;
+    @Autowired
+    private IReplyLikeService iReplyLikeService;
 
-    @PostMapping("/replyBackGround/insertReply")
+
+    @PostMapping("/replyFrontDesk/insertReply")
     @ApiOperation(value = "回复增加", notes = "回复内容不能为空", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "replyId",
@@ -66,14 +60,8 @@ public class ReplyBackGroundController {
                     value = "回复时间", required = true, dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "replyContent",
                     value = "回复内容", required = true, dataTypeClass = String.class)
-    }
-    )
+    })
     public RespBean insertComment(@Valid ReplyBean replyBean, BindingResult bindingResult) {
-
-        /**
-         * 将@Valid鉴权的错误信息返给前端
-         */
-
         if (bindingResult.hasErrors()) {
             Map<String, Object> map = new HashMap<>(999);
             List<FieldError> errors = bindingResult.getFieldErrors();
@@ -97,14 +85,8 @@ public class ReplyBackGroundController {
         return RespBean.error("回复失败，未找到改评论");
     }
 
-    /**
-     * 回复删除
-     *
-     * @param replyId
-     * @return RespBean
-     */
 
-    @DeleteMapping("/replyBackGround/deleteReply")
+    @DeleteMapping("/replyFrontDesk/deleteReply")
     @ApiOperation(value = "回复删除", notes = "回复需存在", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "replyId",
@@ -114,49 +96,12 @@ public class ReplyBackGroundController {
         return iReplyService.deleteReply(replyId,memberId);
     }
 
-    /**
-     * 根据用户id删除该用户下全部回复
-     *
-     * @param replyMemberId
-     * @return RespBean
-     */
-    @DeleteMapping("/replyBackGround/deleteAllReplyByMemberId")
-    @ApiOperation(value = "根据用户id删除该用户全部回复", notes = "用户需存在", httpMethod = "DELETE")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "replyMemberId",
-                    value = "用户id", required = true, dataTypeClass = Integer.class),
-    }
-    )
-    public RespBean deleteAllCommentByMemberId(Integer replyMemberId) {
-
-        return iReplyService.deleteAllReplyByMemberId(replyMemberId);
-    }
-
-    /**
-     * 根据评论id删除该评论下全部回复
-     *
-     * @param commentId
-     * @return RespBean
-     */
-    @DeleteMapping("/replyBackGround/deleteAllReplyByCommentId")
-    @ApiOperation(value = "根据评论id删除该评论下全部回复", notes = "评论需存在", httpMethod = "DELETE")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "commentId",
-                    value = "评论id", required = true, dataTypeClass = Integer.class),
-    }
-    )
-    public RespBean deleteAllCommentByCommentId(Integer commentId) {
-        return iReplyService.deleteAllReplyByCommentId(commentId);
-    }
 
 
-    /**
-     * 根据评论id查询该评论下全部回复
-     *
-     * @param commentId
-     * @return RespBean
-     */
-    @GetMapping("/replyBackGround/selectAllReplyByCommentId")
+
+
+
+    @GetMapping("/replyFrontDesk/selectAllReplyByCommentId")
     @ApiOperation(value = "根据评论id查找该评论下全部回复", notes = "评论需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "commentId",
@@ -165,11 +110,57 @@ public class ReplyBackGroundController {
                     value = "分页查询页数", required = true, dataTypeClass = Integer.class)
     })
     public RespBean selectAllReplyByCommentId(Integer commentId,Integer page) {
-
         return iReplyService.selectAllReplyByCommentId(commentId,page);
-
     }
 
 
+    @GetMapping("/judgeReplyLike")
+    @ApiOperation(value = "根据用户id和回复id判断是否具有点赞关系", httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "userId",
+                    value = "用户id", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "replyId",
+                    value = "回复id", required = true, dataTypeClass = Integer.class)
+    })
+    public boolean judgeReplyLike(Integer userId, Integer replyId) {
+        return iReplyLikeService.judgeReplyLike(userId, replyId);
+    }
+    @PostMapping("/insertReplyLike")
+    @ApiOperation(value = "增加点赞",httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "likeId",
+                    value = "点赞主键id", required = false, dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "likeUserId",
+                    value = "点赞用户id", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "replyId",
+                    value = "回复id", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "beLikeUserId",
+                    value = "被点赞用户id", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "postId",
+                    value = "帖子id", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "replyContent",
+                    value = "回复内容", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "likeTime",
+                    value = "点赞时间", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "show",
+                    value = "是否展示0：展示1：不展示", required = true, dataTypeClass = Integer.class)
+    })
+    public RespBean insertReplyLike(ReplyLikeBean replyLikeBean) {
+        return iReplyLikeService.insertReplyLike(replyLikeBean);
+    }
+
+    @DeleteMapping("/deleteReplyLike")
+    @ApiOperation(value = "根据用户id，回复id，回复用户id取消点赞",httpMethod = "DELETE")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "likeUserId",
+                    value = "点赞用户id", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "replyId",
+                    value = "回复id", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "replyUserId",
+                    value = "回复用户id", required = true, dataTypeClass = Integer.class)
+    })
+    public RespBean deleteReplyLike(Integer userId, Integer replyId,Integer replyUserId) {
+        return iReplyLikeService.deleteReplyLike(userId, replyId,replyUserId);
+    }
 
 }

@@ -1,4 +1,4 @@
-package studio.banner.forumwebsite.controller.background;
+package studio.banner.forumwebsite.controller.frontdesk;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
@@ -9,13 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ZSetOperations;
+//import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import studio.banner.forumwebsite.bean.*;
-import studio.banner.forumwebsite.service.ICommentService;
-import studio.banner.forumwebsite.service.IPostService;
-import studio.banner.forumwebsite.service.IReplyService;
+import studio.banner.forumwebsite.service.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,17 +31,40 @@ import java.util.Set;
  */
 
 @RestController
-@Api(tags = "后台帖子接口", value = "PostBackGroundController")
-@RequestMapping("/backGround")
-public class PostBackGroundController {
-    private static final Logger logger = LoggerFactory.getLogger(PostBackGroundController.class);
+@Api(tags = "前台帖子接口", value = "BPostController")
+@RequestMapping("/frontDesk")
+public class PostController {
+    /**
+     * 日志 打印信息
+     */
+    private static final Logger logger = LoggerFactory.getLogger(PostController.class);
     @Autowired
     private IPostService iPostService;
     @Autowired
-    private ICommentService iCommentService;
+    private IPostEsService iPostEsService;
     @Autowired
-    private IReplyService iReplyService;
+    private IRedisService iRedisService;
+    @Autowired
+    private IPostTypeService iPostTypeService;
 
+    /**
+     * 测试Markdown
+     *
+     * @return
+     */
+//    @Secured("admin")
+    @GetMapping("/postFrontDesk/toEditor")
+    public ModelAndView toEditor() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("editor/editormd");
+        return modelAndView;
+    }
+
+    @GetMapping("/selectPostAllType")
+    @ApiOperation(value = "查询所有帖子类型",httpMethod = "GET")
+    public RespBean selectPostAllType() {
+        return iPostTypeService.selectPostAllType();
+    }
     /**
      * 帖子增加接口
      *
@@ -49,7 +72,7 @@ public class PostBackGroundController {
      * @param bindingResult
      * @return RespBean
      */
-    @PostMapping("/postBackGround/insertPost")
+    @PostMapping("/postFrontDesk/insertPost")
     @ApiOperation(value = "帖子增加", notes = "帖子内容不能为空", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
@@ -72,18 +95,10 @@ public class PostBackGroundController {
                     value = "帖子点赞数量", required = false, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "postImageAddress",
                     value = "帖子图片地址", required = false, dataTypeClass = String.class),
-            @ApiImplicitParam(paramType = "query",name = "postGrade",
-                    value = "帖子年级",required = true,dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "postType",
                     value = "帖子类型", required = false, dataTypeClass = String.class)
-    }
-    )
+    })
     public RespBean insertPost(PostBean postBean,BindingResult bindingResult) {
-        System.out.println(postBean);
-        /**
-         * 将@Valid鉴权的错误信息返给前端
-         */
-
         if (bindingResult.hasErrors()) {
             Map<String, Object> map = new HashMap<>(999);
             List<FieldError> errors = bindingResult.getFieldErrors();
@@ -99,14 +114,28 @@ public class PostBackGroundController {
         String judge2 = "^.{5,10000}$";
         if (postBean.getPostTitle().matches(judge1)) {
             if (postBean.getPostContent().matches(judge2)) {
-                iPostService.insertPost(postBean);
-                return RespBean.ok("添加帖子成功");
+                return iPostService.insertPost(postBean);
             }
         }
         return RespBean.error("添加帖子失败,帖子内容有误");
     }
+    /**
+     * 帖子删除接口
+     *
+     * @param postId
+     * @return RespBean
+     */
 
-
+    @DeleteMapping("/postFrontDesk/deletePost")
+    @ApiOperation(value = "帖子删除", notes = "帖子需存在", httpMethod = "DELETE")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "postId",
+                    value = "帖子id", required = true, dataTypeClass = Integer.class),
+    }
+    )
+    public RespBean deletePost(int postId) {
+        return iPostService.deletePostById(postId);
+    }
 
     /**
      * 根据用户id清空该用户全部帖子
@@ -114,63 +143,20 @@ public class PostBackGroundController {
      * @param postMemberId
      * @return RespBean
      */
-    @DeleteMapping("/postBackGround/deleteAllPost")
+    @DeleteMapping("/postFrontDesk/deleteAllPost")
     @ApiOperation(value = "帖子批量删除", notes = "用户需存在", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postMemberId",
                     value = "用户id", required = true, dataTypeClass = String.class),
-    }
-    )
+    })
     public RespBean deleteAllPost(int postMemberId) {
-        if (iPostService.selectAllPostByDescById(postMemberId) != null) {
-            iPostService.deleteAllPost(postMemberId);
-            iCommentService.deleteAllCommentByMemberId(postMemberId);
-            return RespBean.ok("删除成功");
-        }
-        return RespBean.error("删除失败,未查询到该用户或用户已无文章");
+        return iPostService.deleteAllPost(postMemberId);
     }
 
-
-    /**
-     * 更改帖子浏览量
-     *
-     * @param postId
-     * @return RespBean
-     */
-    @PutMapping("/postBackGround/updatePostPageview")
-    @ApiOperation(value = "帖子浏览量修改", notes = "帖子需存在", httpMethod = "PUT")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "postId",
-                    value = "帖子id", required = true, dataTypeClass = Integer.class),
-
-    }
-
-    )
-    public RespBean udpatePostPageview(int postId) {
-        if (iPostService.updatePostPageView(postId)) {
-            return RespBean.ok("更改成功");
-        }
-        return RespBean.error("更改失败，未查询到改帖子");
-    }
-
-    /**
-     * 修改帖子评论量
-     *
-     * @param postId
-     * @return RespBean
-     */
-    @PutMapping("/postBackGround/updatePostCommentNumber")
-    @ApiOperation(value = "帖子评论量修改", notes = "帖子需存在", httpMethod = "PUT")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "postId",
-                    value = "帖子id", required = true, dataTypeClass = Integer.class),
-    }
-    )
-    public RespBean udpatePostCommentNumber(int postId) {
-        if (iPostService.updatePostCommentNumber(postId)) {
-            return RespBean.ok("更改成功");
-        }
-        return RespBean.error("更改失败，未查询到改帖子");
+    @PostMapping("/updatePostById")
+    @ApiOperation(value = "修改帖子信息", httpMethod = "POST")
+    public RespBean updatePostById(PostBean postBean) {
+        return iPostService.updatePostById(postBean);
     }
 
 
@@ -180,16 +166,16 @@ public class PostBackGroundController {
      * @param postId
      * @return RespBean
      */
-    @GetMapping("/postBackGround/selectPost")
+    @GetMapping("/postFrontDesk/selectPost")
     @ApiOperation(value = "帖子查找", notes = "帖子需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
                     value = "帖子id", required = true, dataTypeClass = Integer.class),
-    }
-    )
+    })
     public RespBean selectPost(int postId) {
-        if (iPostService.selectPost(postId) != null) {
-            PostBean postBean = iPostService.selectPost(postId);
+        PostBean postBean = iPostService.selectPost(postId);
+        if (postBean != null) {
+
             return RespBean.ok("查找成功", postBean);
         }
         return RespBean.error("查找失败，未查询到该帖子");
@@ -201,13 +187,12 @@ public class PostBackGroundController {
      * @param postMemberId
      * @return RespBean
      */
-    @GetMapping("/postBackGround/selectAllPostByDescById")
+    @GetMapping("/postFrontDesk/selectAllPostByDescById")
     @ApiOperation(value = "根据时间倒序查询某用户所有帖子", notes = "帖子需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postMemberId",
                     value = "用户id", required = true, dataTypeClass = Integer.class),
-    }
-    )
+    })
     public RespBean selectAllPostByDescById(int postMemberId) {
         if (iPostService.selectAllPostByDescById(postMemberId) != null) {
             List<PostBean> list = iPostService.selectAllPostByDescById(postMemberId);
@@ -216,20 +201,18 @@ public class PostBackGroundController {
         return RespBean.error("查找失败，未查询到该用户或该用户无帖子");
     }
 
-
     /**
      * 根据用户id查询该用户所有帖子
      *
      * @param postMemberId
      * @return RespBean
      */
-    @GetMapping("/postBackGround/selectAllPostByAscById")
+    @GetMapping("/postFrontDesk/selectAllPostByAscById")
     @ApiOperation(value = "根据时间正序查询某用户所有帖子", notes = "帖子需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postMemberId",
                     value = "用户id", required = true, dataTypeClass = Integer.class),
-    }
-    )
+    })
     public RespBean selectAllPostByAscById(int postMemberId) {
         if (iPostService.selectAllPostByAscById(postMemberId) != null) {
             List<PostBean> list = iPostService.selectAllPostByAscById(postMemberId);
@@ -238,18 +221,22 @@ public class PostBackGroundController {
         return RespBean.error("查找失败，未查询到该用户或该用户无帖子");
     }
 
+    @GetMapping("/selectAllPostNum")
+    @ApiOperation(value = "查找所有帖子数量", httpMethod = "GET")
+    public RespBean selectAllPostNum() {
+        return RespBean.ok("查询成功",iPostService.selectAllPostNum());
+    }
     /**
      * 查询全部帖子接口
      *
      * @return RespBean
      */
-    @GetMapping("/postBackGround/selectAllPost")
+    @GetMapping("/postFrontDesk/selectAllPost")
     @ApiOperation(value = "查找所有帖子", notes = "帖子需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "page",
                     value = "分页查询页数", required = true, dataTypeClass = Integer.class),
-    }
-    )
+    })
     public RespBean selectAllPost(int page) {
         IPage<PostBean> iPage = iPostService.selectAllPost(page);
         List<PostBean> list = iPage.getRecords();
@@ -259,52 +246,45 @@ public class PostBackGroundController {
         return RespBean.error("查询失败，未找到该页数");
     }
 
-//    @GetMapping("/postBackGround/selectDimPost")
-//    @ApiOperation(value = "全文检索帖子", httpMethod = "GET")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(paramType = "query", name = "page",
-//                    value = "分页查询页数", required = true, dataTypeClass = Integer.class),
-//            @ApiImplicitParam(paramType = "query", name = "dim",
-//                    value = "全文检索字段", required = true, dataTypeClass = String.class)
-//    })
-//    public RespBean selectDimPost(int page, String dim) {
-//        List<PostEsBean> list = iPostService.selectDimPost(page - 1, dim);
-//        System.out.println(list);
-//        if (list.size() != 0) {
-//            return RespBean.ok("查询成功", list);
-//        } else {
-//            IPage<PostBean> iPage1 = iPostService.selectAllPost(page);
-//            List<PostBean> list1 = iPage1.getRecords();
-//            if (list1.size() != 0) {
-//                return RespBean.ok(list1);
-//            }
-//        }
-//        return RespBean.error("未查询到相关内容");
-//    }
-//
-//
-//    @GetMapping("/postBackGround/selectPostRank")
-//    @ApiOperation(value = "帖子排行榜查询", httpMethod = "GET")
-//    public RespBean selectPostRank() {
-//        Set<ZSetOperations.TypedTuple<String>> rank = iPostService.selectPostRank();
-//        return RespBean.ok(rank);
-//    }
-//
-//
-//    @GetMapping("/postBackGround/selectYesterdayView")
-//    @ApiOperation(value = "根据作者id获得昨天帖子浏览总量")
-//    @ApiImplicitParam(paramType = "query", name = "memberId",
-//            value = "用户id", required = true, dataTypeClass = Integer.class)
-//    public RespBean selectYesterdayView(Integer memberId) {
-//        String view = iPostService.selectYesterdayView(memberId);
-//        if (view == null) {
-//            view = "0";
-//        }
-//        return RespBean.ok("昨天的浏览总量为：" + view);
-//    }
+    @GetMapping("/findAllWithPage")
+    @ApiOperation(value = "分页检索所有帖子", httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "page",
+                    value = "分页查询页数", required = true, dataTypeClass = Integer.class)
+    })
+    public RespBean findAllWithPage(Integer page) {
+        return iPostEsService.findAllWithPage(page);
+    }
 
 
-    @PostMapping("/postBackGround/updatePostTopById")
+    @GetMapping("/postFrontDesk/selectDimPost")
+    @ApiOperation(value = "全文检索帖子", httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "page",
+                    value = "分页查询页数", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "dim",
+                    value = "全文检索字段", required = true, dataTypeClass = String.class)
+    })
+    public RespBean selectDimPost(Integer page, String dim) {
+        return iPostEsService.findByPostContentAndPostTitleAndPostType(dim,page);
+    }
+
+    @GetMapping("/add")
+    @ApiOperation(value = "帖子排行榜Test", httpMethod = "GET")
+    public RespBean add() {
+        Set<ZSetOperations.TypedTuple<String>> add = iRedisService.addRedis();
+        return RespBean.ok(add);
+    }
+
+    @GetMapping("/selectPostRank")
+    @ApiOperation(value = "帖子排行榜查询", httpMethod = "GET")
+    public RespBean selectPostRank() {
+        Set<ZSetOperations.TypedTuple<String>> rank = iRedisService.selectPostRank();
+        return RespBean.ok(rank);
+    }
+
+
+    @PostMapping("/postFrontDesk/updatePostTopById")
     @ApiOperation(value = "根据帖子id实现置顶", notes = "帖子id需存在", httpMethod = "POST")
     @ApiImplicitParam(type = "query", name = "postId",
             value = "帖子id", required = true, dataTypeClass = Integer.class)
@@ -317,7 +297,7 @@ public class PostBackGroundController {
         }
     }
 
-    @PostMapping("/postBackGround/updatePostNoTopById")
+    @PostMapping("/postFrontDesk/updatePostNoTopById")
     @ApiOperation(value = "根据帖子id取消置顶", notes = "帖子id需存在", httpMethod = "POST")
     @ApiImplicitParam(type = "query", name = "postId",
             value = "帖子id", required = true, dataTypeClass = Integer.class)
@@ -329,4 +309,6 @@ public class PostBackGroundController {
             return RespBean.error("帖子不存在，取消置顶失败！！！");
         }
     }
+
+
 }

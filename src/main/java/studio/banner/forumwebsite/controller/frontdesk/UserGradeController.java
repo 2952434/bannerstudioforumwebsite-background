@@ -20,9 +20,9 @@ import java.util.List;
  * @role:
  */
 @RestController
-@Api(tags = "前台用户年级姓名方向接口", value = "UserGradeFrontDeskController")
+@Api(tags = "前台用户年级姓名方向接口", value = "BUserGradeController")
 @RequestMapping("/frontDesk")
-public class UserGradeFrontDeskController {
+public class UserGradeController {
 
     @Autowired
     private IUserGradeService userGradeService;

@@ -18,9 +18,9 @@ import java.util.List;
  */
 
 @RestController
-@Api(tags = "后台用户信息接口", value = "UserMsgBackGroundController")
+@Api(tags = "后台用户信息接口", value = "BUserMsgController")
 @RequestMapping("/backGround")
-public class UserMsgBackGroundController {
+public class BUserMsgController {
 
     @Autowired
     protected IMemberInformationService iMemberInformationService;

@@ -29,4 +29,5 @@ public interface PostEsMapper extends ElasticsearchRepository<PostEsBean, Intege
      * @param memberId
      */
     void deletePostEsBeansByPostMemberId(Integer memberId);
+
 }

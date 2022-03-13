@@ -18,9 +18,9 @@ import studio.banner.forumwebsite.service.IInformService;
  * @role:
  */
 @RestController
-@Api(tags = "前台通知接口", value = "InformFrontDeskController")
+@Api(tags = "前台通知接口", value = "BInformController")
 @RequestMapping("/frontDesk")
-public class InformFrontDeskController {
+public class InformController {
 
     @Autowired
     private IInformService informService;

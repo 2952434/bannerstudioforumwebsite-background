@@ -1,6 +1,5 @@
 package studio.banner.forumwebsite.controller.background;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -28,12 +27,12 @@ import java.util.Map;
  * @role:
  */
 @RestController
-@Api(tags = "后台评论接口", value = "CommentBackGroundController")
+@Api(tags = "后台评论接口", value = "BCommentController")
 @RequestMapping("/backGround")
-public class CommentBackGroundController {
-    private static final Logger logger = LoggerFactory.getLogger(CommentBackGroundController.class);
+public class BCommentController {
+    private static final Logger logger = LoggerFactory.getLogger(BCommentController.class);
     @Autowired
-    protected ICommentService iCommentServicel;
+    protected ICommentService iCommentService;
     @Autowired
     protected IReplyService iReplyService;
     @Autowired
@@ -61,8 +60,7 @@ public class CommentBackGroundController {
                     value = "评论内容2-100字之间", required = true, dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "commentTime",
                     value = "评论时间", required = true, dataTypeClass = String.class)
-    }
-    )
+    })
     public RespBean insertComment(@Valid CommentBean commentBean, BindingResult bindingResult) {
 
         /**
@@ -83,7 +81,7 @@ public class CommentBackGroundController {
         if (iPostService.selectPost(commentBean.getCommentPostId()) != null) {
             String judge = "^.{2,100}$";
             if (commentBean.getCommentContent().matches(judge)) {
-                iCommentServicel.insertComment(commentBean);
+                iCommentService.insertComment(commentBean);
                 return RespBean.ok("评论成功");
             }
             return RespBean.error("评论失败，评论内容不符合标准");
@@ -105,12 +103,12 @@ public class CommentBackGroundController {
                     value = "用户id", required = true, dataTypeClass = Integer.class),
     })
     public RespBean deleteAllCommentByMemberId(int commentMemberId) {
-        if (iCommentServicel.selectAllCommentByMemberId(commentMemberId) != null) {
-            List<CommentBean> list = iCommentServicel.selectAllCommentByMemberId(commentMemberId);
+        if (iCommentService.selectAllCommentByMemberId(commentMemberId) != null) {
+            List<CommentBean> list = iCommentService.selectAllCommentByMemberId(commentMemberId);
             for (int i = 0; i < list.size(); i++) {
                 iReplyService.deleteAllReplyByCommentId(list.get(i).getCommentId());
             }
-            iCommentServicel.deleteAllCommentByMemberId(commentMemberId);
+            iCommentService.deleteAllCommentByMemberId(commentMemberId);
             return RespBean.ok("删除成功");
         }
         return RespBean.error("删除失败，未找到该用户或该用户无评论");
@@ -127,11 +125,10 @@ public class CommentBackGroundController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "commentId",
                     value = "评论id", required = true, dataTypeClass = Integer.class),
-    }
-    )
+    })
     public RespBean deleteComment(Integer commentId,Integer memberId) {
-        if (iCommentServicel.selectComment(commentId) != null) {
-            return iCommentServicel.deleteComment(commentId,memberId);
+        if (iCommentService.selectComment(commentId) != null) {
+            return iCommentService.deleteComment(commentId,memberId);
         }
         return RespBean.error("删除失败，未找到该评论");
     }
@@ -152,11 +149,10 @@ public class CommentBackGroundController {
             @ApiImplicitParam(paramType = "query", name = "commentPostId",
                     value = "帖子id", required = true, dataTypeClass = Integer.class)
 
-    }
-    )
+    })
     public RespBean selectAllCommentByPostId(Integer commentPostId,Integer page) {
 
-        return iCommentServicel.selectAllCommentByPostId(commentPostId,page);
+        return iCommentService.selectAllCommentByPostId(commentPostId,page);
 
     }
 
@@ -172,11 +168,10 @@ public class CommentBackGroundController {
             @ApiImplicitParam(paramType = "query", name = "commentMemberId",
                     value = "用户id", required = true, dataTypeClass = Integer.class)
 
-    }
-    )
+    })
     public RespBean selectAllCommentByMemberId(int commentMemberId) {
-        if (iCommentServicel.selectAllCommentByMemberId(commentMemberId) != null) {
-            List<CommentBean> list = iCommentServicel.selectAllCommentByMemberId(commentMemberId);
+        if (iCommentService.selectAllCommentByMemberId(commentMemberId) != null) {
+            List<CommentBean> list = iCommentService.selectAllCommentByMemberId(commentMemberId);
             return RespBean.ok("查询成功", list);
         }
         return RespBean.error("查询失败，未找到该用户或该用户下无评论");
@@ -194,35 +189,12 @@ public class CommentBackGroundController {
             @ApiImplicitParam(paramType = "query", name = "commentId",
                     value = "评论id", required = true, dataTypeClass = Integer.class)
 
-    }
-    )
+    })
     public RespBean selectComment(int commentId) {
-        if (iCommentServicel.selectComment(commentId) != null) {
-            CommentBean commentBean = iCommentServicel.selectComment(commentId);
+        if (iCommentService.selectComment(commentId) != null) {
+            CommentBean commentBean = iCommentService.selectComment(commentId);
             return RespBean.ok("查询成功", commentBean);
         }
         return RespBean.error("查询失败，未找到该评论");
-    }
-
-    /**
-     * 查询全部评论
-     *
-     * @return RespBean
-     */
-    @GetMapping("/commentBackGround/selectAllComment")
-    @ApiOperation(value = "查询全部评论", notes = "评论需存在", httpMethod = "GET")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "page",
-                    value = "分页查询页数", required = true, dataTypeClass = Integer.class)
-
-    }
-    )
-    public RespBean selectAllComment(int page) {
-        IPage<CommentBean> iPage = iCommentServicel.selectAllComment(page);
-        List<CommentBean> list = iPage.getRecords();
-        if (list.size() != 0) {
-            return RespBean.ok("查询成功", list);
-        }
-        return RespBean.error("查询失败，未找到该页数");
     }
 }

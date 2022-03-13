@@ -17,9 +17,9 @@ import studio.banner.forumwebsite.service.IInformService;
  * @role:
  */
 @RestController
-@Api(tags = "后台通知接口", value = "InformBackGroundController")
+@Api(tags = "后台通知接口", value = "BInformController")
 @RequestMapping("/backGround")
-public class InformBackGroundController {
+public class BInformController {
 
     @Autowired
     private IInformService informService;

@@ -1,19 +1,13 @@
 package studio.banner.forumwebsite.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.redis.core.DefaultTypedTuple;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ZSetOperations;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import studio.banner.forumwebsite.bean.*;
 import studio.banner.forumwebsite.mapper.*;
@@ -50,6 +44,9 @@ public class PostServiceImpl implements IPostService {
     private IPostLikeService iPostLikeService;
     @Autowired
     private MemberInformationMapper memberInformationMapper;
+    @Autowired
+    private RedisTemplate<String,String> redisTemplate;
+    @Autowired IMemberInformationService iMemberInformationService;
 
 
 
@@ -66,8 +63,13 @@ public class PostServiceImpl implements IPostService {
         postBean.setPostTime(TimeUtils.getDateString());
         if (postMapper.insert(postBean)==1){
             UpdateWrapper<MemberInformationBean> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("member_id",postBean.getPostMemberId()).setSql("`member_post_num`=`member_post_num`+1");
+            updateWrapper.eq("member_id",postBean.getPostMemberId()).set("member_post_num",selectPostNumByMemberId(postBean.getPostMemberId()));
             memberInformationMapper.update(null,updateWrapper);
+            Integer todayPostInsertNum = (Integer) redisTemplate.opsForHash().get("forumPostInsertNum", "todayPostInsertNum");
+            if (todayPostInsertNum==null){
+                todayPostInsertNum=0;
+            }
+            redisTemplate.opsForHash().put("forumPostInsertNum", "todayPostInsertNum",String.valueOf(todayPostInsertNum+1));
             logger.info("插入帖子成功");
             return RespBean.ok("插入帖子成功");
         }
@@ -82,7 +84,13 @@ public class PostServiceImpl implements IPostService {
      */
     @Override
     public RespBean deletePostById(Integer postId) {
-        Integer postMemberId = selectPost(postId).getPostMemberId();
+        QueryWrapper<PostBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("post_id",postId);
+        PostBean postBean = postMapper.selectOne(queryWrapper);
+        if (postBean==null){
+            return RespBean.error("无该帖子");
+        }
+        Integer postMemberId = postBean.getPostMemberId();
         if (postMapper.deleteById(postId)!=1) {
             logger.error("帖子删除失败");
             return RespBean.error("帖子删除失败");
@@ -90,7 +98,7 @@ public class PostServiceImpl implements IPostService {
         iCommentService.deleteAllCommentByPostId(postId);
         logger.info("帖子删除成功");
         UpdateWrapper<MemberInformationBean> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("member_id",postMemberId).setSql("`member_post_num`=`member_post_num`-1");
+        updateWrapper.eq("member_id",postMemberId).set("member_post_num",selectPostNumByMemberId(postMemberId));
         memberInformationMapper.update(null,updateWrapper);
         iPostEsService.deleteEsPostById(postId);
         return RespBean.ok("帖子删除成功");
@@ -135,62 +143,21 @@ public class PostServiceImpl implements IPostService {
         return RespBean.error("帖子修改失败");
     }
 
-
-    /**
-     * 根据帖子id更改浏览量
-     *
-     * @param postId 帖子id
-     * @return boolean
-     */
-    @Override
-    public boolean updatePostPageView(Integer postId) {
-        if (selectPost(postId) != null) {
-            UpdateWrapper<PostBean> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("post_id", postId).setSql("`post_page_view`=`post_page_view`+1");
-            postMapper.update(null, updateWrapper);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 根据帖子id更改评论量
-     *
-     * @param postId 帖子id
-     * @return boolean
-     */
-    @Override
-    public boolean updatePostCommentNumber(Integer postId) {
-        if (selectPost(postId) != null) {
-            UpdateWrapper<PostBean> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("post_id", postId).setSql("`post_comment_number`=`post_comment_number`+1");
-            postMapper.update(null, updateWrapper);
-            return true;
-        }
-        return false;
-    }
-
     /**
      * 根据帖子id更改点赞量
      *
      * @param postId 帖子id
-     * @return boolean
      */
     @Override
-    public boolean updatePostLikeNumber(Integer postId) {
-        PostBean postBean = selectPost(postId);
+    public void updatePostLikeNumber(Integer postId) {
+        QueryWrapper<PostBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("post_id",postId);
+        PostBean postBean = postMapper.selectOne(queryWrapper);
         if (postBean!= null) {
             UpdateWrapper<PostBean> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("post_id", postId).set("post_like_number",iPostLikeService.selectPostLikeNum(postId));
             postMapper.update(null, updateWrapper);
-            return true;
         }
-        return false;
-    }
-
-    @Override
-    public boolean updatePostColNumByPostId(Integer postId) {
-        return false;
     }
 
 
@@ -203,13 +170,21 @@ public class PostServiceImpl implements IPostService {
     @Override
     public PostBean selectPost(Integer postId) {
         PostBean postBean = postMapper.selectById(postId);
+        if (postBean==null){
+            return null;
+        }
         postBean.setPostPageView(postBean.getPostPageView()+1);
         postBean.setPostColNum(iCollectService.selectCollectNumByPostId(postId));
-        postBean.setPostCommentNumber(iCommentService.selectCommentNum(postId));
         postMapper.updateById(postBean);
         UpdateWrapper<MemberInformationBean> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("member_id",postBean.getPostMemberId()).setSql("'member_view_num'='member_view_num'+1");
+        updateWrapper.eq("member_id",postBean.getPostMemberId()).set("member_view_num",iMemberInformationService.selectUserMsg(postBean.getPostMemberId()).getMemberViewNum()+1);
         memberInformationMapper.update(null,updateWrapper);
+        String todayViewNum = (String) redisTemplate.opsForHash().get("forumPostViewNum", "todayViewNum");
+        int integer = 0;
+        if (todayViewNum!=null){
+              integer = Integer.parseInt(todayViewNum);
+        }
+        redisTemplate.opsForHash().put("forumPostViewNum", "todayViewNum",String.valueOf(integer+1));
         return postBean;
     }
 

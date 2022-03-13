@@ -1,4 +1,4 @@
-package studio.banner.forumwebsite.controller.background;
+package studio.banner.forumwebsite.controller.frontdesk;
 
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
@@ -7,10 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.service.ITencentYunService;
@@ -23,14 +20,14 @@ import javax.servlet.http.HttpServletRequest;
  * @role:
  */
 @RestController
-@Api(tags = "后台腾讯云上传图片接口", value = "TencentPhotoBackGroundController")
-@RequestMapping("/backGround")
-public class TencentPhotoBackGroundController {
-    protected static final Logger logger = LoggerFactory.getLogger(TencentPhotoBackGroundController.class);
+@Api(tags = "前台腾讯云上传图片接口", value = "BTencentPhotoController")
+@RequestMapping("/frontDesk")
+public class TencentPhotoController {
+    protected static final Logger logger = LoggerFactory.getLogger(TencentPhotoController.class);
     @Autowired
     private ITencentYunService iTencentYunService;
 
-    @RequestMapping(value = "/tencentPhotoBackGround/upload")
+    @RequestMapping(value = "/tencentPhotoFrontDesk/upload")
     @ApiOperation(value = "腾讯云上传接口", notes = "上传图片不能为空", httpMethod = "POST")
     public JSONObject upload(@RequestParam(value = "editormd-image-file", required = false) MultipartFile file, HttpServletRequest request) {
         String url = iTencentYunService.upload(file);
@@ -41,7 +38,7 @@ public class TencentPhotoBackGroundController {
         return res;
     }
 
-    @DeleteMapping("/tencentPhotoBackGround/delete")
+    @DeleteMapping("/tencentPhotoFrontDesk/delete")
     @ApiOperation(value = "腾讯云删除接口", httpMethod = "DELETE")
     @ApiImplicitParam(name = "fileName", value = "图片名", dataTypeClass = String.class)
     public RespBean delete(@RequestParam String fileName) {

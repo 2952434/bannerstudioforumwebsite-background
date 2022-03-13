@@ -1,6 +1,5 @@
 package studio.banner.forumwebsite.controller.frontdesk;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -30,12 +29,12 @@ import java.util.Map;
  * @Description: 评论接口
  */
 @RestController
-@Api(tags = "前台评论接口", value = "CommentFrontDeskController")
+@Api(tags = "前台评论接口", value = "BCommentController")
 @RequestMapping("/frontDesk")
-public class CommentFrontDeskController {
-    private static final Logger logger = LoggerFactory.getLogger(CommentFrontDeskController.class);
+public class CommentController {
+    private static final Logger logger = LoggerFactory.getLogger(CommentController.class);
     @Autowired
-    protected ICommentService iCommentServicel;
+    protected ICommentService iCommentService;
     @Autowired
     protected IReplyService iReplyService;
     @Autowired
@@ -58,8 +57,6 @@ public class CommentFrontDeskController {
                     value = "评论时间", required = true, dataTypeClass = String.class)
     })
     public RespBean insertComment(@Valid CommentBean commentBean, BindingResult bindingResult) {
-
-        //将@Valid鉴权的错误信息返给前端
         if (bindingResult.hasErrors()) {
             Map<String, Object> map = new HashMap<>(999);
             List<FieldError> errors = bindingResult.getFieldErrors();
@@ -74,7 +71,7 @@ public class CommentFrontDeskController {
         if (iPostService.selectPost(commentBean.getCommentPostId()) != null) {
             String judge = "^.{2,100}$";
             if (commentBean.getCommentContent().matches(judge)) {
-                if (iCommentServicel.insertComment(commentBean)){
+                if (iCommentService.insertComment(commentBean)){
                     return RespBean.ok("评论成功");
                 }
             }
@@ -90,8 +87,8 @@ public class CommentFrontDeskController {
                     value = "评论id", required = true, dataTypeClass = Integer.class),
     })
     public RespBean deleteComment(Integer commentId,Integer memberId) {
-        if (iCommentServicel.selectComment(commentId) != null) {
-            return iCommentServicel.deleteComment(commentId,memberId);
+        if (iCommentService.selectComment(commentId) != null) {
+            return iCommentService.deleteComment(commentId,memberId);
         }
         return RespBean.error("删除失败，未找到该评论");
     }
@@ -107,7 +104,7 @@ public class CommentFrontDeskController {
     })
     public RespBean selectAllCommentByPostId(Integer commentPostId,Integer page) {
 
-        return iCommentServicel.selectAllCommentByPostId(commentPostId,page);
+        return iCommentService.selectAllCommentByPostId(commentPostId,page);
 
     }
 
@@ -119,8 +116,8 @@ public class CommentFrontDeskController {
 
     })
     public RespBean selectComment(int commentId) {
-        if (iCommentServicel.selectComment(commentId) != null) {
-            CommentBean commentBean = iCommentServicel.selectComment(commentId);
+        if (iCommentService.selectComment(commentId) != null) {
+            CommentBean commentBean = iCommentService.selectComment(commentId);
             return RespBean.ok("查询成功", commentBean);
         }
         return RespBean.error("查询失败，未找到该评论");

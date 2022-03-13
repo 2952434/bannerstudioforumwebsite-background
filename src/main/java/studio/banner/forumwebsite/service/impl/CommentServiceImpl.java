@@ -49,7 +49,6 @@ public class CommentServiceImpl implements ICommentService {
     public boolean insertComment(CommentBean commentBean) {
         if (commentBean != null) {
             commentBean.setCommentTime(TimeUtils.getDateString());
-
             commentMapper.insert(commentBean);
             updatePostCommentNum(commentBean.getCommentPostId());
             return true;
@@ -161,19 +160,6 @@ public class CommentServiceImpl implements ICommentService {
         QueryWrapper<CommentBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("comment_post_id",postId);
         return commentMapper.selectCount(queryWrapper);
-    }
-
-    /**
-     * 分页查询全部评论
-     *
-     * @param page 页数
-     * @return IPage<CommentBean>
-     */
-    @Override
-    public IPage<CommentBean> selectAllComment(Integer page) {
-        Page<CommentBean> page1 = new Page<>(page, 10);
-        IPage<CommentBean> page2 = commentMapper.selectPage(page1, null);
-        return page2;
     }
 
     @Override

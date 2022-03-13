@@ -52,7 +52,7 @@ public class CommentLikeBean {
     /**
      * 是否展示
      */
-    private Integer show;
+    private Integer showInformation;
 
     /**
      * 用户名

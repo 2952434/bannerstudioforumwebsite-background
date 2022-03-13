@@ -2,6 +2,7 @@ package studio.banner.forumwebsite.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import studio.banner.forumwebsite.bean.PostTypeBean;
 import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.mapper.PostTypeMapper;
@@ -15,6 +16,7 @@ import java.util.List;
  * @Date: 2022/3/11 14:42
  * @role:
  */
+@Service
 public class PostTypeServiceImpl implements IPostTypeService {
 
     @Autowired
@@ -41,7 +43,7 @@ public class PostTypeServiceImpl implements IPostTypeService {
         if (postTypeMapper.deleteById(typeId)==1) {
             return RespBean.ok("删除成功");
         }
-        return RespBean.error("删除失败");
+        return RespBean.error("删除失败无该类型");
     }
 
     @Override

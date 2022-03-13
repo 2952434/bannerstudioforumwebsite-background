@@ -1,6 +1,5 @@
-package studio.banner.forumwebsite.controller.frontdesk;
+package studio.banner.forumwebsite.controller.background;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -29,13 +28,13 @@ import java.util.Map;
  * @Description: 回复接口
  */
 @RestController
-@Api(tags = "前台帖子回复接口", value = "ReplyFrontDeskController")
-@RequestMapping("/frontDesk")
-public class ReplyFrontDeskController {
+@Api(tags = "后台台帖子回复接口", value = "BReplyController")
+@RequestMapping("/backGround")
+public class BReplyController {
     /**
      * 日志 打印信息
      */
-    private static final Logger logger = LoggerFactory.getLogger(ReplyFrontDeskController.class);
+    private static final Logger logger = LoggerFactory.getLogger(BReplyController.class);
     @Autowired
     protected IReplyService iReplyService;
     @Autowired
@@ -49,7 +48,7 @@ public class ReplyFrontDeskController {
      * @return RespBean
      */
 
-    @PostMapping("/replyFrontDesk/insertReply")
+    @PostMapping("/replyBackGround/insertReply")
     @ApiOperation(value = "回复增加", notes = "回复内容不能为空", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "replyId",
@@ -66,7 +65,8 @@ public class ReplyFrontDeskController {
                     value = "回复时间", required = true, dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "replyContent",
                     value = "回复内容", required = true, dataTypeClass = String.class)
-    })
+    }
+    )
     public RespBean insertComment(@Valid ReplyBean replyBean, BindingResult bindingResult) {
 
         /**
@@ -103,18 +103,33 @@ public class ReplyFrontDeskController {
      * @return RespBean
      */
 
-    @DeleteMapping("/replyFrontDesk/deleteReply")
+    @DeleteMapping("/replyBackGround/deleteReply")
     @ApiOperation(value = "回复删除", notes = "回复需存在", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "replyId",
                     value = "回复id", required = true, dataTypeClass = Integer.class),
     })
     public RespBean deleteComment(Integer replyId,Integer memberId) {
-
         return iReplyService.deleteReply(replyId,memberId);
-
     }
 
+    /**
+     * 根据用户id删除该用户下全部回复
+     *
+     * @param replyMemberId
+     * @return RespBean
+     */
+    @DeleteMapping("/replyBackGround/deleteAllReplyByMemberId")
+    @ApiOperation(value = "根据用户id删除该用户全部回复", notes = "用户需存在", httpMethod = "DELETE")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "replyMemberId",
+                    value = "用户id", required = true, dataTypeClass = Integer.class),
+    }
+    )
+    public RespBean deleteAllCommentByMemberId(Integer replyMemberId) {
+
+        return iReplyService.deleteAllReplyByMemberId(replyMemberId);
+    }
 
     /**
      * 根据评论id删除该评论下全部回复
@@ -122,17 +137,16 @@ public class ReplyFrontDeskController {
      * @param commentId
      * @return RespBean
      */
-    @DeleteMapping("/replyFrontDesk/deleteAllReplyByCommentId")
+    @DeleteMapping("/replyBackGround/deleteAllReplyByCommentId")
     @ApiOperation(value = "根据评论id删除该评论下全部回复", notes = "评论需存在", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "commentId",
                     value = "评论id", required = true, dataTypeClass = Integer.class),
-    })
+    }
+    )
     public RespBean deleteAllCommentByCommentId(Integer commentId) {
         return iReplyService.deleteAllReplyByCommentId(commentId);
-
     }
-
 
 
     /**
@@ -141,7 +155,7 @@ public class ReplyFrontDeskController {
      * @param commentId
      * @return RespBean
      */
-    @GetMapping("/replyFrontDesk/selectAllReplyByCommentId")
+    @GetMapping("/replyBackGround/selectAllReplyByCommentId")
     @ApiOperation(value = "根据评论id查找该评论下全部回复", notes = "评论需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "commentId",
@@ -154,6 +168,7 @@ public class ReplyFrontDeskController {
         return iReplyService.selectAllReplyByCommentId(commentId,page);
 
     }
+
 
 
 }

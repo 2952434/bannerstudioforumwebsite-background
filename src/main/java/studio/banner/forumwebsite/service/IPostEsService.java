@@ -1,10 +1,7 @@
 package studio.banner.forumwebsite.service;
 
-import org.springframework.data.domain.Pageable;
-import studio.banner.forumwebsite.bean.PostEsBean;
 import studio.banner.forumwebsite.bean.RespBean;
 
-import java.util.List;
 
 /**
  * @Author: Ljx
