@@ -6,8 +6,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import studio.banner.forumwebsite.bean.FixedInformationBean;
+import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.mapper.FixedInformationMapper;
 import studio.banner.forumwebsite.service.IFixedInformationService;
+
+import java.util.List;
 
 
 /**
@@ -70,7 +73,7 @@ public class FixedInformationServiceImpl implements IFixedInformationService {
      */
     @Override
     public boolean deleteUsersInformation(Integer id) {
-        QueryWrapper<FixedInformationBean> wrapper = new QueryWrapper();
+        QueryWrapper<FixedInformationBean> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", id);
         return fixedInformationMapper.delete(wrapper) == 1;
     }
@@ -86,6 +89,12 @@ public class FixedInformationServiceImpl implements IFixedInformationService {
         QueryWrapper<FixedInformationBean> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", fixedInformationBean.getUserId());
         return fixedInformationMapper.update(fixedInformationBean, wrapper) == 1;
+    }
+
+    @Override
+    public RespBean selectAllUserInformation() {
+        List<FixedInformationBean> fixedInformationBeans = fixedInformationMapper.selectList(null);
+        return RespBean.ok("查询成功",fixedInformationBeans);
     }
 
 }

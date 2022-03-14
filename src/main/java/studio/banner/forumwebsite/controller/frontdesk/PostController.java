@@ -31,7 +31,7 @@ import java.util.Set;
  */
 
 @RestController
-@Api(tags = "前台帖子接口", value = "BPostController")
+@Api(tags = "前台帖子接口", value = "BackPostController")
 @RequestMapping("/frontDesk")
 public class PostController {
     /**

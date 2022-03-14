@@ -29,7 +29,7 @@ import java.util.Map;
  * @Description: 评论接口
  */
 @RestController
-@Api(tags = "前台评论接口", value = "BCommentController")
+@Api(tags = "前台评论接口", value = "CommentController")
 @RequestMapping("/frontDesk")
 public class CommentController {
     private static final Logger logger = LoggerFactory.getLogger(CommentController.class);

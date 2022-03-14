@@ -16,7 +16,7 @@ import studio.banner.forumwebsite.service.IPostLikeService;
  * @role:
  */
 @RestController
-@Api(tags = "前台帖子点赞接口", value = "BPostController")
+@Api(tags = "前台帖子点赞接口", value = "BackPostController")
 @RequestMapping("/frontDesk")
 public class PostLikeController {
 

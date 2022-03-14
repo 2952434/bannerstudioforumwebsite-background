@@ -17,9 +17,9 @@ import java.util.List;
  * @role:
  */
 @RestController
-@Api(tags = "后台论坛数据接口",value = "BForumDateController")
+@Api(tags = "后台论坛数据接口",value = "BackForumDateController")
 @RequestMapping("/backGround")
-public class BForumDateController {
+public class BackForumDateController {
 
 
     @Autowired

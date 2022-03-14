@@ -24,19 +24,16 @@ import java.util.List;
  */
 
 @RestController
-@Api(tags = "前台用户信息接口", value = "BUserMsgController")
+@Api(tags = "前台用户信息接口", value = "UserMsgController")
 @RequestMapping("/frontDesk")
 public class UserMsgController {
     private static final Logger logger = LoggerFactory.getLogger(UserMsgController.class);
 
     @Autowired
-    private RestTemplate restTemplate;
-    @Autowired
     private IMemberInformationService iMemberInformationService;
     @Autowired
     private IRedisService iRedisService;
-    @Autowired
-    private IFixedInformationService iFixedInformationService;
+
 
     @ApiOperation(value = "初始化用户信息", notes = "用户默认信息都为空", httpMethod = "POST")
     @PostMapping("/userMsgFrontDesk/insertUserMsg")
@@ -64,9 +61,7 @@ public class UserMsgController {
             @ApiImplicitParam(paramType = "query", name = "memberSignature",
                     value = "个性签名", dataTypeClass = String.class)
 
-    }
-    )
-
+    })
     public RespBean insert(MemberInformationBean memberInformationBean) {
         return iMemberInformationService.insertUserMsg(memberInformationBean);
     }
@@ -76,8 +71,7 @@ public class UserMsgController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberId",
                     value = "用户Id", required = true, dataTypeClass = Integer.class)
-    }
-    )
+    })
     public RespBean selectUserMsg(Integer memberId) {
         if (iMemberInformationService.selectUserMsg(memberId) != null) {
             return RespBean.ok(iMemberInformationService.selectUserMsg(memberId));
@@ -143,7 +137,6 @@ public class UserMsgController {
 ////        更新数据库操作
 //        assert authUser != null;
 //        iFixedInformationService.insertUsersInformation(new FixedInformationBean(authUser));
-//        iUserGradeService.insertUserGradeDirection(authUser.getId(),authUser.getGrade(),authUser.getUserName(),authUser.getDirection());
 //        iMemberInformationService.insertUserMsg(new MemberInformationBean(authUser));
 //        return RespBean.ok("数据库更新成功");
 //    }

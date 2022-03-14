@@ -17,7 +17,7 @@ import studio.banner.forumwebsite.service.IStudyRouteService;
  * @role: 前台学习路线接口
  */
 @RestController
-@Api(tags = "前台学习路线接口", value = "BStudyController")
+@Api(tags = "前台学习路线接口", value = "BackStudyController")
 @RequestMapping("/frontDesk")
 public class StudyController {
 

@@ -30,7 +30,7 @@ import java.util.Map;
  * @Description: 回复接口
  */
 @RestController
-@Api(tags = "前台帖子回复接口", value = "BReplyController")
+@Api(tags = "前台帖子回复接口", value = "ReplyController")
 @RequestMapping("/frontDesk")
 public class ReplyController {
 

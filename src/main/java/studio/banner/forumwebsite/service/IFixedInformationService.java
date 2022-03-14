@@ -1,6 +1,7 @@
 package studio.banner.forumwebsite.service;
 
 import studio.banner.forumwebsite.bean.FixedInformationBean;
+import studio.banner.forumwebsite.bean.RespBean;
 
 
 /**
@@ -21,10 +22,10 @@ public interface IFixedInformationService {
     /**
      * 查询用户信息通过id
      *
-     * @param id 用户id
+     * @param userId 用户id
      * @return boolean
      */
-    FixedInformationBean selectUsersInformationById(Integer id);
+    FixedInformationBean selectUsersInformationById(Integer userId);
 
     /**
      * 删除用户信息
@@ -42,5 +43,10 @@ public interface IFixedInformationService {
      */
     boolean updateUsersInformation(FixedInformationBean fixedInformationBean);
 
+    /**
+     * 查询所有用户信息
+     * @return
+     */
+    RespBean selectAllUserInformation();
 
 }

@@ -40,6 +40,12 @@ public interface IStudyRouteService {
     RespBean selectStudyRouteByDirection(String direction,Integer id);
 
     /**
+     * 根据方向查询学习路线
+     * @param direction
+     * @return
+     */
+    RespBean selectStudyByDirection(String direction);
+    /**
      * 更改学习路线
      * @param studyRouteBean
      * @return

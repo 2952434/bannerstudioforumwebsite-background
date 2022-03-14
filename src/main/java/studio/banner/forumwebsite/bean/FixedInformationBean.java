@@ -37,7 +37,9 @@ public class FixedInformationBean {
     @TableField(value = "users_direction")
     private String usersDirection;
 
-
+    /**
+     * 用户年级
+     */
     private String userGrade;
 
     /**

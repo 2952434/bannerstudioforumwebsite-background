@@ -33,25 +33,23 @@ public class UsersInformationController {
     @Autowired
     private IFixedInformationService iFixedInformationService;
 
-    @PutMapping("/usersInformationFrontDesk/updateUsersInformation")
+    @PutMapping("/updateUsersInformation")
     @ApiOperation(value = "用户信息更改", notes = "用户不能为空", httpMethod = "PUT")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "usersName",
-                    value = "用户姓名", required = true, dataTypeClass = String.class),
+            @ApiImplicitParam(paramType = "query", name = "id",
+                    value = "主键id", required = false, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "usersDirection",
                     value = "用户方向", dataTypeClass = String.class),
-            @ApiImplicitParam(paramType = "query", name = "usersPhone",
-                    value = "用户手机号", dataTypeClass = String.class),
-            @ApiImplicitParam(paramType = "query", name = "usersQQ",
-                    value = "用户QQ号", dataTypeClass = String.class),
-            @ApiImplicitParam(paramType = "query", name = "usersWeChat",
-                    value = "用户微信号", dataTypeClass = String.class),
+            @ApiImplicitParam(paramType = "query", name = "usersName",
+                    value = "用户姓名", dataTypeClass = String.class),
+            @ApiImplicitParam(paramType = "query", name = "userGrade",
+                    value = "用户年级", dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "usersCompany",
                     value = "用户公司", dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "usersWork",
                     value = "用户工作岗位", dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "usersAddress",
-                    value = "公司名称", dataTypeClass = String.class),
+                    value = "公司地址", dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "usersPay",
                     value = "薪资", dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "userId",
@@ -77,6 +75,18 @@ public class UsersInformationController {
             logger.error("更新失败");
             return RespBean.error("更新失败");
         }
+    }
+
+    @GetMapping("/selectUsersInformationById")
+    @ApiOperation(value = "根据用户id查询用户信息",httpMethod = "GET")
+    @ApiImplicitParam(paramType = "query", name = "userId",
+            value = "用户id", required = true, dataTypeClass = Integer.class)
+    public RespBean selectUsersInformationById(Integer userId) {
+        FixedInformationBean fixedInformationBean = iFixedInformationService.selectUsersInformationById(userId);
+        if (fixedInformationBean!=null){
+            return RespBean.ok("查询成功",fixedInformationBean);
+        }
+        return RespBean.error("无该用户信息");
     }
 
 }

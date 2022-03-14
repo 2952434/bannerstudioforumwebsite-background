@@ -89,12 +89,23 @@ public class StudyRouteServiceImpl implements IStudyRouteService {
     }
 
     @Override
+    public RespBean selectStudyByDirection(String direction) {
+        QueryWrapper<StudyRouteBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("study_direction",direction).orderByAsc("study_title");
+        List<StudyRouteBean> studyRouteBeans = studyRouteMapper.selectList(queryWrapper);
+        if (studyRouteBeans==null){
+            return RespBean.error("暂无该学习路线");
+        }
+        return RespBean.ok("查询成功",studyRouteBeans);
+    }
+
+    @Override
     public RespBean updateStudyRoute(StudyRouteBean studyRouteBean) {
         QueryWrapper<StudyRouteBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("study_direction",studyRouteBean.getStudyDirection())
                 .eq("study_title",studyRouteBean.getStudyTitle());
         StudyRouteBean studyRouteBean1 = studyRouteMapper.selectOne(queryWrapper);
-        if (studyRouteBean.getId()==studyRouteBean1.getId()){
+        if (studyRouteBean.getId().equals(studyRouteBean1.getId())){
             if (studyRouteMapper.updateById(studyRouteBean)==1){
                 return RespBean.ok("学习路线更新成功");
             }

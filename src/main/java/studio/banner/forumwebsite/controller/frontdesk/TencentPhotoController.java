@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
  * @role:
  */
 @RestController
-@Api(tags = "前台腾讯云上传图片接口", value = "BTencentPhotoController")
+@Api(tags = "前台腾讯云上传图片接口", value = "TencentPhotoController")
 @RequestMapping("/frontDesk")
 public class TencentPhotoController {
     protected static final Logger logger = LoggerFactory.getLogger(TencentPhotoController.class);

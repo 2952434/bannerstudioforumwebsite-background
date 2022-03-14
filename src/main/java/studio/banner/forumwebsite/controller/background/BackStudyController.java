@@ -25,11 +25,11 @@ import java.util.Map;
  * @role:
  */
 @RestController
-@Api(tags = "后台学习计划接口", value = "BStudyController")
+@Api(tags = "后台学习计划接口", value = "BackStudyController")
 @RequestMapping("/backGround")
-public class BStudyController {
+public class BackStudyController {
 
-    protected static final Logger logger = LoggerFactory.getLogger(BStudyController.class);
+    protected static final Logger logger = LoggerFactory.getLogger(BackStudyController.class);
     @Autowired
     private IStudyRouteService iStudyRouteService;
 
@@ -49,19 +49,13 @@ public class BStudyController {
                     value = "发表时间", required = true, dataTypeClass = String.class)
     })
     public RespBean insertStudyRoute(@Valid StudyRouteBean studyRouteBean, BindingResult bindingResult){
-        if (bindingResult.hasErrors()) {
-            Map<String, Object> map = new HashMap<>();
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            logger.error("插入失败！");
-            for (FieldError error : errors) {
-                logger.error("错误的字段名：" + error.getField());
-                logger.error("错误信息：" + error.getDefaultMessage());
-                map.put(error.getField(), error.getDefaultMessage());
-            }
-            return RespBean.error(map);
+        RespBean map = getRespBean(bindingResult);
+        if (map != null) {
+            return map;
         }
         return iStudyRouteService.insertStudyRoute(studyRouteBean);
     }
+
 
 
     @GetMapping("/selectAllStudyRoute")
@@ -115,6 +109,14 @@ public class BStudyController {
                     value = "发表时间", required = true, dataTypeClass = String.class)
     })
     public RespBean updateStudyRoute(@Valid StudyRouteBean studyRouteBean,BindingResult bindingResult){
+        RespBean map = getRespBean(bindingResult);
+        if (map != null) {
+            return map;
+        }
+        return iStudyRouteService.updateStudyRoute(studyRouteBean);
+    }
+
+    private RespBean getRespBean(BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             Map<String, Object> map = new HashMap<>();
             List<FieldError> errors = bindingResult.getFieldErrors();
@@ -126,6 +128,14 @@ public class BStudyController {
             }
             return RespBean.error(map);
         }
-        return iStudyRouteService.updateStudyRoute(studyRouteBean);
+        return null;
     }
+    @GetMapping("/selectStudyByDirection")
+    @ApiOperation(value = "根据方向名查询学习路线",httpMethod = "GET")
+    @ApiImplicitParam(paramType = "query",name = "direction",
+            value = "方向名",required = true,dataTypeClass = String.class)
+    public RespBean selectStudyByDirection(String direction) {
+        return iStudyRouteService.selectStudyByDirection(direction);
+    }
+
 }
