@@ -7,17 +7,14 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
 //import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import studio.banner.forumwebsite.bean.*;
 import studio.banner.forumwebsite.service.IMemberInformationService;
 import studio.banner.forumwebsite.service.IRedisService;
-import studio.banner.forumwebsite.service.IUserGradeService;
 import studio.banner.forumwebsite.service.IFixedInformationService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 
@@ -38,8 +35,6 @@ public class UserMsgController {
     private IMemberInformationService iMemberInformationService;
     @Autowired
     private IRedisService iRedisService;
-    @Autowired
-    private IUserGradeService iUserGradeService;
     @Autowired
     private IFixedInformationService iFixedInformationService;
 

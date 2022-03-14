@@ -115,7 +115,7 @@ public class UserAttentionServiceImpl implements IUserAttentionService {
     public List<UserAttentionBean> stars(Integer memberFan,Integer page) {
         Page<UserAttentionBean> page1 = new Page<>(page, 12);
         QueryWrapper<UserAttentionBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("attention_id", memberFan).orderByDesc("attention_time");
+        queryWrapper.eq("attention_id", memberFan).orderByDesc("contact_time");
         Page<UserAttentionBean> userAttentionBeanPage = userContactMapper.selectPage(page1, queryWrapper);
         List<UserAttentionBean> records = userAttentionBeanPage.getRecords();
         for (UserAttentionBean record : records) {
@@ -137,7 +137,7 @@ public class UserAttentionServiceImpl implements IUserAttentionService {
     public List<UserAttentionBean> fans(Integer memberStar,Integer page) {
         Page<UserAttentionBean> page1 = new Page<>(page, 12);
         QueryWrapper<UserAttentionBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("be_attention_id", memberStar).orderByDesc("attention_time");
+        queryWrapper.eq("be_attention_id", memberStar).orderByDesc("contact_time");
         Page<UserAttentionBean> userAttentionBeanPage = userContactMapper.selectPage(page1, queryWrapper);
         List<UserAttentionBean> records = userAttentionBeanPage.getRecords();
         for (UserAttentionBean record : records) {

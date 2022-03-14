@@ -41,6 +41,7 @@ public class BForumDateController {
     @ApiOperation(value = "查询论坛15天每天新增发帖量",httpMethod = "GET")
     public RespBean selectForumPostInsertNum() {
         List<Integer> list = iRedisService.selectForumPostInsertNum();
+        System.out.println(list);
         if (list.size()==0){
             return RespBean.error("未查询到数据");
         }

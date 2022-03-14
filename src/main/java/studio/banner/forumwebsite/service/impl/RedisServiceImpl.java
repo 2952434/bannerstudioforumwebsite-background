@@ -103,26 +103,31 @@ public class RedisServiceImpl implements IRedisService {
     public void updateMemberViewNum() {
         List<MemberInformationBean> memberInformationBeans = memberInformationMapper.selectList(null);
         for (MemberInformationBean memberInformationBean : memberInformationBeans) {
-            Integer yesterdayViewNum = (Integer) redisTemplate.opsForHash().get(String.valueOf(memberInformationBean.getMemberId()), "yesterdayViewNum");
-            if (yesterdayViewNum==null){
-                for (int i = 0; i < 29; i++) {
+            String yesterdayViewNum1 = (String) redisTemplate.opsForHash().get(String.valueOf(memberInformationBean.getMemberId()), "yesterdayViewNum");
+            Integer yesterdayViewNum;
+            if (yesterdayViewNum1==null){
+                for (int i = 0; i < 14; i++) {
                     redisTemplate.opsForList().leftPush("viewNum"+memberInformationBean.getMemberId(), String.valueOf(0));
                 }
-                redisTemplate.opsForList().leftPush("viewNum"+memberInformationBean.getMemberId(), String.valueOf(memberInformationBean.getMemberViewNum()));
-                redisTemplate.opsForHash().put(String.valueOf(memberInformationBean.getMemberId()), "yesterdayViewNum",memberInformationBean.getMemberViewNum());
+                redisTemplate.opsForList().rightPush("viewNum"+memberInformationBean.getMemberId(), String.valueOf(memberInformationBean.getMemberViewNum()));
+                redisTemplate.opsForHash().put(String.valueOf(memberInformationBean.getMemberId()), "yesterdayViewNum",String.valueOf(memberInformationBean.getMemberViewNum()));
             }else {
+                yesterdayViewNum = Integer.valueOf(yesterdayViewNum1);
                 Integer view = memberInformationBean.getMemberLikeNum()-yesterdayViewNum;
-                redisTemplate.opsForHash().put(String.valueOf(memberInformationBean.getMemberId()), "yesterdayViewNum",memberInformationBean.getMemberViewNum());
-                redisTemplate.opsForList().rightPopAndLeftPush("viewNum"+memberInformationBean.getMemberId(), String.valueOf(view));
+                redisTemplate.opsForHash().put(String.valueOf(memberInformationBean.getMemberId()), "yesterdayViewNum",String.valueOf(memberInformationBean.getMemberViewNum()));
+                redisTemplate.opsForList().leftPop("viewNum"+memberInformationBean.getMemberId());
+                redisTemplate.opsForList().rightPush("viewNum"+memberInformationBean.getMemberId(), String.valueOf(view));
             }
         }
     }
 
     @Override
     public List<Integer> selectEveryDayAddViewNum(Integer memberId) {
-        List<String> viewNum = redisTemplate.opsForList().range("viewNum", 0L, 14L);
-        if (viewNum==null){
-            return null;
+        List<String> viewNum = redisTemplate.opsForList().range("viewNum"+memberId, 0L, 14L);
+        assert viewNum != null;
+        if (viewNum.size()==0){
+            updateMemberViewNum();
+            viewNum = redisTemplate.opsForList().range("viewNum"+memberId, 0L, 14L);
         }
         List<Integer> viewNumList = new ArrayList<>();
         CollectionUtils.collect(viewNum, o -> Integer.valueOf(o.toString()), viewNumList);
@@ -133,32 +138,32 @@ public class RedisServiceImpl implements IRedisService {
     @Scheduled(cron = "0 0 1 * * ?")
     public void updateForumViewNum() {
         Integer yesterdayViewNum = (Integer) redisTemplate.opsForHash().get("forumPostViewNum", "yesterdayViewNum");
-        Integer todayViewNum = (Integer) redisTemplate.opsForHash().get("forumPostViewNum", "todayViewNum");
-        if (todayViewNum==null){
-            todayViewNum = 0;
+        String todayViewNumString = (String) redisTemplate.opsForHash().get("forumPostViewNum", "todayViewNum");
+        Integer todayViewNum = 0;
+        if (todayViewNumString!=null){
+            todayViewNum = Integer.valueOf(todayViewNumString);
         }
         if (yesterdayViewNum==null){
-            for (int i = 0; i < 29; i++) {
+            for (int i = 0; i < 14; i++) {
                 redisTemplate.opsForList().leftPush("forumPostViewNumList", String.valueOf(0));
             }
-            redisTemplate.opsForList().leftPush("forumPostViewNumList", String.valueOf(todayViewNum));
-            redisTemplate.opsForHash().put("forumPostViewNum", "yesterdayViewNum",todayViewNum);
+            redisTemplate.opsForList().rightPush("forumPostViewNumList", String.valueOf(todayViewNum));
+            redisTemplate.opsForHash().put("forumPostViewNum", "yesterdayViewNum",String.valueOf(todayViewNum));
         }else {
             Integer forumViewNum = todayViewNum - yesterdayViewNum;
-            redisTemplate.opsForHash().put("forumPostViewNum", "yesterdayViewNum",todayViewNum);
-            redisTemplate.opsForList().rightPopAndLeftPush("forumPostViewNumList", String.valueOf(forumViewNum));
+            redisTemplate.opsForHash().put("forumPostViewNum", "yesterdayViewNum",String.valueOf(todayViewNum));
+            redisTemplate.opsForList().leftPop("forumPostViewNumList");
+            redisTemplate.opsForList().rightPush("forumPostViewNumList", String.valueOf(forumViewNum));
         }
     }
 
     @Override
     public List<Integer> selectForumEveryDayAddViewNum() {
         List<String> forumPostViewNum = redisTemplate.opsForList().range("forumPostViewNumList", 0L, 14L);
-        if (forumPostViewNum==null){
+        assert forumPostViewNum != null;
+        if (forumPostViewNum.size()==0){
             updateForumViewNum();
-            List<String> forumPostViewNum1 = redisTemplate.opsForList().range("forumPostViewNumList", 0L, 14L);
-            List<Integer> viewNumList = new ArrayList<>();
-            CollectionUtils.collect(forumPostViewNum1, o -> Integer.valueOf(o.toString()), viewNumList);
-            return viewNumList;
+            forumPostViewNum = redisTemplate.opsForList().range("forumPostViewNumList", 0L, 14L);
         }
         List<Integer> viewNumList = new ArrayList<>();
         CollectionUtils.collect(forumPostViewNum, o -> Integer.valueOf(o.toString()), viewNumList);
@@ -174,27 +179,27 @@ public class RedisServiceImpl implements IRedisService {
             todayPostInsertNum = 0;
         }
         if (yesterdayPostInsertNum==null){
-            for (int i = 0; i < 29; i++) {
-                redisTemplate.opsForList().leftPush("forumPostInsertNum", String.valueOf(0));
+            for (int i = 0; i < 14; i++) {
+                redisTemplate.opsForList().leftPush("forumPostInsertNumList", String.valueOf(0));
             }
-            redisTemplate.opsForList().leftPush("forumPostInsertNum", String.valueOf(todayPostInsertNum));
-            redisTemplate.opsForHash().put("forumPostInsertNum", "yesterdayPostInsertNum",todayPostInsertNum);
+            redisTemplate.opsForList().rightPush("forumPostInsertNumList", String.valueOf(todayPostInsertNum));
+            redisTemplate.opsForHash().put("forumPostInsertNum", "yesterdayPostInsertNum",String.valueOf(todayPostInsertNum));
         }else {
             Integer forumPostInsertNum = todayPostInsertNum - yesterdayPostInsertNum;
-            redisTemplate.opsForHash().put("forumPostInsertNum", "yesterdayPostInsertNum",todayPostInsertNum);
-            redisTemplate.opsForList().rightPopAndLeftPush("forumPostInsertNum", String.valueOf(forumPostInsertNum));
+            redisTemplate.opsForHash().put("forumPostInsertNum", "yesterdayPostInsertNum",String.valueOf(todayPostInsertNum));
+            redisTemplate.opsForList().leftPop("forumPostInsertNumList");
+            redisTemplate.opsForList().rightPush("forumPostInsertNumList", String.valueOf(forumPostInsertNum));
         }
     }
 
     @Override
     public List<Integer> selectForumPostInsertNum() {
-        List<String> forumPostInsertNum = redisTemplate.opsForList().range("forumPostInsertNum", 0L, 14L);
-        if (forumPostInsertNum==null){
+        List<String> forumPostInsertNum = redisTemplate.opsForList().range("forumPostInsertNumList", 0L, 14L);
+        System.out.println(forumPostInsertNum);
+        assert forumPostInsertNum != null;
+        if (forumPostInsertNum.size()==0){
             updateForumPostInsertNum();
-            List<String> forumPostInsertNum1 = redisTemplate.opsForList().range("forumPostInsertNum", 0L, 14L);
-            List<Integer> postInsertNumList = new ArrayList<>();
-            CollectionUtils.collect(forumPostInsertNum1, o -> Integer.valueOf(o.toString()), postInsertNumList);
-            return postInsertNumList;
+            forumPostInsertNum = redisTemplate.opsForList().range("forumPostInsertNumList", 0L, 14L);
         }
         List<Integer> postInsertNumList = new ArrayList<>();
         CollectionUtils.collect(forumPostInsertNum, o -> Integer.valueOf(o.toString()), postInsertNumList);

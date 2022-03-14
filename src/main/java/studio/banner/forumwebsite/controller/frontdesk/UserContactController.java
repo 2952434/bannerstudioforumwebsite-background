@@ -29,6 +29,20 @@ public class UserContactController {
 
     @ApiOperation(value = "新增关注", notes = "已关注过无法再次关注", httpMethod = "POST")
     @PostMapping("/userContactFrontDesk/insertContact")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "id",
+                    value = "关注主键id", required = false, dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "beAttentionId",
+                    value = "被关注的人id", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "attentionId",
+                    value = "关注者id", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "contactTime",
+                    value = "关注时间", required = false, dataTypeClass = String.class),
+            @ApiImplicitParam(paramType = "query", name = "attentionShow",
+                    value = "关注是否展示0：展示1：不展示", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "attentionInformation",
+                    value = "关注信息", required = true, dataTypeClass = String.class)
+    })
     public RespBean insert(UserAttentionBean userAttentionBean) {
         if (!iUserAttentionService.contacted(userAttentionBean.getAttentionId(), userAttentionBean.getBeAttentionId())) {
             return iUserAttentionService.insertContact(userAttentionBean);
@@ -41,9 +55,9 @@ public class UserContactController {
     @DeleteMapping("/userContactFrontDesk/deleteContact")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberFan",
-                    value = "memberFan", required = true, dataTypeClass = Integer.class),
+                    value = "关注者id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "memberStar",
-                    value = "memberStar", required = true, dataTypeClass = Integer.class),
+                    value = "被关注者id", required = true, dataTypeClass = Integer.class),
     })
     public RespBean deleteContact(Integer memberFan, Integer memberStar) {
         if (iUserAttentionService.contacted(memberFan, memberStar)) {
@@ -65,9 +79,9 @@ public class UserContactController {
     @GetMapping("/userContactFrontDesk/selectContact")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberFan",
-                    value = "memberFan", required = true, dataTypeClass = Integer.class),
+                    value = "关注者id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "memberStar",
-                    value = "memberStar", required = true, dataTypeClass = Integer.class),
+                    value = "被关注者id", required = true, dataTypeClass = Integer.class),
     })
     public boolean selectContact(Integer memberFan, Integer memberStar) {
 
@@ -79,7 +93,7 @@ public class UserContactController {
     @GetMapping("/userContactFrontDesk/selectFan")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberStar",
-                    value = "memberStar", required = true, dataTypeClass = Integer.class),
+                    value = "被关注者id", required = true, dataTypeClass = Integer.class),
     })
     public List<UserAttentionBean> selectFan(Integer memberStar,Integer page) {
 
@@ -91,7 +105,7 @@ public class UserContactController {
     @GetMapping("/userContactFrontDesk/selectFans")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberStar",
-                    value = "memberStar", required = true, dataTypeClass = Integer.class),
+                    value = "被关注者id", required = true, dataTypeClass = Integer.class),
     })
     public Integer selectFans(Integer memberStar) {
         return iUserAttentionService.selectFansByMemberId(memberStar);
@@ -102,7 +116,7 @@ public class UserContactController {
     @GetMapping("/userContactFrontDesk/selectStar")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberFan",
-                    value = "memberFan", required = true, dataTypeClass = Integer.class),
+                    value = "被关注者id", required = true, dataTypeClass = Integer.class),
     })
     public List<UserAttentionBean> selectStar(Integer memberFan,Integer page) {
 
