@@ -2,6 +2,7 @@ package studio.banner.forumwebsite.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import studio.banner.forumwebsite.bean.InformBean;
+import studio.banner.forumwebsite.bean.RespBean;
 
 /**
  * @Author: Ljx
@@ -18,12 +19,18 @@ public interface IInformService {
     boolean insertInform(InformBean informBean);
 
     /**
+     * 查询通知总数量
+     * @return
+     */
+    RespBean selectInformNum();
+
+    /**
      * 分页查询通知
      *
      * @param page 页数
      * @return IPage<InformBean>
      */
-    IPage<InformBean> selectInform(Integer page);
+    IPage<InformBean> selectInform(Integer page,Integer size);
 
     /**
      * 通过id查询通知

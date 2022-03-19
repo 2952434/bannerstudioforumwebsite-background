@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import studio.banner.forumwebsite.bean.InformBean;
 import studio.banner.forumwebsite.bean.PostBean;
+import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.mapper.InformMapper;
 import studio.banner.forumwebsite.service.IInformService;
 
@@ -33,6 +34,11 @@ public class InformServiceImpl implements IInformService {
         return insert == 1;
     }
 
+    @Override
+    public RespBean selectInformNum() {
+        return RespBean.ok("查询成功",informMapper.selectCount(null));
+    }
+
     /**
      * 分页查询通知
      *
@@ -40,10 +46,10 @@ public class InformServiceImpl implements IInformService {
      * @return IPage<InformBean>
      */
     @Override
-    public IPage<InformBean> selectInform(Integer page) {
+    public IPage<InformBean> selectInform(Integer page,Integer size) {
         QueryWrapper<InformBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("inform_time");
-        Page<InformBean> page1 = new Page<>(page, 6);
+        Page<InformBean> page1 = new Page<>(page, size);
         Page<InformBean> informBeanPage = informMapper.selectPage(page1, queryWrapper);
         return informBeanPage;
     }

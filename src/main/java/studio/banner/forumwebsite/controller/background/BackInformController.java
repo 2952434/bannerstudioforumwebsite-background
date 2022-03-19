@@ -47,12 +47,19 @@ public class BackInformController {
         }
     }
 
-    @GetMapping("/selectAllInform/{page}")
+    @GetMapping("/selectInformNum")
+    @ApiOperation(value = "查询通知总数量",httpMethod = "GET")
+    public RespBean selectInformNum() {
+        return informService.selectInformNum();
+    }
+
+
+    @GetMapping("/selectAllInform/{page}/{size}")
     @ApiOperation(value = "分页查询所有通知", notes = "页数不为空")
     @ApiImplicitParam(type = "query", name = "page",
             value = "分页页数", required = true, dataTypeClass = Integer.class)
-    public RespBean selectAllInform(@PathVariable("page") Integer page) {
-        IPage<InformBean> informBeanIPage = informService.selectInform(page);
+    public RespBean selectAllInform(@PathVariable("page") Integer page,@PathVariable Integer size) {
+        IPage<InformBean> informBeanIPage = informService.selectInform(page,size);
         if (informBeanIPage.getSize() != 0) {
             return RespBean.ok("查询成功！！！", informBeanIPage);
         } else {
