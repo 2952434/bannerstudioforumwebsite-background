@@ -23,7 +23,7 @@ public class CommentLikeController {
     @Autowired
     private ICommentLikeService iCommentLikeService;
 
-    @GetMapping("/judgeCommentLike")
+    @GetMapping("/judgeCommentLike/{userId}/{commentId}")
     @ApiOperation(value = "根据用户id和评论id查询该用户是否点赞该评论", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "userId",
@@ -31,7 +31,7 @@ public class CommentLikeController {
             @ApiImplicitParam(paramType = "query", name = "commentId",
                     value = "评论id", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean judgeCommentLike(Integer userId, Integer commentId) {
+    public RespBean judgeCommentLike(@PathVariable Integer userId,@PathVariable Integer commentId) {
         if (iCommentLikeService.judgeCommentLike(userId, commentId)) {
             return RespBean.ok("该用户未点赞该评论");
         }
@@ -55,7 +55,7 @@ public class CommentLikeController {
     }
 
 
-    @DeleteMapping("/deleteCommentLike")
+    @DeleteMapping("/deleteCommentLike/{userId}/{commentId}/{commentUserId}")
     @ApiOperation(value = "取消点赞", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "userId",
@@ -65,7 +65,7 @@ public class CommentLikeController {
             @ApiImplicitParam(paramType = "query", name = "commentUserId",
                     value = "评论者id", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean deleteCommentLike(Integer userId, Integer commentId,Integer commentUserId) {
+    public RespBean deleteCommentLike(@PathVariable Integer userId,@PathVariable Integer commentId,@PathVariable Integer commentUserId) {
         return iCommentLikeService.deleteCommentLike(userId, commentId,commentUserId);
     }
 

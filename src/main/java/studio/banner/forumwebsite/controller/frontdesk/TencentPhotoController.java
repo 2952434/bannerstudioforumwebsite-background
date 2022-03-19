@@ -38,10 +38,10 @@ public class TencentPhotoController {
         return res;
     }
 
-    @DeleteMapping("/tencentPhotoFrontDesk/delete")
+    @DeleteMapping("/delete/{fileName}")
     @ApiOperation(value = "腾讯云删除接口", httpMethod = "DELETE")
     @ApiImplicitParam(name = "fileName", value = "图片名", dataTypeClass = String.class)
-    public RespBean delete(@RequestParam String fileName) {
+    public RespBean delete(@PathVariable String fileName) {
         if (iTencentYunService.delete(fileName)) {
             return RespBean.ok("删除成功");
         }

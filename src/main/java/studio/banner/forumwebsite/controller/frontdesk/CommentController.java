@@ -80,7 +80,7 @@ public class CommentController {
         return RespBean.error("评论失败，未找到该帖子");
     }
 
-    @DeleteMapping("/commentFrontDesk/deleteComment")
+    @DeleteMapping("/deleteComment/{commentId}/{memberId}")
     @ApiOperation(value = "评论删除", notes = "评论需存在", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "commentId",
@@ -95,27 +95,27 @@ public class CommentController {
 
 
 
-    @GetMapping("/commentFrontDesk/selectAllCommentByPostId")
+    @GetMapping("/selectAllCommentByPostId/{commentPostId}/{page}")
     @ApiOperation(value = "根据帖子id查询该帖子下全部评论", notes = "帖子需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "commentPostId",
                     value = "帖子id", required = true, dataTypeClass = Integer.class)
 
     })
-    public RespBean selectAllCommentByPostId(Integer commentPostId,Integer page) {
+    public RespBean selectAllCommentByPostId(@PathVariable Integer commentPostId,@PathVariable Integer page) {
 
         return iCommentService.selectAllCommentByPostId(commentPostId,page);
 
     }
 
-    @GetMapping("/commentFrontDesk/selectComment")
+    @GetMapping("/selectComment/{commentId}")
     @ApiOperation(value = "查询评论", notes = "评论需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "commentId",
                     value = "评论id", required = true, dataTypeClass = Integer.class)
 
     })
-    public RespBean selectComment(int commentId) {
+    public RespBean selectComment(@PathVariable Integer commentId) {
         if (iCommentService.selectComment(commentId) != null) {
             CommentBean commentBean = iCommentService.selectComment(commentId);
             return RespBean.ok("查询成功", commentBean);

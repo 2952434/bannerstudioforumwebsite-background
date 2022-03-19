@@ -64,7 +64,7 @@ public class BackStudyController {
         return iStudyRouteService.selectAllStudyRoute();
     }
 
-    @GetMapping("/selectStudyRouteByDirection")
+    @GetMapping("/selectStudyRouteByDirection/{direction}/{userId}")
     @ApiOperation(value = "根据用户方向和id查询学习计划", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "direction",
@@ -72,25 +72,25 @@ public class BackStudyController {
             @ApiImplicitParam(paramType = "query", name = "userId",
                     value = "用户id", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean selectStudyRouteByDirection(String direction,Integer userId){
+    public RespBean selectStudyRouteByDirection(@PathVariable("direction") String direction,@PathVariable("userId") Integer userId){
 
         return iStudyRouteService.selectStudyRouteByDirection(direction,userId);
     }
 
 
-    @DeleteMapping("/deleteStudyRouteById")
+    @DeleteMapping("/deleteStudyRouteById/{id}")
     @ApiOperation(value = "根据id删除学习路线",httpMethod = "DELETE")
     @ApiImplicitParam(paramType = "query", name = "id",
             value = "主键id", required = true, dataTypeClass = Integer.class)
-    public RespBean deleteStudyRouteById(Integer id){
+    public RespBean deleteStudyRouteById(@PathVariable("id") Integer id){
         return iStudyRouteService.deleteStudyRouteById(id);
     }
 
-    @GetMapping("/selectStudyRouteById")
+    @GetMapping("/selectStudyRouteById/{id}")
     @ApiOperation(value = "根据id查询学习路线",httpMethod = "GET")
     @ApiImplicitParam(paramType = "query", name = "id",
             value = "主键id", required = true, dataTypeClass = Integer.class)
-    public RespBean selectStudyRouteById(Integer id){
+    public RespBean selectStudyRouteById(@PathVariable("id") Integer id){
         return iStudyRouteService.selectStudyRouteById(id);
     }
 
@@ -130,11 +130,11 @@ public class BackStudyController {
         }
         return null;
     }
-    @GetMapping("/selectStudyByDirection")
+    @GetMapping("/selectStudyByDirection/{direction}")
     @ApiOperation(value = "根据方向名查询学习路线",httpMethod = "GET")
     @ApiImplicitParam(paramType = "query",name = "direction",
             value = "方向名",required = true,dataTypeClass = String.class)
-    public RespBean selectStudyByDirection(String direction) {
+    public RespBean selectStudyByDirection(@PathVariable("direction") String direction) {
         return iStudyRouteService.selectStudyByDirection(direction);
     }
 

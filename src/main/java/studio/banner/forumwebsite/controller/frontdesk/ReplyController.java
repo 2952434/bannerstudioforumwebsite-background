@@ -43,7 +43,7 @@ public class ReplyController {
     private IReplyLikeService iReplyLikeService;
 
 
-    @PostMapping("/replyFrontDesk/insertReply")
+    @PostMapping("/insertReply")
     @ApiOperation(value = "回复增加", notes = "回复内容不能为空", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "replyId",
@@ -86,13 +86,13 @@ public class ReplyController {
     }
 
 
-    @DeleteMapping("/replyFrontDesk/deleteReply")
+    @DeleteMapping("/deleteReply/{replyId}/{memberId}")
     @ApiOperation(value = "回复删除", notes = "回复需存在", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "replyId",
                     value = "回复id", required = true, dataTypeClass = Integer.class),
     })
-    public RespBean deleteComment(Integer replyId,Integer memberId) {
+    public RespBean deleteComment(@PathVariable Integer replyId,@PathVariable Integer memberId) {
         return iReplyService.deleteReply(replyId,memberId);
     }
 

@@ -63,7 +63,7 @@ public class CollectController {
         return iCollectService.updateCollectFavorite(collectFavoriteBean);
     }
 
-    @GetMapping("/selectCollectFavoriteById")
+    @GetMapping("/selectCollectFavoriteById/{userId}/{selectId}")
     @ApiOperation(value = "查询收藏夹", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "userId",
@@ -71,11 +71,11 @@ public class CollectController {
             @ApiImplicitParam(paramType = "query", name = "selectId",
                     value = "查看用户id", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean selectCollectFavoriteById(Integer userId,Integer selectId){
+    public RespBean selectCollectFavoriteById(@PathVariable Integer userId,@PathVariable Integer selectId){
         return iCollectService.selectCollectFavoriteById(userId,selectId);
     }
 
-    @DeleteMapping("/selectCollectFavoriteById")
+    @DeleteMapping("/selectCollectFavoriteById/{favoriteId}/{moveFavoriteId}")
     @ApiOperation(value = "删除收藏夹", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "favoriteId",
@@ -83,11 +83,11 @@ public class CollectController {
             @ApiImplicitParam(paramType = "query", name = "moveFavoriteId",
                     value = "收藏移动到其他收藏夹id，如果为-1则删除该收藏夹文章", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean deleteCollectFavorite(Integer favoriteId,Integer moveFavoriteId){
+    public RespBean deleteCollectFavorite(@PathVariable Integer favoriteId,@PathVariable Integer moveFavoriteId){
         return iCollectService.deleteCollectFavorite(favoriteId,moveFavoriteId);
     }
 
-    @GetMapping("/judgeCollectPost")
+    @GetMapping("/judgeCollectPost/{userId}/{postId}")
     @ApiOperation(value = "判断该用户是否收藏该帖子", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
@@ -96,7 +96,7 @@ public class CollectController {
                     value = "用户id", required = true, dataTypeClass = Integer.class)
 
     })
-    private boolean judgeCollectPost(Integer userId,Integer postId){
+    private boolean judgeCollectPost(@PathVariable Integer userId,@PathVariable Integer postId){
         return iCollectService.judgeCollectPost(userId, postId);
     }
 
@@ -123,7 +123,7 @@ public class CollectController {
         }
     }
 
-    @DeleteMapping("/deleteCollect")
+    @DeleteMapping("/deleteCollect/{postId}/{userId}")
     @ApiOperation(value = "删除收藏", notes = "id不能为空", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
@@ -131,7 +131,7 @@ public class CollectController {
             @ApiImplicitParam(paramType = "query", name = "userId",
                     value = "用户id", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean deleteCollect(Integer postId,Integer userId) {
+    public RespBean deleteCollect(@PathVariable Integer postId,@PathVariable Integer userId) {
         if (iCollectService.deleteCollect(postId,userId)) {
             logger.info("收藏删除成功");
             return RespBean.ok("删除成功");
@@ -142,7 +142,7 @@ public class CollectController {
     }
 
 
-    @DeleteMapping("/deleteBatchCollectByIds")
+    @DeleteMapping("/deleteBatchCollectByIds/{colIds}/{userId}")
     @ApiOperation(value = "批量删除收藏", notes = "id不能为空", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "colIds",
@@ -150,16 +150,16 @@ public class CollectController {
             @ApiImplicitParam(paramType = "query", name = "userId",
                     value = "用户id", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean deleteBatchCollectByIds(List<Integer> colIds,Integer userId){
+    public RespBean deleteBatchCollectByIds(@PathVariable List<Integer> colIds,@PathVariable Integer userId){
         return iCollectService.deleteBatchCollectByIds(colIds,userId);
     }
 
 
-    @DeleteMapping("/deleteCollectByUserId")
+    @DeleteMapping("/deleteCollectByUserId/{userId}")
     @ApiOperation(value = "清除用户收藏", notes = "用户id不能为空", httpMethod = "DELETE")
     @ApiImplicitParam(paramType = "query", name = "userId",
             value = "用户id", required = true, dataTypeClass = Integer.class)
-    public RespBean deleteCollectByUserId(Integer userId) {
+    public RespBean deleteCollectByUserId(@PathVariable Integer userId) {
         if (iCollectService.deleteCollectByUserId(userId)) {
             logger.info("清除成功");
             return RespBean.ok("清除所有收藏成功");
@@ -193,11 +193,11 @@ public class CollectController {
         return iCollectService.updateCollectByIds(colIds, favoriteId);
     }
 
-    @GetMapping("/selectCollectByFavoriteId")
+    @GetMapping("/selectCollectByFavoriteId/{favoriteId}")
     @ApiOperation(value = "根据收藏夹id获取收藏夹中的数据",  httpMethod = "GET")
     @ApiImplicitParam(paramType = "query", name = "favoriteId",
             value = "收藏夹id", required = true, dataTypeClass = Integer.class)
-    public RespBean selectCollectByFavoriteId(Integer favoriteId) {
+    public RespBean selectCollectByFavoriteId(@PathVariable Integer favoriteId) {
         return iCollectService.selectCollectByFavoriteId(favoriteId);
     }
 }

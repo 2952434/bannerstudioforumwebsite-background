@@ -24,7 +24,7 @@ public class BackInformController {
     @Autowired
     private IInformService informService;
 
-    @PostMapping("/informBackGroundController/inertInform")
+    @PostMapping("/inertInform")
     @ApiOperation(value = "添加通知")
     @ApiImplicitParams({
             @ApiImplicitParam(type = "query", name = "informId",
@@ -47,11 +47,11 @@ public class BackInformController {
         }
     }
 
-    @GetMapping("/informBackGroundController/selectAllInform")
+    @GetMapping("/selectAllInform/{page}")
     @ApiOperation(value = "分页查询所有通知", notes = "页数不为空")
     @ApiImplicitParam(type = "query", name = "page",
             value = "分页页数", required = true, dataTypeClass = Integer.class)
-    public RespBean selectAllInform(Integer page) {
+    public RespBean selectAllInform(@PathVariable("page") Integer page) {
         IPage<InformBean> informBeanIPage = informService.selectInform(page);
         if (informBeanIPage.getSize() != 0) {
             return RespBean.ok("查询成功！！！", informBeanIPage);
@@ -60,11 +60,11 @@ public class BackInformController {
         }
     }
 
-    @GetMapping("/informBackGroundController/selectInformById")
+    @GetMapping("/selectInformById/{id}")
     @ApiOperation(value = "通过通知id查询通知")
     @ApiImplicitParam(type = "query", name = "id",
             value = "通知id", required = true, dataTypeClass = Integer.class)
-    public RespBean selectInformById(Integer id) {
+    public RespBean selectInformById(@PathVariable("id") Integer id) {
         InformBean informBean = informService.selectInformById(id);
         if (informBean == null) {
             return RespBean.error("查询失败，未找到该通知");
@@ -73,7 +73,7 @@ public class BackInformController {
         }
     }
 
-    @PostMapping("/informBackGroundController/updateInformById")
+    @PostMapping("/updateInformById")
     @ApiOperation(value = "更新通知信息")
     @ApiImplicitParams({
             @ApiImplicitParam(type = "query", name = "informId",
@@ -96,11 +96,11 @@ public class BackInformController {
         }
     }
 
-    @DeleteMapping("/informBackGroundController/deleteInformById")
+    @DeleteMapping("/deleteInformById/{id}")
     @ApiOperation(value = "根据id删除通知", notes = "id需存在")
     @ApiImplicitParam(type = "query", name = "id",
             value = "通知id", required = true, dataTypeClass = Integer.class)
-    public RespBean deleteInformById(Integer id) {
+    public RespBean deleteInformById(@PathVariable("id") Integer id) {
         boolean deleteInformById = informService.deleteInformById(id);
         if (deleteInformById) {
             return RespBean.ok("删除成功!!!");

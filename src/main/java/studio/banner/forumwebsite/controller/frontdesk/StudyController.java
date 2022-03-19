@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import studio.banner.forumwebsite.bean.RespBean;
@@ -24,7 +25,7 @@ public class StudyController {
     @Autowired
     private IStudyRouteService iStudyRouteService;
 
-    @GetMapping("/selectStudyRouteByDirection")
+    @GetMapping("/selectStudyRouteByDirection/{direction}/{userId}")
     @ApiOperation(value = "根据用户方向和id查询学习计划", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "direction",
@@ -32,7 +33,7 @@ public class StudyController {
             @ApiImplicitParam(paramType = "query", name = "userId",
                     value = "用户id", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean selectStudyRouteByDirection(String direction,int userId){
+    public RespBean selectStudyRouteByDirection(@PathVariable String direction,@PathVariable Integer userId){
 
         return iStudyRouteService.selectStudyRouteByDirection(direction,userId);
     }

@@ -52,14 +52,14 @@ public class UserContactController {
     }
 
     @ApiOperation(value = "取消关注", notes = "未关注过无法取消关注", httpMethod = "DELETE")
-    @DeleteMapping("/userContactFrontDesk/deleteContact")
+    @DeleteMapping("/deleteContact/{memberFan}/{memberStar}")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberFan",
                     value = "关注者id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "memberStar",
                     value = "被关注者id", required = true, dataTypeClass = Integer.class),
     })
-    public RespBean deleteContact(Integer memberFan, Integer memberStar) {
+    public RespBean deleteContact(@PathVariable Integer memberFan,@PathVariable Integer memberStar) {
         if (iUserAttentionService.contacted(memberFan, memberStar)) {
             boolean judgment = iUserAttentionService.deleteContact(memberFan, memberStar);
             if (judgment) {
@@ -76,14 +76,14 @@ public class UserContactController {
     }
 
     @ApiOperation(value = "查询是否存在关注关系", notes = "返回列表", httpMethod = "GET")
-    @GetMapping("/userContactFrontDesk/selectContact")
+    @GetMapping("/selectContact/{memberFan}/{memberStar}")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberFan",
                     value = "关注者id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "memberStar",
                     value = "被关注者id", required = true, dataTypeClass = Integer.class),
     })
-    public boolean selectContact(Integer memberFan, Integer memberStar) {
+    public boolean selectContact(@PathVariable Integer memberFan,@PathVariable Integer memberStar) {
 
         return iUserAttentionService.contacted(memberFan, memberStar);
 

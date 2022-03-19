@@ -36,7 +36,7 @@ public class UserMsgController {
 
 
     @ApiOperation(value = "初始化用户信息", notes = "用户默认信息都为空", httpMethod = "POST")
-    @PostMapping("/userMsgFrontDesk/insertUserMsg")
+    @PostMapping("/insertUserMsg")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberId",
                     value = "用户Id", dataTypeClass = Integer.class),
@@ -67,12 +67,12 @@ public class UserMsgController {
     }
 
     @ApiOperation(value = "根据Id查询用户信息", notes = "同时更新关注人数和粉丝人数")
-    @PutMapping("/userMsgFrontDesk/selectUserMsg")
+    @PutMapping("/selectUserMsg/{memberId}")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberId",
                     value = "用户Id", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean selectUserMsg(Integer memberId) {
+    public RespBean selectUserMsg(@PathVariable Integer memberId) {
         if (iMemberInformationService.selectUserMsg(memberId) != null) {
             return RespBean.ok(iMemberInformationService.selectUserMsg(memberId));
         }
@@ -80,10 +80,10 @@ public class UserMsgController {
     }
 
     @ApiOperation(value = "根据用户id查询生日")
-    @GetMapping("/userMsgFrontDesk/selectUserBirthdayById")
+    @GetMapping("/selectUserBirthdayById/{id}")
     @ApiImplicitParam(paramType = "query", name = "id",
             value = "用户id", required = true, dataTypeClass = Integer.class)
-    public RespBean selectUserBirthdayById(Integer id) {
+    public RespBean selectUserBirthdayById(@PathVariable Integer id) {
         boolean birthdayById = iMemberInformationService.selectBirthdayById(id);
         if (birthdayById) {
             return RespBean.ok("今天是您的生日，生日快乐！！！！");
@@ -92,11 +92,11 @@ public class UserMsgController {
     }
 
 
-    @GetMapping("/userMsgFrontDesk/selectUserBirthday")
+    @GetMapping("/selectUserBirthday/{memberId}")
     @ApiOperation(value = "查询过生日的人")
     @ApiImplicitParam(paramType = "query", name = "memberId",
             value = "用户id", required = true, dataTypeClass = Integer.class)
-    public RespBean selectUserBirthday(Integer memberId) {
+    public RespBean selectUserBirthday(@PathVariable Integer memberId) {
         List<MemberInformationBean> list = iMemberInformationService.selectBirthday(memberId);
         if (list.size() != 0) {
             return RespBean.ok("今天生日的人为：" + list);
@@ -105,7 +105,7 @@ public class UserMsgController {
         }
     }
 
-    @PostMapping("/userMsgFrontDesk/blessUserBirthday")
+    @PostMapping("/blessUserBirthday")
     @ApiOperation(value = "祝福过生日的人")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberId",
@@ -141,11 +141,11 @@ public class UserMsgController {
 //        return RespBean.ok("数据库更新成功");
 //    }
 
-    @GetMapping("/selectEveryDayAddViewNum")
+    @GetMapping("/selectEveryDayAddViewNum/{memberId}")
     @ApiOperation(value = "根据用户id查询15天每天浏览增长量",httpMethod = "GET")
     @ApiImplicitParam(paramType = "query",name = "memberId",
             value = "用户id",required = true,dataTypeClass = Integer.class)
-    public RespBean selectEveryDayAddViewNum(Integer memberId) {
+    public RespBean selectEveryDayAddViewNum(@PathVariable Integer memberId) {
         List<Integer> list = iRedisService.selectEveryDayAddViewNum(memberId);
         if (list.size()==0){
             return RespBean.error("暂无数据");

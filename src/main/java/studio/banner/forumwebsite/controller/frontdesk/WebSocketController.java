@@ -5,10 +5,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import studio.banner.forumwebsite.bean.Message;
 import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.service.IMessageService;
@@ -28,7 +25,7 @@ public class WebSocketController {
     @Autowired
     private IMessageService messageService;
 
-    @GetMapping("/IndexController/queryMessageList")
+    @GetMapping("/queryMessageList/{fromId}/{toId}/{page}/{rows}")
     @ApiOperation(value = "查询聊天记录", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(type = "query", name = "fromId",
@@ -40,13 +37,13 @@ public class WebSocketController {
             @ApiImplicitParam(type = "query", name = "rows",
                     value = "每页的信息条数", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean queryMessageList(Integer fromId, Integer toId, Integer page, Integer rows) {
+    public RespBean queryMessageList(@PathVariable Integer fromId, Integer toId, Integer page, Integer rows) {
         List<Message> messages = messageService.queryMessageList(fromId, toId, page, rows);
         return RespBean.ok(messages);
     }
 
 
-    @GetMapping("/IndexController/queryUserList")
+    @GetMapping("/queryUserList/{userId}/{page}")
     @ApiOperation(value = "查询用户列表页面", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(type = "query", name = "userId",
@@ -59,7 +56,7 @@ public class WebSocketController {
         return RespBean.ok(maps);
     }
 
-    @PostMapping("/IndexController/saveMessage")
+    @PostMapping("/saveMessage")
     @ApiOperation(value = "发送信息", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(type = "query", name = "userId",

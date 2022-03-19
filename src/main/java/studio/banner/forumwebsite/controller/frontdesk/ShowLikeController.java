@@ -4,11 +4,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import studio.banner.forumwebsite.bean.*;
 import studio.banner.forumwebsite.service.ICommentLikeService;
 import studio.banner.forumwebsite.service.IPostLikeService;
@@ -33,7 +31,7 @@ public class ShowLikeController {
     @Autowired
     private IReplyLikeService iReplyLikeService;
 
-    @GetMapping("/selectUserLikeInformation")
+    @GetMapping("/selectUserLikeInformation/{userId}/{page}")
     @ApiOperation(value = "根据用户id查询点赞信息",httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "userId",
@@ -41,7 +39,7 @@ public class ShowLikeController {
             @ApiImplicitParam(paramType = "query", name = "page",
                     value = "分页查询页数", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean selectUserLikeInformation(Integer userId,Integer page){
+    public RespBean selectUserLikeInformation(@PathVariable Integer userId,@PathVariable Integer page){
         List<CommentLikeBean> commentLikeBeans = iCommentLikeService.selectCommentLikeByBeLikeUserId(userId, page);
         List<PostLikeBean> postLikeBeans = iPostLikeService.selectPostLikeByUserId(userId, page);
         List<ReplyLikeBean> replyLikeBeans = iReplyLikeService.selectReplyLikeByBeLikeUserId(userId, page);
@@ -62,15 +60,15 @@ public class ShowLikeController {
         return RespBean.ok("查询成功",list);
     }
 
-    @PostMapping("/deleteLikeInformation")
-    @ApiOperation(value = "根据点赞id取消点赞信息显示", httpMethod = "POST")
+    @DeleteMapping("/deleteLikeInformation/{likeId}/{judge}")
+    @ApiOperation(value = "根据点赞id取消点赞信息显示", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "likeId",
                     value = "点赞id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "judge",
                     value = "0删除帖子点赞，1删除评论点赞，2删除回复点赞", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean deleteLikeInformation(Integer likeId,Integer judge){
+    public RespBean deleteLikeInformation(@PathVariable Integer likeId,@PathVariable Integer judge){
         if (judge==0){
             if (!iPostLikeService.deletePostLikeInformation(likeId)) {
                 return RespBean.error("删除失败");
@@ -90,11 +88,11 @@ public class ShowLikeController {
     }
 
 
-    @PostMapping("/deleteLikeAllInformation")
-    @ApiOperation(value = "通过用户id取消点赞信息全部展示", httpMethod = "POST")
+    @DeleteMapping("/deleteLikeAllInformation/{userId}")
+    @ApiOperation(value = "通过用户id取消点赞信息全部展示", httpMethod = "DELETE")
     @ApiImplicitParam(paramType = "query", name = "userId",
             value = "用户id", required = true, dataTypeClass = Integer.class)
-    public RespBean deleteLikeAllInformation(Integer userId) {
+    public RespBean deleteLikeAllInformation(@PathVariable Integer userId) {
         iPostLikeService.deletePostLikeAllInformation(userId);
         iCommentLikeService.deleteAllCommentLikeByBeLikeUserId(userId);
         iReplyLikeService.deleteAllReplyLikeByBeLikeUserId(userId);

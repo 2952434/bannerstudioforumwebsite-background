@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import studio.banner.forumwebsite.bean.InformBean;
@@ -25,11 +26,11 @@ public class InformController {
     @Autowired
     private IInformService informService;
 
-    @GetMapping("/informFrontDeskController/selectAllInform")
+    @GetMapping("/selectAllInform/{page}")
     @ApiOperation(value = "分页查询所有通知", notes = "页数不为空")
     @ApiImplicitParam(type = "query", name = "page",
             value = "分页页数", required = true, dataTypeClass = Integer.class)
-    public RespBean selectAllInform(Integer page) {
+    public RespBean selectAllInform(@PathVariable Integer page) {
         IPage<InformBean> informBeanIPage = informService.selectInform(page);
         if (informBeanIPage.getSize() != 0) {
             return RespBean.ok("查询成功！！！", informBeanIPage);
@@ -38,11 +39,11 @@ public class InformController {
         }
     }
 
-    @GetMapping("/informFrontDeskController/selectInformById")
+    @GetMapping("/selectInformById/{id}")
     @ApiOperation(value = "通过通知id查询通知")
     @ApiImplicitParam(type = "query", name = "id",
             value = "通知id", required = true, dataTypeClass = Integer.class)
-    public RespBean selectInformById(Integer id) {
+    public RespBean selectInformById(@PathVariable Integer id) {
         InformBean informBean = informService.selectInformById(id);
         if (informBean == null) {
             return RespBean.error("查询失败，未找到该通知");

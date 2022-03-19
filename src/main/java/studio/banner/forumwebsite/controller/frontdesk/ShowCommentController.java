@@ -5,10 +5,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import studio.banner.forumwebsite.bean.*;
 import studio.banner.forumwebsite.service.ICommentService;
 import studio.banner.forumwebsite.service.IReplyService;
@@ -33,7 +30,7 @@ public class ShowCommentController {
     private IReplyService iReplyService;
 
 
-    @GetMapping("/selectCommentInformation")
+    @GetMapping("/selectCommentInformation/{userId}/{page}")
     @ApiOperation(value = "根据用户id查询评论信息",httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "userId",
@@ -41,7 +38,7 @@ public class ShowCommentController {
             @ApiImplicitParam(paramType = "query", name = "page",
                     value = "分页查询页数", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean selectCommentInformation(Integer userId, Integer page){
+    public RespBean selectCommentInformation(@PathVariable Integer userId,@PathVariable Integer page){
         List<CommentBean> commentBeans = iCommentService.selectCommentByMemberId(userId, page);
         List<ReplyBean> replyBeans = iReplyService.selectReplyInformationById(userId, page);
         List<ShowCommentBean> list = new ArrayList<>();
@@ -58,15 +55,15 @@ public class ShowCommentController {
         return RespBean.ok("查询成功",list);
     }
 
-    @PostMapping("/deleteCommentInformation")
-    @ApiOperation(value = "根据评论id取消评论信息显示", httpMethod = "POST")
+    @DeleteMapping("/deleteCommentInformation/{commentId}/{judge}")
+    @ApiOperation(value = "根据评论id取消评论信息显示", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "commentId",
                     value = "评论id", required = true, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "judge",
                     value = "0删除评论，1删除回复", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean deleteCommentInformation(Integer commentId,Integer judge){
+    public RespBean deleteCommentInformation(@PathVariable Integer commentId,@PathVariable Integer judge){
         if (judge==0){
             if (!iCommentService.deleteCommentInformationById(commentId)) {
                 return RespBean.error("删除失败");
@@ -82,11 +79,11 @@ public class ShowCommentController {
     }
 
 
-    @PostMapping("/deleteCommentAllInformation")
-    @ApiOperation(value = "通过用户id删除评论信息全部展示", httpMethod = "POST")
+    @DeleteMapping("/deleteCommentAllInformation/{userId}")
+    @ApiOperation(value = "通过用户id删除评论信息全部展示", httpMethod = "DELETE")
     @ApiImplicitParam(paramType = "query", name = "userId",
             value = "用户id", required = true, dataTypeClass = Integer.class)
-    public RespBean deleteCommentAllInformation(Integer userId) {
+    public RespBean deleteCommentAllInformation(@PathVariable Integer userId) {
         iCommentService.deleteAllCommentInformationById(userId);
         iReplyService.deleteAllReplyInformationById(userId);
         return RespBean.ok("删除成功");

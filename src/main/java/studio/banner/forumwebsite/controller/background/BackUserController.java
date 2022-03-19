@@ -4,10 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.service.IFixedInformationService;
 
@@ -31,11 +28,11 @@ public class BackUserController {
         return iFixedInformationService.selectAllUserInformation();
     }
 
-    @DeleteMapping("/deleteUsersInformation")
+    @DeleteMapping("/deleteUsersInformation/{id}")
     @ApiOperation(value = "根据用户id删除该用户",httpMethod = "DELETE")
     @ApiImplicitParam(paramType = "query",name = "id",
             value = "用户id",required = true,dataTypeClass = Integer.class)
-    public boolean deleteUsersInformation(Integer id) {
+    public boolean deleteUsersInformation(@PathVariable("id") Integer id) {
         return iFixedInformationService.deleteUsersInformation(id);
     }
 

@@ -57,30 +57,30 @@ public class BackPostController {
         return iPostTypeService.insertPostType(postTypeBean);
     }
 
-    @DeleteMapping("/deletePostTypeById")
+    @DeleteMapping("/deletePostTypeById/{typeId}")
     @ApiOperation(value = "根据id删除帖子类型",httpMethod = "DELETE")
     @ApiImplicitParam(paramType = "query", name = "typeId",
             value = "帖子类型主键id", required = true, dataTypeClass = Integer.class)
-    public RespBean deletePostTypeById(Integer typeId) {
+    public RespBean deletePostTypeById(@PathVariable("typeId") Integer typeId) {
         return iPostTypeService.deletePostTypeById(typeId);
     }
 
 
-    @DeleteMapping("/deletePostById")
+    @DeleteMapping("/deletePostById/{postId}")
     @ApiOperation(value = "根据帖子id删除帖子",httpMethod = "DELETE")
     @ApiImplicitParam(paramType = "query", name = "postId",
             value = "帖子主键id", required = true, dataTypeClass = Integer.class)
-    public RespBean deletePostById(Integer postId) {
+    public RespBean deletePostById(@PathVariable("postId") Integer postId) {
         return iPostService.deletePostById(postId);
     }
 
-    @GetMapping("/selectPost")
+    @GetMapping("/selectPost/{postId}")
     @ApiOperation(value = "帖子查找", notes = "帖子需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
                     value = "帖子id", required = true, dataTypeClass = Integer.class),
     })
-    public RespBean selectPost(Integer postId) {
+    public RespBean selectPost(@PathVariable("postId") Integer postId) {
         PostBean postBean = iPostService.selectPost(postId);
         if (postBean!=null){
             return RespBean.ok("查找成功", postBean);
@@ -88,13 +88,13 @@ public class BackPostController {
         return RespBean.error("查找失败，未查询到该帖子");
     }
 
-    @GetMapping("/postBackGround/selectAllPostByDescById")
+    @GetMapping("/selectAllPostByDescById/{postMemberId}")
     @ApiOperation(value = "根据时间倒序查询某用户所有帖子", notes = "帖子需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postMemberId",
                     value = "用户id", required = true, dataTypeClass = Integer.class),
     })
-    public RespBean selectAllPostByDescById(Integer postMemberId) {
+    public RespBean selectAllPostByDescById(@PathVariable("postMemberId") Integer postMemberId) {
         if (iPostService.selectAllPostByDescById(postMemberId) != null) {
             List<PostBean> list = iPostService.selectAllPostByDescById(postMemberId);
             return RespBean.ok("查找成功", list);
@@ -103,13 +103,13 @@ public class BackPostController {
     }
 
 
-    @GetMapping("/postBackGround/selectAllPostByAscById")
+    @GetMapping("/selectAllPostByAscById/{postMemberId}")
     @ApiOperation(value = "根据时间正序查询某用户所有帖子", notes = "帖子需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postMemberId",
                     value = "用户id", required = true, dataTypeClass = Integer.class),
     })
-    public RespBean selectAllPostByAscById(Integer postMemberId) {
+    public RespBean selectAllPostByAscById(@PathVariable("postMemberId") Integer postMemberId) {
         if (iPostService.selectAllPostByAscById(postMemberId) != null) {
             List<PostBean> list = iPostService.selectAllPostByAscById(postMemberId);
             return RespBean.ok("查找成功", list);

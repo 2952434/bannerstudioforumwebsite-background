@@ -77,11 +77,11 @@ public class UsersInformationController {
         }
     }
 
-    @GetMapping("/selectUsersInformationById")
+    @GetMapping("/selectUsersInformationById/{userId}")
     @ApiOperation(value = "根据用户id查询用户信息",httpMethod = "GET")
     @ApiImplicitParam(paramType = "query", name = "userId",
             value = "用户id", required = true, dataTypeClass = Integer.class)
-    public RespBean selectUsersInformationById(Integer userId) {
+    public RespBean selectUsersInformationById(@PathVariable Integer userId) {
         FixedInformationBean fixedInformationBean = iFixedInformationService.selectUsersInformationById(userId);
         if (fixedInformationBean!=null){
             return RespBean.ok("查询成功",fixedInformationBean);

@@ -23,7 +23,7 @@ public class PostLikeController {
     @Autowired
     private IPostLikeService iPostLikeService;
 
-    @GetMapping("/judgePostLike")
+    @GetMapping("/judgePostLike/{postId}/{userId}")
     @ApiOperation(value = "根据帖子id和用户id判断是否点赞", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
@@ -31,20 +31,20 @@ public class PostLikeController {
             @ApiImplicitParam(paramType = "query", name = "userId",
                     value = "用户id", required = false, dataTypeClass = Integer.class)
     })
-    public RespBean judgePostLike(Integer postId, Integer userId) {
+    public RespBean judgePostLike(@PathVariable Integer postId,@PathVariable Integer userId) {
         if (iPostLikeService.judgePostLike(postId, userId)) {
             return RespBean.ok("没有点赞关系",true);
         }
         return RespBean.ok("有点赞关系",false);
     }
 
-    @GetMapping("/selectPostLikeNum")
+    @GetMapping("/selectPostLikeNum/{postId}")
     @ApiOperation(value = "根据帖子id查询该帖子点赞量", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
                     value = "帖子id", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean selectPostLikeNum(Integer postId) {
+    public RespBean selectPostLikeNum(@PathVariable Integer postId) {
         return RespBean.ok("查询成功",iPostLikeService.selectPostLikeNum(postId));
     }
     @PostMapping("/insertPostLike")
@@ -73,7 +73,7 @@ public class PostLikeController {
         return iPostLikeService.insertPostLike(postLikeBean);
     }
 
-    @DeleteMapping("/deletePostLikeById")
+    @DeleteMapping("/deletePostLikeById/{postId}/{userId}")
     @ApiOperation(value = "根据帖子id和用户id取消点赞", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
@@ -81,15 +81,15 @@ public class PostLikeController {
             @ApiImplicitParam(paramType = "query", name = "userId",
                     value = "用户id", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean deletePostLikeById(Integer postId, Integer userId) {
+    public RespBean deletePostLikeById(@PathVariable Integer postId,@PathVariable Integer userId) {
         return iPostLikeService.deletePostLikeById(postId, userId);
     }
 
-    @GetMapping("/selectPostLikeNumByUserId")
+    @GetMapping("/selectPostLikeNumByUserId/{userId}")
     @ApiOperation(value = "根据用户id查询被点赞数量", httpMethod = "GET")
     @ApiImplicitParam(paramType = "query", name = "userId",
             value = "用户id", required = true, dataTypeClass = Integer.class)
-    public RespBean selectPostLikeNumByUserId(Integer userId){
+    public RespBean selectPostLikeNumByUserId(@PathVariable Integer userId){
         return RespBean.ok(iPostLikeService.selectPostLikeNumByUserId(userId));
     }
 

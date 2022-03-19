@@ -72,7 +72,7 @@ public class PostController {
      * @param bindingResult
      * @return RespBean
      */
-    @PostMapping("/postFrontDesk/insertPost")
+    @PostMapping("/insertPost")
     @ApiOperation(value = "帖子增加", notes = "帖子内容不能为空", httpMethod = "POST")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
@@ -126,14 +126,13 @@ public class PostController {
      * @return RespBean
      */
 
-    @DeleteMapping("/postFrontDesk/deletePost")
+    @DeleteMapping("/deletePost/{postId}")
     @ApiOperation(value = "帖子删除", notes = "帖子需存在", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
                     value = "帖子id", required = true, dataTypeClass = Integer.class),
-    }
-    )
-    public RespBean deletePost(int postId) {
+    })
+    public RespBean deletePost(@PathVariable Integer postId) {
         return iPostService.deletePostById(postId);
     }
 
@@ -143,13 +142,13 @@ public class PostController {
      * @param postMemberId
      * @return RespBean
      */
-    @DeleteMapping("/postFrontDesk/deleteAllPost")
+    @DeleteMapping("/deleteAllPost/{postMemberId}")
     @ApiOperation(value = "帖子批量删除", notes = "用户需存在", httpMethod = "DELETE")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postMemberId",
                     value = "用户id", required = true, dataTypeClass = String.class),
     })
-    public RespBean deleteAllPost(int postMemberId) {
+    public RespBean deleteAllPost(@PathVariable Integer postMemberId) {
         return iPostService.deleteAllPost(postMemberId);
     }
 
@@ -166,13 +165,13 @@ public class PostController {
      * @param postId
      * @return RespBean
      */
-    @GetMapping("/postFrontDesk/selectPost")
+    @GetMapping("/selectPost/{postId}")
     @ApiOperation(value = "帖子查找", notes = "帖子需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postId",
                     value = "帖子id", required = true, dataTypeClass = Integer.class),
     })
-    public RespBean selectPost(int postId) {
+    public RespBean selectPost(@PathVariable Integer postId) {
         PostBean postBean = iPostService.selectPost(postId);
         if (postBean != null) {
 
@@ -187,13 +186,13 @@ public class PostController {
      * @param postMemberId
      * @return RespBean
      */
-    @GetMapping("/postFrontDesk/selectAllPostByDescById")
+    @GetMapping("/selectAllPostByDescById/{postMemberId}")
     @ApiOperation(value = "根据时间倒序查询某用户所有帖子", notes = "帖子需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postMemberId",
                     value = "用户id", required = true, dataTypeClass = Integer.class),
     })
-    public RespBean selectAllPostByDescById(int postMemberId) {
+    public RespBean selectAllPostByDescById(@PathVariable Integer postMemberId) {
         if (iPostService.selectAllPostByDescById(postMemberId) != null) {
             List<PostBean> list = iPostService.selectAllPostByDescById(postMemberId);
             return RespBean.ok("查找成功", list);
@@ -207,13 +206,13 @@ public class PostController {
      * @param postMemberId
      * @return RespBean
      */
-    @GetMapping("/postFrontDesk/selectAllPostByAscById")
+    @GetMapping("/selectAllPostByAscById/{postMemberId}")
     @ApiOperation(value = "根据时间正序查询某用户所有帖子", notes = "帖子需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "postMemberId",
                     value = "用户id", required = true, dataTypeClass = Integer.class),
     })
-    public RespBean selectAllPostByAscById(int postMemberId) {
+    public RespBean selectAllPostByAscById(@PathVariable Integer postMemberId) {
         if (iPostService.selectAllPostByAscById(postMemberId) != null) {
             List<PostBean> list = iPostService.selectAllPostByAscById(postMemberId);
             return RespBean.ok("查找成功", list);
@@ -231,13 +230,13 @@ public class PostController {
      *
      * @return RespBean
      */
-    @GetMapping("/postFrontDesk/selectAllPost")
+    @GetMapping("/selectAllPost/{page}")
     @ApiOperation(value = "查找所有帖子", notes = "帖子需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "page",
                     value = "分页查询页数", required = true, dataTypeClass = Integer.class),
     })
-    public RespBean selectAllPost(int page) {
+    public RespBean selectAllPost(@PathVariable Integer page) {
         IPage<PostBean> iPage = iPostService.selectAllPost(page);
         List<PostBean> list = iPage.getRecords();
         if (list.size() != 0) {
@@ -246,18 +245,18 @@ public class PostController {
         return RespBean.error("查询失败，未找到该页数");
     }
 
-    @GetMapping("/findAllWithPage")
+    @GetMapping("/findAllWithPage/{page}")
     @ApiOperation(value = "分页检索所有帖子", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "page",
                     value = "分页查询页数", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean findAllWithPage(Integer page) {
+    public RespBean findAllWithPage(@PathVariable Integer page) {
         return iPostEsService.findAllWithPage(page);
     }
 
 
-    @GetMapping("/postFrontDesk/selectDimPost")
+    @GetMapping("/selectDimPost/{page}/{dim}")
     @ApiOperation(value = "全文检索帖子", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "page",
@@ -265,7 +264,7 @@ public class PostController {
             @ApiImplicitParam(paramType = "query", name = "dim",
                     value = "全文检索字段", required = true, dataTypeClass = String.class)
     })
-    public RespBean selectDimPost(Integer page, String dim) {
+    public RespBean selectDimPost(@PathVariable Integer page,@PathVariable String dim) {
         return iPostEsService.findByPostContentAndPostTitleAndPostType(dim,page);
     }
 
@@ -284,11 +283,11 @@ public class PostController {
     }
 
 
-    @PostMapping("/postFrontDesk/updatePostTopById")
+    @PostMapping("/updatePostTopById/{postId}")
     @ApiOperation(value = "根据帖子id实现置顶", notes = "帖子id需存在", httpMethod = "POST")
     @ApiImplicitParam(type = "query", name = "postId",
             value = "帖子id", required = true, dataTypeClass = Integer.class)
-    public RespBean updatePostTopById(Integer postId) {
+    public RespBean updatePostTopById(@PathVariable Integer postId) {
         boolean updatePostTopById = iPostService.updatePostTopById(postId);
         if (updatePostTopById) {
             return RespBean.ok("置顶成功！！！");
@@ -297,7 +296,7 @@ public class PostController {
         }
     }
 
-    @PostMapping("/postFrontDesk/updatePostNoTopById")
+    @PostMapping("/updatePostNoTopById")
     @ApiOperation(value = "根据帖子id取消置顶", notes = "帖子id需存在", httpMethod = "POST")
     @ApiImplicitParam(type = "query", name = "postId",
             value = "帖子id", required = true, dataTypeClass = Integer.class)
