@@ -10,6 +10,7 @@ import studio.banner.forumwebsite.bean.PostBean;
 import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.mapper.InformMapper;
 import studio.banner.forumwebsite.service.IInformService;
+import studio.banner.forumwebsite.utils.TimeUtils;
 
 /**
  * @Author: Ljx
@@ -30,6 +31,7 @@ public class InformServiceImpl implements IInformService {
      */
     @Override
     public boolean insertInform(InformBean informBean) {
+        informBean.setInformTime(TimeUtils.getDateString());
         int insert = informMapper.insert(informBean);
         return insert == 1;
     }
