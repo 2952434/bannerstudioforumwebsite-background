@@ -12,6 +12,8 @@ import studio.banner.forumwebsite.service.IStudyRouteService;
 import studio.banner.forumwebsite.utils.TimeUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -91,7 +93,7 @@ public class StudyRouteServiceImpl implements IStudyRouteService {
     @Override
     public RespBean selectStudyByDirection(String direction) {
         QueryWrapper<StudyRouteBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("study_direction",direction).orderByAsc("study_title");
+        queryWrapper.eq("study_direction",direction).orderByAsc("publish_time");
         List<StudyRouteBean> studyRouteBeans = studyRouteMapper.selectList(queryWrapper);
         if (studyRouteBeans==null){
             return RespBean.error("暂无该学习路线");
@@ -105,7 +107,7 @@ public class StudyRouteServiceImpl implements IStudyRouteService {
         queryWrapper.eq("study_direction",studyRouteBean.getStudyDirection())
                 .eq("study_title",studyRouteBean.getStudyTitle());
         StudyRouteBean studyRouteBean1 = studyRouteMapper.selectOne(queryWrapper);
-        if (studyRouteBean.getId().equals(studyRouteBean1.getId())){
+        if (studyRouteBean1 == null||studyRouteBean.getId().equals(studyRouteBean1.getId())){
             if (studyRouteMapper.updateById(studyRouteBean)==1){
                 return RespBean.ok("学习路线更新成功");
             }

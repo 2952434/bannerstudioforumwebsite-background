@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import studio.banner.forumwebsite.bean.RespBean;
+import studio.banner.forumwebsite.service.IFixedInformationService;
 import studio.banner.forumwebsite.service.IRedisService;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -24,7 +26,8 @@ public class BackForumDateController {
 
     @Autowired
     private IRedisService iRedisService;
-
+    @Autowired
+    private IFixedInformationService iFixedInformationService;
 
     @GetMapping("/selectForumEveryDayAddViewNum")
     @ApiOperation(value = "查询论坛15天每天新增浏览量",httpMethod = "GET")
@@ -48,4 +51,25 @@ public class BackForumDateController {
         return RespBean.ok("查询成功",list);
     }
 
+    @GetMapping("/selectDirectionNum")
+    @ApiOperation(value = "查询每个方向的人数",httpMethod = "GET")
+    public RespBean selectDirectionNum() {
+        List<HashMap<String, String>> hashMaps = iFixedInformationService.selectDirectionNum();
+        if (hashMaps.size()!=0){
+            return RespBean.ok("查询成功",hashMaps);
+        }else {
+            return RespBean.error("查询失败");
+        }
+    }
+
+    @GetMapping("/selectDirectionPostNum")
+    @ApiOperation(value = "查询每个方向发帖数量",httpMethod = "GET")
+    public RespBean selectDirectionPostNum() {
+        List<HashMap<String, String>> hashMaps = iFixedInformationService.selectDirectionPostNum();
+        if (hashMaps.size()!=0){
+            return RespBean.ok("查询成功",hashMaps);
+        }else {
+            return RespBean.error("查询失败");
+        }
+    }
 }

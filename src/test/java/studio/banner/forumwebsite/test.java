@@ -1,8 +1,13 @@
 package studio.banner.forumwebsite;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import studio.banner.forumwebsite.bean.FixedInformationBean;
+import studio.banner.forumwebsite.mapper.FixedInformationMapper;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: Ljx

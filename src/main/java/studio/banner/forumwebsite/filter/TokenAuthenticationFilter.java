@@ -29,8 +29,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         //解析出头中的token
         String token = httpServletRequest.getHeader("Authorization");
-        String[] s = token.split(" ");
-        token = s[1];
         if(token!=null){
             //从安全上下文中拿 到用户身份对象
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

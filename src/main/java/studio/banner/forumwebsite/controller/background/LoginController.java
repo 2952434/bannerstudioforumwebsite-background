@@ -36,7 +36,7 @@ public class LoginController {
             map.add("code", code);
             map.add("client_id", "bannerstudioofficialwebsite");
             map.add("client_secret", "bannerstudioofficialwebsite");
-            map.add("redirect_uri", "http://localhost:8081/home");
+            map.add("redirect_uri", "http://localhost:8081/transfer");
             map.add("grant_type", "authorization_code");
             Map<String, String> resp = restTemplate.postForObject("https://oauth.bannerstudio.club/oauth/token", map, Map.class);
             access_token = resp.get("access_token");

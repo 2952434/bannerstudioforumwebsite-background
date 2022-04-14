@@ -2,13 +2,18 @@ package studio.banner.forumwebsite.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import springfox.documentation.builders.OAuthBuilder;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.oas.annotations.EnableOpenApi;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @Author: Ljx
@@ -18,12 +23,21 @@ import java.util.ArrayList;
 @Configuration
 @EnableOpenApi
 public class Swagger3Config {
+
     @Bean
-    public Docket docket() {
-        return new Docket(DocumentationType.OAS_30)
+    Docket docket() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("studio.banner.forumwebsite.controller"))
+                .paths(PathSelectors.any())
+                .build()
+                .securityContexts(Arrays.asList(securityContexts()))
+                .securitySchemes(Arrays.asList(securitySchemes()))
                 .apiInfo(apiInfo())
                 .select()
                 .build();
+    }
+
         /**
          *
          * enable 是否启动Swagger，如果为False，则Swagger不能在浏览器中访问
@@ -39,7 +53,6 @@ public class Swagger3Config {
          *                  path() 过滤什么路径
          *                  .paths(PathSelectors.ant(""))
          */
-    }
 
     private ApiInfo apiInfo() {
         return new ApiInfo(
@@ -51,6 +64,24 @@ public class Swagger3Config {
                 "Apache 2.0",
                 "#",
                 new ArrayList<>());
+    }
+
+    private SecurityScheme securitySchemes() {
+        return new ApiKey("Authorization", "Authorization", "header");
+    }
+
+    private SecurityContext securityContexts() {
+        return SecurityContext.builder()
+                        .securityReferences(defaultAuth())
+                        .forPaths(PathSelectors.any())
+                        .build();
+    }
+
+    private List<SecurityReference> defaultAuth() {
+        AuthorizationScope authorizationScope = new AuthorizationScope("xxx", "描述信息");
+        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+        authorizationScopes[0] = authorizationScope;
+        return Arrays.asList(new SecurityReference("Authorization", authorizationScopes));
     }
 }
 

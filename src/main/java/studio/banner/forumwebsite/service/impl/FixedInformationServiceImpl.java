@@ -10,6 +10,7 @@ import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.mapper.FixedInformationMapper;
 import studio.banner.forumwebsite.service.IFixedInformationService;
 
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -91,10 +92,32 @@ public class FixedInformationServiceImpl implements IFixedInformationService {
         return fixedInformationMapper.update(fixedInformationBean, wrapper) == 1;
     }
 
+    /**
+     * 查询所有用户信息
+     * @return
+     */
     @Override
     public RespBean selectAllUserInformation() {
         List<FixedInformationBean> fixedInformationBeans = fixedInformationMapper.selectList(null);
         return RespBean.ok("查询成功",fixedInformationBeans);
+    }
+
+    /**
+     * 获取每个方向的人数
+     * @return List<HashMap<String,String>>
+     */
+    @Override
+    public List<HashMap<String, String>> selectDirectionNum() {
+        return fixedInformationMapper.selectDirectionNum();
+    }
+
+    /**
+     * 查询每个方向的发帖数量
+     * @return List<HashMap<String,String>>
+     */
+    @Override
+    public List<HashMap<String, String>> selectDirectionPostNum() {
+        return fixedInformationMapper.selectDirectionPostNum();
     }
 
 }

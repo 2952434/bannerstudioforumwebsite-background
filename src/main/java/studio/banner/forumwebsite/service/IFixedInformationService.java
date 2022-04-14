@@ -3,6 +3,9 @@ package studio.banner.forumwebsite.service;
 import studio.banner.forumwebsite.bean.FixedInformationBean;
 import studio.banner.forumwebsite.bean.RespBean;
 
+import java.util.HashMap;
+import java.util.List;
+
 
 /**
  * @Author: Ljx
@@ -49,4 +52,15 @@ public interface IFixedInformationService {
      */
     RespBean selectAllUserInformation();
 
+    /**
+     * 获取每个方向的人数
+     * @return List<HashMap<String,String>>
+     */
+    List<HashMap<String,String>> selectDirectionNum();
+
+    /**
+     * 查询每个方向的发帖数量
+     * @return List<HashMap<String,String>>
+     */
+    List<HashMap<String,String>> selectDirectionPostNum();
 }

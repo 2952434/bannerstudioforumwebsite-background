@@ -20,7 +20,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/login/**", "/css/**", "/js/**", "/img/**","/favicon.ico","/product/**","/agreement.html");
-
+        web.ignoring().antMatchers("/swagger-ui.html")
+                .antMatchers("/webjars/**")
+                .antMatchers("/v2/**")
+                .antMatchers("/swagger-resources/**");
     }
     //安全拦截机制（最重要）
     @Override
