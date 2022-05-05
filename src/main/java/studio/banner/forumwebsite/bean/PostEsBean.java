@@ -8,7 +8,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import javax.validation.constraints.NotNull;
+import java.util.Map;
 
 
 /**
@@ -55,7 +55,11 @@ public class PostEsBean {
      */
     @Field(index = false, store = true, type = FieldType.Integer)
     private Integer postPageView;
-
+    /**
+     * 图片地址
+     */
+    @Field(index = false,store = true,type = FieldType.Text)
+    private String imageAddress;
     /**
      * 帖子评论量
      */
@@ -76,17 +80,38 @@ public class PostEsBean {
      */
     @Field(index = false, store = true, type = FieldType.Integer)
     private Integer postColNum;
+    /**
+     * 用户头像
+     */
+    @Field(index = false,store = true,type = FieldType.Text)
+    private String memberHead;
 
-    public PostEsBean(PostBean postBean) {
-        this.postId = postBean.getPostId();
-        this.postMemberId = postBean.getPostMemberId();
-        this.postTitle = postBean.getPostTitle();
-        this.postContent = postBean.getPostContent();
-        this.postTime = postBean.getPostTime();
-        this.postPageView = postBean.getPostPageView();
-        this.commentNumber = postBean.getPostCommentNumber();
-        this.likeNumber = postBean.getPostLikeNumber();
-        this.postType = postBean.getPostType();
-        this.postColNum = postBean.getPostColNum();
+    /**
+     * 置顶
+     */
+    @Field(index = false,store = true,type = FieldType.Integer)
+    private Integer postTop;
+    /**
+     * 用户昵称
+     */
+    @Field(analyzer = "ik_smart", searchAnalyzer = "ik_smart", store = true, type = FieldType.Text)
+    private String memberName;
+
+    public PostEsBean(Map<String,String> map) {
+        this.postId = Integer.valueOf(String.valueOf(map.get("post_id")));
+        this.postMemberId = Integer.valueOf(String.valueOf(map.get("post_member_id")));
+        this.postTitle = map.get("post_title");
+        this.postContent = map.get("post_content");
+        this.postTime = map.get("post_time");
+        this.postPageView = Integer.valueOf(String.valueOf(map.get("post_page_view")));
+        this.commentNumber = Integer.valueOf(String.valueOf(map.get("post_comment_number")));
+        this.likeNumber = Integer.valueOf(String.valueOf(map.get("post_like_number")));
+        this.postType = map.get("post_type");
+        this.postColNum = Integer.valueOf(String.valueOf(map.get("post_col_num")));
+        this.memberHead = map.get("member_head");
+        this.memberName = map.get("member_name");
+        this.imageAddress = map.get("post_image_address");
+        this.postTop = Integer.valueOf(String.valueOf(map.get("post_top")));
     }
+
 }

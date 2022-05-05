@@ -8,11 +8,14 @@ import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerIntercept
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * @Author: Ljx
  * @Date: 2021/5/13 21:59
  */
+@EnableTransactionManagement
+@MapperScan("studio.banner.forumwebsite.mapper")
 @Configuration
 public class MybatisPlusConfig {
     @Bean

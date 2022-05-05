@@ -17,6 +17,13 @@ import java.util.Map;
 @SpringBootTest
 public class test {
 
+    @Autowired
+    FixedInformationMapper fixedInformationMapper;
 
-
+    @Test
+    public void test(){
+        System.out.println(fixedInformationMapper);
+        List<String> list = fixedInformationMapper.selectUserGrade();
+        System.out.println(list);
+    }
 }

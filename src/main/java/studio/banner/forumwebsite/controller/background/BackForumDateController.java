@@ -63,7 +63,7 @@ public class BackForumDateController {
     }
 
     @GetMapping("/selectDirectionPostNum")
-    @ApiOperation(value = "查询每个方向发帖数量",httpMethod = "GET")
+    @ApiOperation(value = "查询每个方向的发帖数",httpMethod = "GET")
     public RespBean selectDirectionPostNum() {
         List<HashMap<String, String>> hashMaps = iFixedInformationService.selectDirectionPostNum();
         if (hashMaps.size()!=0){
@@ -72,4 +72,5 @@ public class BackForumDateController {
             return RespBean.error("查询失败");
         }
     }
+
 }

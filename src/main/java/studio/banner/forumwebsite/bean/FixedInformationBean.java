@@ -27,6 +27,11 @@ public class FixedInformationBean {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
+     * 用户账号
+     */
+    @TableField(value = "users_account")
+    private String usersAccount;
+    /**
      * 用户姓名
      */
     @TableField(value = "users_name")
@@ -69,7 +74,8 @@ public class FixedInformationBean {
     @TableField(value = "user_id")
     private Integer userId;
 
-    public FixedInformationBean(AuthUser authUser) {
+    public FixedInformationBean(AuthUser authUser,String usersAccount) {
+        this.usersAccount = usersAccount;
         this.usersName = authUser.getUserName();
         this.usersDirection = authUser.getDirection();
         this.userGrade = authUser.getGrade();

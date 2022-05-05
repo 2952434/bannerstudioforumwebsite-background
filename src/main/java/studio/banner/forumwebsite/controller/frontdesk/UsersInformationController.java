@@ -89,4 +89,14 @@ public class UsersInformationController {
         return RespBean.error("无该用户信息");
     }
 
+    @GetMapping("/selectUserGrade")
+    @ApiOperation(value = "查询所有年级",httpMethod = "GET")
+    public RespBean selectUserGrade(){
+        List<String> list = iFixedInformationService.selectUserGrade();
+        if (list.size()!=0){
+            return RespBean.ok("查询成功",list);
+        }else {
+            return RespBean.error("查询失败");
+        }
+    }
 }

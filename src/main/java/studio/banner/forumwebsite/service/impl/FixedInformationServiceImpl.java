@@ -12,6 +12,7 @@ import studio.banner.forumwebsite.service.IFixedInformationService;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -51,6 +52,18 @@ public class FixedInformationServiceImpl implements IFixedInformationService {
                 return false;
             }
         }
+    }
+
+    /**
+     * 根据用户账号查询是否存在该用户
+     * @param account
+     * @return
+     */
+    @Override
+    public FixedInformationBean selectUsersInformationByAccount(String account) {
+        QueryWrapper<FixedInformationBean> wrapper = new QueryWrapper<>();
+        wrapper.eq("users_account", account);
+        return fixedInformationMapper.selectOne(wrapper);
     }
 
     /**
@@ -118,6 +131,15 @@ public class FixedInformationServiceImpl implements IFixedInformationService {
     @Override
     public List<HashMap<String, String>> selectDirectionPostNum() {
         return fixedInformationMapper.selectDirectionPostNum();
+    }
+
+    /**
+     * 查询所有年级
+     * @return List<String>
+     */
+    @Override
+    public List<String> selectUserGrade() {
+        return fixedInformationMapper.selectUserGrade();
     }
 
 }

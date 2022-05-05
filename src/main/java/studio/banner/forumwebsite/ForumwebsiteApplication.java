@@ -11,8 +11,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * @author j8*ijunxiang
  */
 @SpringBootApplication
-@MapperScan("studio.banner.forumwebsite.mapper")
-@EnableSwagger2
 @EnableScheduling
 @EnableDiscoveryClient
 public class ForumwebsiteApplication {

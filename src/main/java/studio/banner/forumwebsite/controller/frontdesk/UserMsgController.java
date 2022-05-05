@@ -124,22 +124,7 @@ public class UserMsgController {
 
 
 
-//    @GetMapping("/userMsgFrontDesk/getInformation")
-//    @ApiOperation(value = "访问授权服务器信息更新资源服务器用户信息")
-//    public RespBean getInformationByUserName(HttpServletRequest request){
-//        String header = request.getHeader("Authorization");
-//        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add("Authorization", header);
-//        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
-//        ResponseEntity<AuthUser> entity = restTemplate.exchange("http://localhost:8090/admin/getInformation/"+username, HttpMethod.GET, httpEntity, AuthUser.class);
-//        AuthUser authUser = entity.getBody();
-////        更新数据库操作
-//        assert authUser != null;
-//        iFixedInformationService.insertUsersInformation(new FixedInformationBean(authUser));
-//        iMemberInformationService.insertUserMsg(new MemberInformationBean(authUser));
-//        return RespBean.ok("数据库更新成功");
-//    }
+
 
     @GetMapping("/selectEveryDayAddViewNum/{memberId}")
     @ApiOperation(value = "根据用户id查询15天每天浏览增长量",httpMethod = "GET")
@@ -152,4 +137,6 @@ public class UserMsgController {
         }
         return RespBean.ok("查询成功",list);
     }
+
+    
 }

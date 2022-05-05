@@ -3,14 +3,18 @@ package studio.banner.forumwebsite.controller.background;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import studio.banner.forumwebsite.bean.RespBean;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -19,18 +23,18 @@ import java.util.Map;
  * @role:
  */
 @RestController
-@Api(tags = "用户授权登录", value = "LoginController")
+@Api(tags = "管理员授权登录", value = "BackLoginController")
 @RequestMapping("/login")
-public class LoginController {
+public class BackLoginController {
 
     public String access_token = "";
     public String refresh_token = "";
     @Autowired
     RestTemplate restTemplate;
 
-    @GetMapping("/callback")
+    @GetMapping("/backGround/callback/{code}")
     @ApiOperation(value = "回调地址",httpMethod = "GET")
-    public RespBean callback(String code){
+    public RespBean callback(@PathVariable String code){
         if ("".equals(access_token) && code != null) {
             MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
             map.add("code", code);
@@ -47,4 +51,8 @@ public class LoginController {
             return RespBean.error("token获取失败");
         }
     }
+
+
+
+
 }

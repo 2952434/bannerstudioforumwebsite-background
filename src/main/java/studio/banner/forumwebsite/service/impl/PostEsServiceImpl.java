@@ -14,7 +14,6 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import studio.banner.forumwebsite.bean.PostBean;
 import studio.banner.forumwebsite.bean.PostEsBean;
 import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.mapper.PostEsMapper;
@@ -45,11 +44,13 @@ public class PostEsServiceImpl implements IPostEsService {
      * 每两分钟更新一次es中的数据
      */
     @Override
-    @Scheduled(cron = "0 */2 * * * ?")
+    @Scheduled(cron = "0 */1 * * * ?")
     public void updateEsPost() {
-        List<PostBean> list = postMapper.selectList(null);
-        for (PostBean postBean : list) {
-            postEsMapper.save(new PostEsBean(postBean));
+        List<Map<String, String>> maps = postMapper.selectListPost();
+        for (Map<String, String> map : maps) {
+            String post_id = String.valueOf(map.get("post_id"));
+            System.out.println(post_id);
+            postEsMapper.save(new PostEsBean(map));
         }
     }
 
@@ -70,8 +71,9 @@ public class PostEsServiceImpl implements IPostEsService {
         BoolQueryBuilder boolQueryBuilder= QueryBuilders.boolQuery()
                 .should(QueryBuilders.matchQuery("postTitle",condition))
                 .should(QueryBuilders.matchQuery("postContent",condition))
-                .should(QueryBuilders.matchQuery("postType",condition));
-        Pageable pageable = PageRequest.of(page-1, 1);
+                .should(QueryBuilders.matchQuery("postType",condition))
+                .should(QueryBuilders.matchQuery("memberName",condition));
+        Pageable pageable = PageRequest.of(page-1, 10);
         //构建高亮查询
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(boolQueryBuilder)
@@ -79,6 +81,7 @@ public class PostEsServiceImpl implements IPostEsService {
                 .withHighlightFields(
                         new HighlightBuilder.Field("postTitle"),
                         new HighlightBuilder.Field("postContent"),
+                        new HighlightBuilder.Field("memberName"),
                         new HighlightBuilder.Field("postType"))
                 .withHighlightBuilder(new HighlightBuilder().preTags("<span style='color:red'>").postTags("</span>"))
                 .build();
@@ -96,6 +99,7 @@ public class PostEsServiceImpl implements IPostEsService {
             searchHit.getContent().setPostTitle(highlightFields.get("postTitle")==null ? searchHit.getContent().getPostTitle():highlightFields.get("postTitle").get(0));
             searchHit.getContent().setPostContent(highlightFields.get("postContent")==null ? searchHit.getContent().getPostContent():highlightFields.get("postContent").get(0));
             searchHit.getContent().setPostType(highlightFields.get("postType")==null ? searchHit.getContent().getPostType():highlightFields.get("postType").get(0));
+            searchHit.getContent().setMemberName(highlightFields.get("memberName")==null ? searchHit.getContent().getMemberName():highlightFields.get("memberName").get(0));
             //放到实体类中
             postEsBeans.add(searchHit.getContent());
         }
