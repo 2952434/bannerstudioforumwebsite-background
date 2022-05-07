@@ -90,7 +90,7 @@ public class PostBean {
     /**
      * 用户昵称
      */
-    @NotNull(message = "用户昵称")
+    @TableField(exist = false)
     private String memberName;
     /**
      * 用户头像

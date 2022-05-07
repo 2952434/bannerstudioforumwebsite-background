@@ -35,6 +35,7 @@ public class BackLoginController {
     @GetMapping("/callback/{code}")
     @ApiOperation(value = "回调地址",httpMethod = "GET")
     public RespBean callback(@PathVariable String code){
+
         if (code != null) {
             MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
             map.add("code", code);
