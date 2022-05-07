@@ -134,5 +134,11 @@ public class UserMsgController {
         return RespBean.ok("查询成功",list);
     }
 
-    
+    @GetMapping("/selectAllInformationByMemberId/{memberId}")
+    @ApiOperation(value = "根据用户id查询用户所有信息",httpMethod = "GET")
+    @ApiImplicitParam(paramType = "query",name = "memberId",
+            value = "用户id",required = true,dataTypeClass = Integer.class)
+    public RespBean selectAllInformationByMemberId(@PathVariable Integer memberId){
+        return iMemberInformationService.selectAllInformationByMemberId(memberId);
+    }
 }

@@ -17,6 +17,7 @@ import studio.banner.forumwebsite.utils.TimeUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 /**
@@ -177,6 +178,19 @@ public class MemberInformationServiceImpl implements IMemberInformationService {
         UpdateWrapper<MemberInformationBean> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("member_id",memberId).set("member_like_num",selectUserMsg(memberId).getMemberLikeNum()-1);
         memberInformationMapper.update(null,updateWrapper);
+    }
+
+
+    /**
+     *  根据用户id查询用户所有信息
+     * @param memberId 用户id
+     * @return Map<String,String>
+     */
+    @Override
+    public RespBean selectAllInformationByMemberId(Integer memberId) {
+
+        Map<String, String> map = memberInformationMapper.selectAllInformationByMemberId(memberId);
+        return RespBean.ok("查询成功", map);
     }
 
 

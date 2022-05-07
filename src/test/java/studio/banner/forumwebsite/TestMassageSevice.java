@@ -47,26 +47,26 @@ public class TestMassageSevice {
 //        RespBean type = postEsService.findByPostContentAndPostTitleAndPostType("李君祥", 1);
 //        System.out.println(type.getObj());
 
-//PostBean postBean = new PostBean();
-//            postBean.setPostCommentNumber(1);
-//            postBean.setPostTime("123");
-//            postBean.setPostColNum(1);
-//            postBean.setPostPageView(12);
-//            postBean.setPostContent("dasfadad");
-//            postBean.setPostImageAddress("http");
-//            postBean.setPostTitle("你好");
-//            postBean.setPostMemberId(197);
-//            postBean.setPostType("Java,Python");
-//            postBean.setPostTop(0);
-//        for (int i = 0; i < 200; i++) {
-//
-//            postMapper.insert(postBean);
-//        }
+PostBean postBean = new PostBean();
+            postBean.setPostCommentNumber(1);
+            postBean.setPostTime("123");
+            postBean.setPostColNum(1);
+            postBean.setPostPageView(12);
+            postBean.setPostContent("dasfadad");
+            postBean.setPostImageAddress("http");
+            postBean.setPostTitle("你好");
+            postBean.setPostMemberId(55);
+            postBean.setPostType("Java,Python");
+            postBean.setPostTop(0);
+        for (int i = 0; i < 200; i++) {
 
-        List<Map<String, String>> maps = postMapper.selectPostById(0);
-        System.out.println(maps);
-        PostBean postBean = new PostBean(maps.get(0));
-        System.out.println(postBean);
+            postMapper.insert(postBean);
+        }
+
+//        List<Map<String, String>> maps = postMapper.selectPostById(0);
+//        System.out.println(maps);
+//        PostBean postBean = new PostBean(maps.get(0));
+//        System.out.println(postBean);
 
     }
     @Test

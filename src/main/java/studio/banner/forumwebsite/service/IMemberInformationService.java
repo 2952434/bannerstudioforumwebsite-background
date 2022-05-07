@@ -4,6 +4,7 @@ import studio.banner.forumwebsite.bean.MemberInformationBean;
 import studio.banner.forumwebsite.bean.RespBean;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: ljh
@@ -86,4 +87,11 @@ public interface IMemberInformationService {
      */
     void underLikeNum(Integer memberId);
 
+
+    /**
+     *  根据用户id查询用户所有信息
+     * @param memberId 用户id
+     * @return Map<String,String>
+     */
+    RespBean selectAllInformationByMemberId(Integer memberId);
 }

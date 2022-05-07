@@ -1,8 +1,11 @@
 package studio.banner.forumwebsite.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 import studio.banner.forumwebsite.bean.MemberInformationBean;
+
+import java.util.Map;
 
 /**
  * @Author: ljh
@@ -11,4 +14,12 @@ import studio.banner.forumwebsite.bean.MemberInformationBean;
  */
 @Repository
 public interface MemberInformationMapper extends BaseMapper<MemberInformationBean> {
+
+    /**
+     * 根据memberId查询用户所有信息
+     * @param memberId 用户id
+     * @return Map<String,String>
+     */
+    @Select("select me.*,fi.* from tab_member_information me,tab_fixed_information fi where me.member_id = #{memberId} and me.member_id = fi.user_id")
+    Map<String,String> selectAllInformationByMemberId(Integer memberId);
 }

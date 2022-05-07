@@ -44,7 +44,7 @@ public class PostEsServiceImpl implements IPostEsService {
      * 每两分钟更新一次es中的数据
      */
     @Override
-    @Scheduled(cron = "0 */2 * * * ?")
+    @Scheduled(cron = "0 */1 * * * ?")
     public void updateEsPost() {
         List<Map<String, String>> maps = postMapper.selectListPost();
         for (Map<String, String> map : maps) {
