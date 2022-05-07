@@ -58,6 +58,7 @@ public class LoginController {
         }
         String header = request.getHeader("Authorization");
         HttpHeaders headers = new HttpHeaders();
+
         headers.add("Authorization", header);
         HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
         ResponseEntity<AuthUser> entity = restTemplate.exchange("https://oauth.bannerstudio.club/admin/getInformation/"+username, HttpMethod.GET, httpEntity, AuthUser.class);

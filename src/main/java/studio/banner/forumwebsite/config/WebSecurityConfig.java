@@ -29,7 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     //安全拦截机制（最重要）
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
+        http.cors().and().csrf().disable()
                 .authorizeRequests()
 //                .antMatchers("/r/r1").hasAuthority("p2")
 //                .antMatchers("/r/r2").hasAuthority("p2")

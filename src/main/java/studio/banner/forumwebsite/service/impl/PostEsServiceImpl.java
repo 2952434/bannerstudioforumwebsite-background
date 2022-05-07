@@ -44,19 +44,19 @@ public class PostEsServiceImpl implements IPostEsService {
      * 每两分钟更新一次es中的数据
      */
     @Override
-    @Scheduled(cron = "0 */1 * * * ?")
+    @Scheduled(cron = "0 */2 * * * ?")
     public void updateEsPost() {
         List<Map<String, String>> maps = postMapper.selectListPost();
         for (Map<String, String> map : maps) {
             String post_id = String.valueOf(map.get("post_id"));
-            System.out.println(post_id);
+//            System.out.println(post_id);
             postEsMapper.save(new PostEsBean(map));
         }
     }
 
     @Override
     public RespBean findAllWithPage(Integer page) {
-        PageRequest pageable = PageRequest.of(page-1, 15);
+        PageRequest pageable = PageRequest.of(page-1, 10);
         Page<PostEsBean> all = postEsMapper.findAll(pageable);
         if (all.getContent().size()==0){
             return RespBean.error("未查询到相关内容",all);

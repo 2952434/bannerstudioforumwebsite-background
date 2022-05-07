@@ -32,10 +32,10 @@ public class BackLoginController {
     @Autowired
     RestTemplate restTemplate;
 
-    @GetMapping("/backGround/callback/{code}")
+    @GetMapping("/callback/{code}")
     @ApiOperation(value = "回调地址",httpMethod = "GET")
     public RespBean callback(@PathVariable String code){
-        if ("".equals(access_token) && code != null) {
+        if (code != null) {
             MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
             map.add("code", code);
             map.add("client_id", "bannerstudioofficialwebsite");

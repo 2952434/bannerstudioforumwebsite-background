@@ -6,10 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import springfox.documentation.spring.web.json.Json;
-import studio.banner.forumwebsite.bean.FixedInformationBean;
-import studio.banner.forumwebsite.bean.Message;
-import studio.banner.forumwebsite.bean.RespBean;
-import studio.banner.forumwebsite.bean.User;
+import studio.banner.forumwebsite.bean.*;
 import studio.banner.forumwebsite.mapper.FixedInformationMapper;
 import studio.banner.forumwebsite.mapper.PostMapper;
 import studio.banner.forumwebsite.service.IMessageService;
@@ -23,6 +20,7 @@ import java.util.*;
 public class TestMassageSevice {
     @Autowired
     private IMessageService messageService;
+
     @Autowired
     private FixedInformationMapper fixedInformationMapper;
     @Autowired
@@ -46,9 +44,29 @@ public class TestMassageSevice {
 //        RespBean allWithPage = postEsService.findAllWithPage(1);
 //        System.out.println(allWithPage.getObj());
 
-        RespBean type = postEsService.findByPostContentAndPostTitleAndPostType("李君祥", 1);
-        System.out.println(type.getObj());
+//        RespBean type = postEsService.findByPostContentAndPostTitleAndPostType("李君祥", 1);
+//        System.out.println(type.getObj());
 
+//PostBean postBean = new PostBean();
+//            postBean.setPostCommentNumber(1);
+//            postBean.setPostTime("123");
+//            postBean.setPostColNum(1);
+//            postBean.setPostPageView(12);
+//            postBean.setPostContent("dasfadad");
+//            postBean.setPostImageAddress("http");
+//            postBean.setPostTitle("你好");
+//            postBean.setPostMemberId(197);
+//            postBean.setPostType("Java,Python");
+//            postBean.setPostTop(0);
+//        for (int i = 0; i < 200; i++) {
+//
+//            postMapper.insert(postBean);
+//        }
+
+        List<Map<String, String>> maps = postMapper.selectPostById(0);
+        System.out.println(maps);
+        PostBean postBean = new PostBean(maps.get(0));
+        System.out.println(postBean);
 
     }
     @Test

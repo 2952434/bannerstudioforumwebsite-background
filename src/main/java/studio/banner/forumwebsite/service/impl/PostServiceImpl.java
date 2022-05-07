@@ -169,10 +169,11 @@ public class PostServiceImpl implements IPostService {
      */
     @Override
     public PostBean selectPost(Integer postId) {
-        PostBean postBean = postMapper.selectById(postId);
-        if (postBean==null){
+        List<Map<String, String>> maps = postMapper.selectPostById(postId);
+        if (maps.size()!=1){
             return null;
         }
+        PostBean postBean = new PostBean(maps.get(0));
         postBean.setPostPageView(postBean.getPostPageView()+1);
         postBean.setPostColNum(iCollectService.selectCollectNumByPostId(postId));
         postMapper.updateById(postBean);

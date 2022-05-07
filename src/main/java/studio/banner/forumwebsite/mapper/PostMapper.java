@@ -25,4 +25,12 @@ public interface PostMapper extends BaseMapper<PostBean> {
      */
     @Select("select po.*,me.member_name,me.member_head from tab_post po,tab_member_information me where po.post_member_id = me.member_id")
     List<Map<String,String>> selectListPost();
+
+    /**
+     * 根据用户id查询帖子信息
+     * @param postId
+     * @return
+     */
+    @Select("select po.*,me.member_name,me.member_head from tab_post po,tab_member_information me where po.post_member_id = me.member_id and po.post_id=#{postId}")
+    List<Map<String,String>> selectPostById(Integer postId);
 }

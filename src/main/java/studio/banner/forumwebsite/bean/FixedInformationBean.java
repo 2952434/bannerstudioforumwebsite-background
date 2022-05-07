@@ -76,7 +76,7 @@ public class FixedInformationBean {
 
     public FixedInformationBean(AuthUser authUser,String usersAccount) {
         this.usersAccount = usersAccount;
-        this.usersName = authUser.getUserName();
+        this.usersName = authUser.getMemberName();
         this.usersDirection = authUser.getDirection();
         this.userGrade = authUser.getGrade();
         this.usersCompany = authUser.getMemberCompany();

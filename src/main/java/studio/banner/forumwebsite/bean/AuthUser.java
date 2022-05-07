@@ -26,6 +26,10 @@ public class AuthUser {
      */
     private String userName;
 
+    /**
+     * 密码
+     */
+    private String password;
 
     /**
      * 邮箱
@@ -40,10 +44,20 @@ public class AuthUser {
     private String phone;
 
     /**
+     * 用户权限
+     */
+
+    private String role;
+
+    /**
      * 用户注册时间
      */
     private String creatTime;
 
+    /**
+     * 成员姓名
+     */
+    private String memberName;
 
     /**
      * 成员性别
@@ -69,6 +83,17 @@ public class AuthUser {
      * 成员头像
      */
     private String headPortraitUrl;
+
+
+    /**
+     * 成员博客地址
+     */
+    private String blogUrl;
+
+    /**
+     * 成员Git地址(Gitee或者GitHub)
+     */
+    private String gitUrl;
 
     /**
      * 成员个性签名
@@ -99,5 +124,10 @@ public class AuthUser {
      * 成员薪资
      */
     private Integer memberPay;
+
+    /**
+     * 成员自我介绍
+     */
+    private String personalIntroduction;
 
 }
