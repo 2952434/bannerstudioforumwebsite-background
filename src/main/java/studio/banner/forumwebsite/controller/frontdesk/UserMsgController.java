@@ -67,7 +67,7 @@ public class UserMsgController {
     }
 
     @ApiOperation(value = "根据Id查询用户信息", notes = "同时更新关注人数和粉丝人数")
-    @PutMapping("/selectUserMsg/{memberId}")
+    @GetMapping("/selectUserMsg/{memberId}")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberId",
                     value = "用户Id", required = true, dataTypeClass = Integer.class)
@@ -121,10 +121,6 @@ public class UserMsgController {
             return RespBean.error("邮件发送失败！！！");
         }
     }
-
-
-
-
 
     @GetMapping("/selectEveryDayAddViewNum/{memberId}")
     @ApiOperation(value = "根据用户id查询15天每天浏览增长量",httpMethod = "GET")
