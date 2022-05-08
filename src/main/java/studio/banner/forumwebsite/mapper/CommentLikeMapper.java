@@ -11,4 +11,5 @@ import studio.banner.forumwebsite.bean.CommentLikeBean;
  */
 @Repository
 public interface CommentLikeMapper extends BaseMapper<CommentLikeBean> {
+
 }

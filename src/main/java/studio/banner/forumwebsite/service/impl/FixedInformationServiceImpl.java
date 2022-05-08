@@ -133,13 +133,5 @@ public class FixedInformationServiceImpl implements IFixedInformationService {
         return fixedInformationMapper.selectDirectionPostNum();
     }
 
-    /**
-     * 查询所有年级
-     * @return List<String>
-     */
-    @Override
-    public List<String> selectUserGrade() {
-        return fixedInformationMapper.selectUserGrade();
-    }
 
 }

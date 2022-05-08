@@ -23,8 +23,8 @@ public interface IFixedInformationService {
 
     /**
      * 根据用户账号查询是否存在该用户
-     * @param account
-     * @return
+     * @param account 用户账号
+     * @return FixedInformationBean
      */
     FixedInformationBean selectUsersInformationByAccount(String account);
     /**
@@ -53,7 +53,7 @@ public interface IFixedInformationService {
 
     /**
      * 查询所有用户信息
-     * @return
+     * @return RespBean
      */
     RespBean selectAllUserInformation();
 
@@ -69,9 +69,5 @@ public interface IFixedInformationService {
      */
     List<HashMap<String,String>> selectDirectionPostNum();
 
-    /**
-     * 查询所有年级
-     * @return List<String>
-     */
-    List<String> selectUserGrade();
+
 }

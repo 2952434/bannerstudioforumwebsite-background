@@ -7,13 +7,20 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import studio.banner.forumwebsite.bean.AuthUser;
 import studio.banner.forumwebsite.bean.FixedInformationBean;
 import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.service.IFixedInformationService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +37,8 @@ import java.util.Map;
 public class UsersInformationController {
     private static final Logger logger = LoggerFactory.getLogger(UsersInformationController.class);
 
+    @Autowired
+    private RestTemplate restTemplate;
     @Autowired
     private IFixedInformationService iFixedInformationService;
 
@@ -91,12 +100,44 @@ public class UsersInformationController {
 
     @GetMapping("/selectUserGrade")
     @ApiOperation(value = "查询所有年级",httpMethod = "GET")
-    public RespBean selectUserGrade(){
-        List<String> list = iFixedInformationService.selectUserGrade();
-        if (list.size()!=0){
-            return RespBean.ok("查询成功",list);
-        }else {
-            return RespBean.error("查询失败");
-        }
+    public RespBean selectGradeGroupBy(HttpServletRequest request){
+        String header = request.getHeader("Authorization");
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", header);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+        ResponseEntity<RespBean> entity = restTemplate.exchange("https://oauth.bannerstudio.club/admin/selectGradeGroupBy", HttpMethod.GET, httpEntity, RespBean.class);
+        return entity.getBody();
     }
+
+    @GetMapping("/selectDirectionGroupBy")
+    @ApiOperation(value = "查询所有方向",httpMethod = "GET")
+    public RespBean selectDirectionGroupBy(HttpServletRequest request){
+        String header = request.getHeader("Authorization");
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", header);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+        ResponseEntity<RespBean> entity = restTemplate.exchange("https://oauth.bannerstudio.club/admin/selectDirectionGroupBy", HttpMethod.GET, httpEntity, RespBean.class);
+        return entity.getBody();
+    }
+
+    @GetMapping("/selectUserIdAndMemberName/{direction}/{grade}")
+    @ApiOperation(value = "根据年级和方向查询成员",httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(type = "query", name = "direction",
+                    value = "方向", required = true, dataTypeClass = String.class),
+            @ApiImplicitParam(type = "query", name = "grade",
+                    value = "年级", required = true, dataTypeClass = String.class)
+    })
+    public RespBean selectUserIdAndMemberName(HttpServletRequest request,@PathVariable String direction,@PathVariable String grade){
+        Map<String,String> map = new HashMap<>();
+        map.put("direction",direction);
+        map.put("grade",grade);
+        String header = request.getHeader("Authorization");
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", header);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+        ResponseEntity<RespBean> entity = restTemplate.exchange("https://oauth.bannerstudio.club/admin/selectUserIdAndMemberName/{direction}/{grade}", HttpMethod.GET, httpEntity, RespBean.class,map);
+        return entity.getBody();
+    }
+
 }

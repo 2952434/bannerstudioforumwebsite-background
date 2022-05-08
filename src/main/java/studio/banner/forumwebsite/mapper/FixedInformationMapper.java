@@ -30,11 +30,6 @@ public interface FixedInformationMapper extends BaseMapper<FixedInformationBean>
     @Select("select count(p.post_id != '') value,f.users_direction name from tab_fixed_information f left join tab_post p on f.user_id = p.post_member_id group by f.users_direction ;")
     List<HashMap<String,String>> selectDirectionPostNum();
 
-    /**
-     * 返回各个年级
-     * @return List<String>
-     */
-    @Select("select user_grade grade from tab_fixed_information group by user_grade;")
-    List<String> selectUserGrade();
+
 
 }

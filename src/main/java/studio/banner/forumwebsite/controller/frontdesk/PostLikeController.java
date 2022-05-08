@@ -32,21 +32,13 @@ public class PostLikeController {
                     value = "用户id", required = false, dataTypeClass = Integer.class)
     })
     public RespBean judgePostLike(@PathVariable Integer postId,@PathVariable Integer userId) {
+        Integer integer = iPostLikeService.selectPostLikeNum(postId);
         if (iPostLikeService.judgePostLike(postId, userId)) {
-            return RespBean.ok("没有点赞关系",true);
+            return RespBean.ok(String.valueOf(integer),true);
         }
-        return RespBean.ok("有点赞关系",false);
+        return RespBean.ok(String.valueOf(integer),false);
     }
 
-    @GetMapping("/selectPostLikeNum/{postId}")
-    @ApiOperation(value = "根据帖子id查询该帖子点赞量", httpMethod = "GET")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "postId",
-                    value = "帖子id", required = true, dataTypeClass = Integer.class)
-    })
-    public RespBean selectPostLikeNum(@PathVariable Integer postId) {
-        return RespBean.ok("查询成功",iPostLikeService.selectPostLikeNum(postId));
-    }
     @PostMapping("/insertPostLike")
     @ApiOperation(value = "帖子点赞增加", httpMethod = "POST")
     @ApiImplicitParams({
