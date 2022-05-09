@@ -8,7 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import springfox.documentation.spring.web.json.Json;
 import studio.banner.forumwebsite.bean.*;
 import studio.banner.forumwebsite.mapper.FixedInformationMapper;
+import studio.banner.forumwebsite.mapper.MemberInformationMapper;
 import studio.banner.forumwebsite.mapper.PostMapper;
+import studio.banner.forumwebsite.mapper.UserContactMapper;
 import studio.banner.forumwebsite.service.IMessageService;
 import studio.banner.forumwebsite.service.IPostEsService;
 import studio.banner.forumwebsite.service.IReplyService;
@@ -22,7 +24,8 @@ import java.util.*;
 public class TestMassageSevice {
     @Autowired
     private IMessageService messageService;
-
+    @Autowired
+    private UserContactMapper userContactMapper;
     @Autowired
     private FixedInformationMapper fixedInformationMapper;
     @Autowired
@@ -30,6 +33,8 @@ public class TestMassageSevice {
     @Autowired
     private IUserAttentionService iUserAttentionService;
 
+    @Autowired
+    private MemberInformationMapper memberInformationMapper;
     @Autowired
     private IPostEsService postEsService;
     @Test
@@ -78,9 +83,10 @@ PostBean postBean = new PostBean();
     public void testAttention(){
         UserAttentionBean userAttentionBean = new UserAttentionBean();
         userAttentionBean.setAttentionId(55);
-        userAttentionBean.setBeAttentionId(179);
+        userAttentionBean.setBeAttentionId(197);
         userAttentionBean.setAttentionInformation("123");
         System.out.println(iUserAttentionService.insertContact(userAttentionBean));
+        iUserAttentionService.deleteContact(55,197);
     }
     @Test
     public void testSave() {

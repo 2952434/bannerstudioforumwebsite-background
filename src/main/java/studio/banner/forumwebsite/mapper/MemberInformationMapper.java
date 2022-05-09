@@ -1,7 +1,9 @@
 package studio.banner.forumwebsite.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 import studio.banner.forumwebsite.bean.MemberInformationBean;
 
@@ -22,4 +24,13 @@ public interface MemberInformationMapper extends BaseMapper<MemberInformationBea
      */
     @Select("select me.*,fi.* from tab_member_information me,tab_fixed_information fi where me.member_id = #{memberId} and me.member_id = fi.user_id")
     Map<String,String> selectAllInformationByMemberId(Integer memberId);
+
+    /**
+     * 更新粉丝数
+     * @param beAttentionId 被关注者id
+     * @param num 粉丝数
+     * @return
+     */
+    @Update("UPDATE tab_member_information SET member_fans= #{num} WHERE (member_id = #{beAttentionId})")
+    Integer updateMemberFansInteger(@Param("beAttentionId") Integer beAttentionId,@Param("num") Integer num);
 }

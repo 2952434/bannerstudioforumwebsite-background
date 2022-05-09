@@ -45,6 +45,9 @@ public class UserAttentionServiceImpl implements IUserAttentionService {
     @Override
     @Transactional
     public RespBean insertContact(UserAttentionBean userAttentionBean) {
+        if (contacted(userAttentionBean.getAttentionId(),userAttentionBean.getBeAttentionId())){
+            return RespBean.error("以关注过该用户");
+        }
         if (userAttentionBean.getBeAttentionId() != null) {
             userAttentionBean.setContactTime(TimeUtils.getDateString());
             userAttentionBean.setAttentionShow(0);
@@ -54,9 +57,10 @@ public class UserAttentionServiceImpl implements IUserAttentionService {
             }
             logger.info("添加关注成功");
             UpdateWrapper<MemberInformationBean> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("member_id",userAttentionBean.getBeAttentionId()).set("member_fans",userAttentionBean.getBeAttentionId());
-            updateWrapper.eq("member_id",userAttentionBean.getAttentionId()).set("member_attention",userAttentionBean.getAttentionId());
-            if (memberInformationMapper.update(null,updateWrapper)==1) {
+            updateWrapper.eq("member_id",userAttentionBean.getBeAttentionId()).set("member_fans",selectFansByMemberId(userAttentionBean.getBeAttentionId()));
+            UpdateWrapper<MemberInformationBean> updateWrapper1 = new UpdateWrapper<>();
+            updateWrapper1.eq("member_id",userAttentionBean.getAttentionId()).set("member_attention",selectStarsByMemberId(userAttentionBean.getAttentionId()));
+            if (memberInformationMapper.update(null,updateWrapper)==1&&memberInformationMapper.update(null,updateWrapper1)==1) {
                 return RespBean.ok("添加关注成功");
             }
         }
@@ -81,8 +85,9 @@ public class UserAttentionServiceImpl implements IUserAttentionService {
         logger.info("取消关注成功");
         UpdateWrapper<MemberInformationBean> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("member_id",beAttentionId).set("member_fans",selectFansByMemberId(beAttentionId));
-        updateWrapper.eq("member_id",attentionId).set("member_attention",selectStarsByMemberId(beAttentionId));
-        return memberInformationMapper.update(null,updateWrapper)==1;
+        UpdateWrapper<MemberInformationBean> updateWrapper1 = new UpdateWrapper<>();
+        updateWrapper1.eq("member_id",attentionId).set("member_attention",selectStarsByMemberId(attentionId));
+        return memberInformationMapper.update(null,updateWrapper)==1&&memberInformationMapper.update(null,updateWrapper1)==1;
     }
 
     /**
