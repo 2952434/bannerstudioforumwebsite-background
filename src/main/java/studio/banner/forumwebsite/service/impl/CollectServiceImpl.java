@@ -148,9 +148,9 @@ public class CollectServiceImpl implements ICollectService {
      */
     @Override
     public boolean insertCollect(CollectBean collectBean) {
-        if (judgeCollectPost(collectBean.getCloUserId(),collectBean.getColId())){
+        if (judgeCollectPost(collectBean.getColUserId(),collectBean.getColId())){
             if (collectMapper.insert(collectBean) == 1) {
-                iMemberInformationService.updateColNum(collectBean.getCloUserId());
+                iMemberInformationService.updateColNum(collectBean.getColUserId());
                 return true;
             }
             return false;

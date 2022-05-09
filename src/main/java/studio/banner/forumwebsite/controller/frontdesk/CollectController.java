@@ -95,9 +95,7 @@ public class CollectController {
             @ApiImplicitParam(paramType = "query", name = "userId",
                     value = "用户id", required = true, dataTypeClass = Integer.class)
     })
-    private boolean judgeCollectPost(@PathVariable("userId") Integer userId,@PathVariable("postId") Integer postId){
-        System.out.println(userId);
-        System.out.println(postId);
+    public boolean judgeCollectPost(@PathVariable("userId") Integer userId,@PathVariable("postId") Integer postId){
         return iCollectService.judgeCollectPost(userId, postId);
     }
 
