@@ -127,6 +127,12 @@ public class CollectServiceImpl implements ICollectService {
         return RespBean.ok("收藏夹删除成功");
     }
 
+    /**
+     * 判断该用户是否收藏该帖子
+     * @param userId
+     * @param postId
+     * @return
+     */
     @Override
     public boolean judgeCollectPost(Integer userId, Integer postId) {
         QueryWrapper<CollectBean> queryWrapper = new QueryWrapper<>();
@@ -153,6 +159,12 @@ public class CollectServiceImpl implements ICollectService {
     }
 
 
+    /**
+     * 根据收藏帖子id和用户id取消收藏文章
+     * @param postId
+     * @param userId
+     * @return
+     */
     @Override
     public boolean deleteCollect(Integer postId,Integer userId) {
         QueryWrapper<CollectBean> queryWrapper = new QueryWrapper<>();
@@ -164,6 +176,12 @@ public class CollectServiceImpl implements ICollectService {
         return false;
     }
 
+    /**
+     * 通过收藏id和用户id批量取消收藏
+     * @param ids
+     * @param userId
+     * @return
+     */
     @Override
     public RespBean deleteBatchCollectByIds(List<Integer> ids,Integer userId) {
         if (collectMapper.deleteBatchIds(ids)==1) {
@@ -190,6 +208,12 @@ public class CollectServiceImpl implements ICollectService {
         return false;
     }
 
+    /**
+     * 通过收藏帖子id 收藏夹id 更改帖子收藏夹
+     * @param colId
+     * @param favoriteId
+     * @return
+     */
     @Override
     public RespBean updateCollectById(Integer colId, Integer favoriteId) {
         UpdateWrapper<CollectBean> updateWrapper = new UpdateWrapper<>();
@@ -201,6 +225,12 @@ public class CollectServiceImpl implements ICollectService {
         return RespBean.error("收藏移动失败");
     }
 
+    /**
+     * 通过收藏帖子id 收藏夹id 批量更改帖子收藏夹
+     * @param colIds
+     * @param favoriteId
+     * @return
+     */
     @Override
     public RespBean updateCollectByIds(List<Integer> colIds, Integer favoriteId) {
         UpdateWrapper<CollectBean> updateWrapper = new UpdateWrapper<>();
@@ -212,6 +242,11 @@ public class CollectServiceImpl implements ICollectService {
         return RespBean.error("收藏移动失败");
     }
 
+    /**
+     * 根据收藏夹id查询收藏夹收藏帖子
+     * @param favoriteId
+     * @return
+     */
     @Override
     public RespBean selectCollectByFavoriteId(Integer favoriteId) {
         QueryWrapper<CollectBean> queryWrapper = new QueryWrapper<>();
