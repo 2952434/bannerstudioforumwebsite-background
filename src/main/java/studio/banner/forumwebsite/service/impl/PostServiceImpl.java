@@ -65,11 +65,11 @@ public class PostServiceImpl implements IPostService {
             UpdateWrapper<MemberInformationBean> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("member_id",postBean.getPostMemberId()).set("member_post_num",selectPostNumByMemberId(postBean.getPostMemberId()));
             memberInformationMapper.update(null,updateWrapper);
-            Integer todayPostInsertNum = (Integer) redisTemplate.opsForHash().get("forumPostInsertNum", "todayPostInsertNum");
+            Object todayPostInsertNum = redisTemplate.opsForHash().get("forumPostInsertNum", "todayPostInsertNum");
             if (todayPostInsertNum==null){
                 todayPostInsertNum=0;
             }
-            redisTemplate.opsForHash().put("forumPostInsertNum", "todayPostInsertNum",String.valueOf(todayPostInsertNum+1));
+            redisTemplate.opsForHash().put("forumPostInsertNum", "todayPostInsertNum",String.valueOf(Integer.parseInt(String.valueOf(todayPostInsertNum))+1));
             logger.info("插入帖子成功");
             return RespBean.ok("插入帖子成功");
         }
