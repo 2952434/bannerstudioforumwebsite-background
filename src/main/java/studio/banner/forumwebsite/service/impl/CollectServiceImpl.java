@@ -137,7 +137,7 @@ public class CollectServiceImpl implements ICollectService {
     public boolean judgeCollectPost(Integer userId, Integer postId) {
         QueryWrapper<CollectBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("col_user_id",userId).eq("col_art_id",postId);
-        return collectMapper.selectOne(queryWrapper)==null;
+        return collectMapper.selectList(queryWrapper).size()==1;
     }
 
     /**
