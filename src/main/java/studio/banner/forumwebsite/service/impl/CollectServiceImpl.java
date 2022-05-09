@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import studio.banner.forumwebsite.bean.CollectBean;
 import studio.banner.forumwebsite.bean.CollectFavoriteBean;
 import studio.banner.forumwebsite.bean.PostBean;
@@ -18,6 +19,7 @@ import studio.banner.forumwebsite.service.IPostService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: Ljx
@@ -224,6 +226,25 @@ public class CollectServiceImpl implements ICollectService {
         }
         return RespBean.ok(collectBeans);
 
+    }
+
+    /**
+     * 根据用户id和帖子id查询收藏夹id
+     * @param userId
+     * @param postId
+     * @return
+     */
+    @Override
+    @Transactional
+    public RespBean selectCollectFavoriteId(Integer userId, Integer postId) {
+        QueryWrapper<CollectBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("col_user_id",userId).eq("col_art_id",postId);
+        CollectBean collectBean = collectMapper.selectOne(queryWrapper);
+        if (collectBean!=null){
+            return RespBean.ok("查询成功",collectBean);
+        }
+        Map<String, String> map = collectFavoriteMapper.selectFavoriteId(userId);
+        return RespBean.ok("查询成功",map);
     }
 
 

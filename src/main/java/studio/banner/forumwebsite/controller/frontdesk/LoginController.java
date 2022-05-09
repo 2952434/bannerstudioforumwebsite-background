@@ -9,6 +9,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,6 +50,7 @@ public class LoginController {
 
     @GetMapping("/getInformation")
     @ApiOperation(value = "访问授权服务器信息初始化资源服务器用户信息")
+    @Transactional
     public RespBean getInformationByUserName(HttpServletRequest request){
         String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         System.out.println(username);

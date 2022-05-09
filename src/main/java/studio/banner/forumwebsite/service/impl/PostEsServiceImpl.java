@@ -47,11 +47,11 @@ public class PostEsServiceImpl implements IPostEsService {
     @Scheduled(cron = "0 */1 * * * ?")
     public void updateEsPost() {
         List<Map<String, String>> maps = postMapper.selectListPost();
+        List<PostEsBean> postEsBeans = new ArrayList<>();
         for (Map<String, String> map : maps) {
-            String post_id = String.valueOf(map.get("post_id"));
-//            System.out.println(post_id);
-            postEsMapper.save(new PostEsBean(map));
+            postEsBeans.add(new PostEsBean(map));
         }
+        postEsMapper.saveAll(postEsBeans);
     }
 
     @Override

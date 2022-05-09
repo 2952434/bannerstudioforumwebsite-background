@@ -103,7 +103,7 @@ public class MemberInformationBean {
 
     public MemberInformationBean(AuthUser authUser) {
         this.memberId = authUser.getId();
-        this.memberName = authUser.getUserName();
+        this.memberName = authUser.getMemberName();
         this.memberSex = authUser.getSex();
         this.memberAge = TimeUtils.getAgeFromBirthTime(authUser.getBirthday());
         this.memberTime = authUser.getCreatTime();
