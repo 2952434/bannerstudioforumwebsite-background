@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import studio.banner.forumwebsite.bean.InformBean;
 import studio.banner.forumwebsite.bean.RespBean;
 
+import java.util.List;
+
 /**
  * @Author: Ljx
  * @Date: 2021/12/19 14:07
@@ -32,6 +34,11 @@ public interface IInformService {
      */
     IPage<InformBean> selectInform(Integer page,Integer size);
 
+    /**
+     * 查询所有通知
+     * @return
+     */
+    List<InformBean> selectAllInform();
     /**
      * 通过id查询通知
      *

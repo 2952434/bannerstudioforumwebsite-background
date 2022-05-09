@@ -13,6 +13,8 @@ import studio.banner.forumwebsite.bean.InformBean;
 import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.service.IInformService;
 
+import java.util.List;
+
 /**
  * @Author: Ljx
  * @Date: 2021/12/19 15:09
@@ -57,5 +59,15 @@ public class InformController {
         } else {
             return RespBean.ok("查询成功", informBean);
         }
+    }
+
+    @GetMapping("/selectAllInform")
+    @ApiOperation(value = "查询所有通知")
+    public RespBean selectAllInform(){
+        List<InformBean> informBeans = informService.selectAllInform();
+        if (informBeans.size()==0){
+            return RespBean.error("查询失败");
+        }
+        return RespBean.ok("查询成功",informBeans);
     }
 }

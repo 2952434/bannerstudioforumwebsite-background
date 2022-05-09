@@ -23,7 +23,7 @@ public class test {
     @Test
     public void test(){
         System.out.println(fixedInformationMapper);
-        List<String> list = fixedInformationMapper.selectUserGrade();
-        System.out.println(list);
+//        List<String> list = fixedInformationMapper.selectUserGrade();
+//        System.out.println(list);
     }
 }

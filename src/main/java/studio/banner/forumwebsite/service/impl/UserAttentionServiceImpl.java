@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import studio.banner.forumwebsite.bean.MemberInformationBean;
 import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.bean.UserAttentionBean;
@@ -42,6 +43,7 @@ public class UserAttentionServiceImpl implements IUserAttentionService {
      * @return boolean
      */
     @Override
+    @Transactional
     public RespBean insertContact(UserAttentionBean userAttentionBean) {
         if (userAttentionBean.getBeAttentionId() != null) {
             userAttentionBean.setContactTime(TimeUtils.getDateString());
@@ -52,8 +54,8 @@ public class UserAttentionServiceImpl implements IUserAttentionService {
             }
             logger.info("添加关注成功");
             UpdateWrapper<MemberInformationBean> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("member_id", userAttentionBean.getBeAttentionId()).setSql("`member_fans`=`member_fans`+1")
-                    .eq("member_id", userAttentionBean.getAttentionId()).setSql("`member_attention`=`member_attention`+1");
+            updateWrapper.eq("member_id",userAttentionBean.getBeAttentionId()).set("member_fans",userAttentionBean.getBeAttentionId());
+            updateWrapper.eq("member_id",userAttentionBean.getAttentionId()).set("member_attention",userAttentionBean.getAttentionId());
             if (memberInformationMapper.update(null,updateWrapper)==1) {
                 return RespBean.ok("添加关注成功");
             }
@@ -68,6 +70,7 @@ public class UserAttentionServiceImpl implements IUserAttentionService {
      * @return boolean
      */
     @Override
+    @Transactional
     public boolean deleteContact(Integer attentionId,Integer beAttentionId) {
         UpdateWrapper<UserAttentionBean> wrapper = new UpdateWrapper<>();
         wrapper.eq("attention_id", attentionId).eq("be_attention_id",beAttentionId);

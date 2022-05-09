@@ -12,6 +12,8 @@ import studio.banner.forumwebsite.mapper.InformMapper;
 import studio.banner.forumwebsite.service.IInformService;
 import studio.banner.forumwebsite.utils.TimeUtils;
 
+import java.util.List;
+
 /**
  * @Author: Ljx
  * @Date: 2021/12/19 14:10
@@ -54,6 +56,11 @@ public class InformServiceImpl implements IInformService {
         Page<InformBean> page1 = new Page<>(page, size);
         Page<InformBean> informBeanPage = informMapper.selectPage(page1, queryWrapper);
         return informBeanPage;
+    }
+
+    @Override
+    public List<InformBean> selectAllInform() {
+        return informMapper.selectList(null);
     }
 
     /**

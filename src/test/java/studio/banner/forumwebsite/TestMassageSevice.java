@@ -12,7 +12,9 @@ import studio.banner.forumwebsite.mapper.PostMapper;
 import studio.banner.forumwebsite.service.IMessageService;
 import studio.banner.forumwebsite.service.IPostEsService;
 import studio.banner.forumwebsite.service.IReplyService;
+import studio.banner.forumwebsite.service.IUserAttentionService;
 import studio.banner.forumwebsite.service.impl.MessageServiceImpl;
+import studio.banner.forumwebsite.service.impl.UserAttentionServiceImpl;
 
 import java.util.*;
 
@@ -25,6 +27,8 @@ public class TestMassageSevice {
     private FixedInformationMapper fixedInformationMapper;
     @Autowired
     private PostMapper postMapper;
+    @Autowired
+    private IUserAttentionService iUserAttentionService;
 
     @Autowired
     private IPostEsService postEsService;
@@ -68,6 +72,15 @@ PostBean postBean = new PostBean();
 //        PostBean postBean = new PostBean(maps.get(0));
 //        System.out.println(postBean);
 
+    }
+
+    @Test
+    public void testAttention(){
+        UserAttentionBean userAttentionBean = new UserAttentionBean();
+        userAttentionBean.setAttentionId(55);
+        userAttentionBean.setBeAttentionId(179);
+        userAttentionBean.setAttentionInformation("123");
+        System.out.println(iUserAttentionService.insertContact(userAttentionBean));
     }
     @Test
     public void testSave() {
