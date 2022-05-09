@@ -77,8 +77,8 @@ public class UserAttentionServiceImpl implements IUserAttentionService {
         }
         logger.info("取消关注成功");
         UpdateWrapper<MemberInformationBean> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("member_id",beAttentionId).setSql("`member_fans`=`member_fans`-1")
-                .eq("member_id",attentionId).setSql("`member_attention`=`member_attention`-1");
+        updateWrapper.eq("member_id",beAttentionId).set("member_fans",selectFansByMemberId(beAttentionId));
+        updateWrapper.eq("member_id",attentionId).set("member_attention",selectStarsByMemberId(beAttentionId));
         return memberInformationMapper.update(null,updateWrapper)==1;
     }
 

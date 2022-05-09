@@ -39,7 +39,7 @@ public class UserContactController {
             @ApiImplicitParam(paramType = "query", name = "contactTime",
                     value = "关注时间", required = false, dataTypeClass = String.class),
             @ApiImplicitParam(paramType = "query", name = "attentionShow",
-                    value = "关注是否展示0：展示1：不展示", required = true, dataTypeClass = Integer.class),
+                    value = "关注是否展示0：展示1：不展示", required = false, dataTypeClass = Integer.class),
             @ApiImplicitParam(paramType = "query", name = "attentionInformation",
                     value = "关注信息", required = true, dataTypeClass = String.class)
     })
