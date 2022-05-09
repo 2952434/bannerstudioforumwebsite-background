@@ -11,10 +11,7 @@ import studio.banner.forumwebsite.mapper.FixedInformationMapper;
 import studio.banner.forumwebsite.mapper.MemberInformationMapper;
 import studio.banner.forumwebsite.mapper.PostMapper;
 import studio.banner.forumwebsite.mapper.UserContactMapper;
-import studio.banner.forumwebsite.service.IMessageService;
-import studio.banner.forumwebsite.service.IPostEsService;
-import studio.banner.forumwebsite.service.IReplyService;
-import studio.banner.forumwebsite.service.IUserAttentionService;
+import studio.banner.forumwebsite.service.*;
 import studio.banner.forumwebsite.service.impl.MessageServiceImpl;
 import studio.banner.forumwebsite.service.impl.UserAttentionServiceImpl;
 
@@ -28,6 +25,8 @@ public class TestMassageSevice {
     private UserContactMapper userContactMapper;
     @Autowired
     private FixedInformationMapper fixedInformationMapper;
+    @Autowired
+    private ICollectService iCollectService;
     @Autowired
     private PostMapper postMapper;
     @Autowired
@@ -87,6 +86,11 @@ PostBean postBean = new PostBean();
         userAttentionBean.setAttentionInformation("123");
         System.out.println(iUserAttentionService.insertContact(userAttentionBean));
         iUserAttentionService.deleteContact(55,197);
+    }
+
+    @Test
+    public void testCollect(){
+        System.out.println(iCollectService.judgeCollectPost(53, 1));
     }
     @Test
     public void testSave() {

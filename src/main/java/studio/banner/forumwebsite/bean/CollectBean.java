@@ -39,7 +39,7 @@ public class CollectBean {
     /**
      * 收藏用户id
      */
-    private Integer cloUserId;
+    private Integer colUserId;
     /**
      * 收藏文章标题
      */
