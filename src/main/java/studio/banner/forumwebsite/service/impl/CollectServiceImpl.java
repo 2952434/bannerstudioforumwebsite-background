@@ -149,13 +149,6 @@ public class CollectServiceImpl implements ICollectService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean insertCollect(CollectBean collectBean) {
-        if (collectBean.getFavoriteId()==null){
-            if (deleteCollect(collectBean.getColArtId(),collectBean.getColUserId())){
-                logger.info("取消收藏成功");
-                return false;
-            }
-            logger.error("取消收藏失败");
-        }
         List<CollectBean> collectBeans = judgeCollectPost(collectBean.getColUserId(), collectBean.getColArtId());
         if (collectBeans.size()==0){
             if (collectMapper.insert(collectBean) == 1) {
@@ -301,7 +294,9 @@ public class CollectServiceImpl implements ICollectService {
             return RespBean.ok("查询成功",collectBean);
         }
         Map<String, String> map = collectFavoriteMapper.selectFavoriteId(userId);
-        return RespBean.ok("查询成功",map);
+        collectBean = new CollectBean();
+        collectBean.setFavoriteId(Integer.parseInt(String.valueOf(map.get("favorite_id"))));
+        return RespBean.ok("查询成功",collectBean);
     }
 
 
