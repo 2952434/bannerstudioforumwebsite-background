@@ -21,6 +21,6 @@ public interface CollectFavoriteMapper extends BaseMapper<CollectFavoriteBean> {
      * @param userId
      * @return
      */
-    @Select("select fa.favorite_id from tab_collect co,tab_collect_favorite fa where fa.user_id=#{userId} and co.col_user_id = fa.user_id and fa.favorite_name='默认收藏夹'")
+    @Select("select fa.favorite_id from tab_collect_favorite fa where fa.user_id=#{userId} and fa.favorite_name='默认收藏夹';")
     Map<String,String> selectFavoriteId(@Param("userId") Integer userId);
 }

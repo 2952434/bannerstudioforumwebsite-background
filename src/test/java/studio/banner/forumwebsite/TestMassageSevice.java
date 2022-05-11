@@ -90,6 +90,7 @@ PostBean postBean = new PostBean();
 
     @Test
     public void testCollect(){
+        System.out.println(iCollectService.selectCollectFavoriteId(50, 1));
         System.out.println(iCollectService.judgeCollectPost(53, 1));
     }
     @Test

@@ -201,7 +201,7 @@ public class CollectController {
     }
 
     @GetMapping("selectCollectFavoriteId/{userId}/{postId}")
-    @ApiOperation(value = "根据用户id和帖子id查询收藏夹",httpMethod = "GET")
+    @ApiOperation(value = "根据用户id和帖子id查询收藏夹id",httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "userId",
                     value = "用户id", required = true, dataTypeClass = Integer.class),
