@@ -71,7 +71,7 @@ public interface ICollectService {
      * @param postId
      * @return
      */
-    boolean judgeCollectPost(Integer userId,Integer postId);
+    List<CollectBean> judgeCollectPost(Integer userId,Integer postId);
 
     /**
      * 增加收藏文章

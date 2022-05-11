@@ -96,7 +96,7 @@ public class CollectController {
                     value = "用户id", required = true, dataTypeClass = Integer.class)
     })
     public boolean judgeCollectPost(@PathVariable("userId") Integer userId,@PathVariable("postId") Integer postId){
-        return iCollectService.judgeCollectPost(userId, postId);
+        return iCollectService.judgeCollectPost(userId, postId).size()==1;
     }
 
     @PostMapping("/insertCollect")
@@ -116,9 +116,9 @@ public class CollectController {
     })
     public RespBean insert(CollectBean collectBean) {
         if (iCollectService.insertCollect(collectBean)) {
-            return RespBean.ok("收藏" + collectBean.getColArtTit() + "添加成功");
+            return RespBean.ok("收藏添加成功");
         } else {
-            return RespBean.error("收藏" + collectBean.getColArtTit() + "添加失败");
+            return RespBean.error("收藏添加失败");
         }
     }
 

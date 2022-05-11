@@ -134,10 +134,10 @@ public class CollectServiceImpl implements ICollectService {
      * @return
      */
     @Override
-    public boolean judgeCollectPost(Integer userId, Integer postId) {
+    public List<CollectBean> judgeCollectPost(Integer userId, Integer postId) {
         QueryWrapper<CollectBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("col_user_id",userId).eq("col_art_id",postId);
-        return collectMapper.selectList(queryWrapper).size()==1;
+        return collectMapper.selectList(queryWrapper);
     }
 
     /**
@@ -147,15 +147,35 @@ public class CollectServiceImpl implements ICollectService {
      * @return boolean
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean insertCollect(CollectBean collectBean) {
-        if (judgeCollectPost(collectBean.getColUserId(),collectBean.getColId())){
+        if (collectBean.getFavoriteId()==null){
+            if (deleteCollect(collectBean.getColArtId(),collectBean.getColUserId())){
+                logger.info("取消收藏成功");
+                return false;
+            }
+            logger.error("取消收藏失败");
+        }
+        List<CollectBean> collectBeans = judgeCollectPost(collectBean.getColUserId(), collectBean.getColArtId());
+        if (collectBeans.size()==0){
             if (collectMapper.insert(collectBean) == 1) {
                 iMemberInformationService.updateColNum(collectBean.getColUserId());
+                logger.info("添加收藏成功");
                 return true;
             }
+            logger.error("添加收藏失败");
             return false;
+        }else {
+            CollectBean collectBean1 = collectBeans.get(0);
+            collectBean1.setFavoriteId(collectBean.getFavoriteId());
+            if (collectMapper.updateById(collectBean1)==1) {
+                logger.info("更改收藏夹成功");
+                return true;
+            }else {
+                logger.error("更改收藏夹失败");
+                return false;
+            }
         }
-        return false;
     }
 
 
@@ -232,6 +252,7 @@ public class CollectServiceImpl implements ICollectService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public RespBean updateCollectByIds(List<Integer> colIds, Integer favoriteId) {
         UpdateWrapper<CollectBean> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("col_id",colIds).set("favorite_id",favoriteId);
@@ -248,6 +269,7 @@ public class CollectServiceImpl implements ICollectService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public RespBean selectCollectByFavoriteId(Integer favoriteId) {
         QueryWrapper<CollectBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("favorite_id",favoriteId);
@@ -270,7 +292,7 @@ public class CollectServiceImpl implements ICollectService {
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public RespBean selectCollectFavoriteId(Integer userId, Integer postId) {
         QueryWrapper<CollectBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("col_user_id",userId).eq("col_art_id",postId);
