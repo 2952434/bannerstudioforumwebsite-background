@@ -99,7 +99,7 @@ public class UserMsgController {
     public RespBean selectUserBirthday(@PathVariable Integer memberId) {
         List<MemberInformationBean> list = iMemberInformationService.selectBirthday(memberId);
         if (list.size() != 0) {
-            return RespBean.ok("今天生日的人为：" + list);
+            return RespBean.ok("今天生日的人为：" , list);
         } else {
             return RespBean.ok("今天没人过生日！！！");
         }

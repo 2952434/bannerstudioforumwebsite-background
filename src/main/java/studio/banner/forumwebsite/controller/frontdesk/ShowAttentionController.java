@@ -11,6 +11,7 @@ import studio.banner.forumwebsite.bean.UserAttentionBean;
 import studio.banner.forumwebsite.service.IUserAttentionService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: Ljx
@@ -35,10 +36,7 @@ public class ShowAttentionController {
                     value = "页数",required = true,dataTypeClass = Integer.class)
     })
     public RespBean selectAttentionInformation(@PathVariable Integer memberId,@PathVariable Integer page) {
-        List<UserAttentionBean> userAttentionBeans = iUserAttentionService.selectAttentionInformation(memberId, page);
-        if (userAttentionBeans.size()==0){
-            return RespBean.error("该页无数据");
-        }
+        List<Map<String, String>> userAttentionBeans = iUserAttentionService.selectAttentionInformation(memberId, page);
         return RespBean.ok("查询成功",userAttentionBeans);
     }
 

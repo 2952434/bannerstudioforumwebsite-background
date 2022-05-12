@@ -2,8 +2,6 @@ package studio.banner.forumwebsite.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +17,10 @@ import studio.banner.forumwebsite.service.IUserAttentionService;
 import studio.banner.forumwebsite.utils.TimeUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
- * @Author: Mo
+ * @Author: Ljx
  * @Date: 2021/5/18 18:35
  * @role: 关注关系服务实现
  */
@@ -33,8 +32,6 @@ public class UserAttentionServiceImpl implements IUserAttentionService {
     private UserContactMapper userContactMapper;
     @Autowired
     private MemberInformationMapper memberInformationMapper;
-    @Autowired
-    private IMemberInformationService iMemberInformationService;
 
     /**
      * 新增关注
@@ -74,7 +71,7 @@ public class UserAttentionServiceImpl implements IUserAttentionService {
      * @return boolean
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public boolean deleteContact(Integer attentionId,Integer beAttentionId) {
         UpdateWrapper<UserAttentionBean> wrapper = new UpdateWrapper<>();
         wrapper.eq("attention_id", attentionId).eq("be_attention_id",beAttentionId);
@@ -115,61 +112,29 @@ public class UserAttentionServiceImpl implements IUserAttentionService {
 
     /**
      * 根据Id查询其关注的人
-     *
-     * @param memberFan 粉丝id
-     * @return List<UserAttentionBean>
+     * @param userId
+     * @param page
+     * @return
      */
     @Override
-    public List<UserAttentionBean> stars(Integer memberFan,Integer page) {
-        Page<UserAttentionBean> page1 = new Page<>(page, 12);
-        QueryWrapper<UserAttentionBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("attention_id", memberFan).orderByDesc("contact_time");
-        Page<UserAttentionBean> userAttentionBeanPage = userContactMapper.selectPage(page1, queryWrapper);
-        List<UserAttentionBean> records = userAttentionBeanPage.getRecords();
-        for (UserAttentionBean record : records) {
-            MemberInformationBean memberInformationBean = iMemberInformationService.selectUserMsg(record.getBeAttentionId());
-            record.setAttentionHead(memberInformationBean.getMemberHead());
-            record.setAttentionName(memberInformationBean.getMemberName());
-            record.setMemberSignature(memberInformationBean.getMemberSignature());
-        }
-        return records;
+    public List<Map<String, String>> selectAttentionUserId(Integer userId, Integer page) {
+        return userContactMapper.selectAttentionUserId(userId,page*12);
     }
 
     /**
      * 根据用户Id查询其粉丝
-     *
-     * @param memberStar 用户id
-     * @return List<UserAttentionBean>
+     * @param userId
+     * @param page
+     * @return
      */
     @Override
-    public List<UserAttentionBean> fans(Integer memberStar,Integer page) {
-        Page<UserAttentionBean> page1 = new Page<>(page, 12);
-        QueryWrapper<UserAttentionBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("be_attention_id", memberStar).orderByDesc("contact_time");
-        Page<UserAttentionBean> userAttentionBeanPage = userContactMapper.selectPage(page1, queryWrapper);
-        List<UserAttentionBean> records = userAttentionBeanPage.getRecords();
-        for (UserAttentionBean record : records) {
-            MemberInformationBean memberInformationBean = iMemberInformationService.selectUserMsg(record.getAttentionId());
-            record.setAttentionHead(memberInformationBean.getMemberHead());
-            record.setAttentionName(memberInformationBean.getMemberName());
-            record.setMemberSignature(memberInformationBean.getMemberSignature());
-        }
-        return records;
+    public List<Map<String, String>> selectFanByUserId(Integer userId, Integer page) {
+        return userContactMapper.selectFanByUserId(userId, page * 12);
     }
 
     @Override
-    public List<UserAttentionBean> selectAttentionInformation(Integer memberId, Integer page) {
-        Page<UserAttentionBean> page1 = new Page<>(page, 12);
-        QueryWrapper<UserAttentionBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("be_attention_id", memberId).eq("attention_show",0).orderByDesc("attention_time");
-        Page<UserAttentionBean> userAttentionBeanPage = userContactMapper.selectPage(page1, queryWrapper);
-        List<UserAttentionBean> records = userAttentionBeanPage.getRecords();
-        for (UserAttentionBean record : records) {
-            MemberInformationBean memberInformationBean = iMemberInformationService.selectUserMsg(record.getAttentionId());
-            record.setAttentionHead(memberInformationBean.getMemberHead());
-            record.setAttentionName(memberInformationBean.getMemberName());
-        }
-        return records;
+    public List<Map<String, String>> selectAttentionInformation(Integer memberId, Integer page) {
+        return userContactMapper.selectFanByUserId(memberId, page * 12);
     }
 
     @Override

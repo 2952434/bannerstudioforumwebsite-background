@@ -93,6 +93,11 @@ PostBean postBean = new PostBean();
         System.out.println(iCollectService.selectCollectFavoriteId(50, 1));
         System.out.println(iCollectService.judgeCollectPost(53, 1));
     }
+
+    @Test
+    public void userContactMapper(){
+        System.out.println(userContactMapper.selectFanByUserId(50, 0));
+    }
     @Test
     public void testSave() {
         Message message = Message.builder()

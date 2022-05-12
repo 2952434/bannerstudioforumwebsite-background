@@ -4,6 +4,7 @@ import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.bean.UserAttentionBean;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: Mo
@@ -51,7 +52,7 @@ public interface IUserAttentionService {
      * @param page
      * @return
      */
-    List<UserAttentionBean> stars(Integer memberFan,Integer page);
+    List<Map<String,String>> selectAttentionUserId(Integer memberFan,Integer page);
 
     /**
      * 根据用户Id查询其粉丝
@@ -59,7 +60,7 @@ public interface IUserAttentionService {
      * @param page
      * @return
      */
-    List<UserAttentionBean> fans(Integer memberStar,Integer page);
+    List<Map<String,String>> selectFanByUserId(Integer memberStar, Integer page);
 
     /**
      * 根据用户Id查询其粉丝信息
@@ -67,7 +68,7 @@ public interface IUserAttentionService {
      * @param page
      * @return
      */
-    List<UserAttentionBean> selectAttentionInformation(Integer memberId,Integer page);
+    List<Map<String, String>> selectAttentionInformation(Integer memberId, Integer page);
 
     /**
      * 通过用户id查询其关注数数

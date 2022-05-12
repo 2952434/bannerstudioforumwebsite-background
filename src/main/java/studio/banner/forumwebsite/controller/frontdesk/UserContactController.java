@@ -13,6 +13,7 @@ import studio.banner.forumwebsite.bean.UserAttentionBean;
 import studio.banner.forumwebsite.service.IUserAttentionService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: ljh
@@ -95,9 +96,9 @@ public class UserContactController {
             @ApiImplicitParam(paramType = "query", name = "memberStar",
                     value = "被关注者id", required = true, dataTypeClass = Integer.class),
     })
-    public List<UserAttentionBean> selectFan(@PathVariable("memberId") Integer memberStar,@PathVariable("page") Integer page) {
+    public List<Map<String, String>> selectFan(@PathVariable("memberId") Integer memberId, @PathVariable("page") Integer page) {
 
-        return iUserAttentionService.fans(memberStar,page);
+        return iUserAttentionService.selectFanByUserId(memberId,page);
 
     }
 
@@ -115,12 +116,15 @@ public class UserContactController {
     @ApiOperation(value = "根据用户Id查询其关注的人", notes = "返回列表", httpMethod = "GET")
     @GetMapping("/userContactFrontDesk/selectStar/{memberId}/{page}")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "memberFan",
+            @ApiImplicitParam(paramType = "query", name = "memberId",
                     value = "被关注者id", required = true, dataTypeClass = Integer.class),
-    })
-    public List<UserAttentionBean> selectStar(@PathVariable("memberId") Integer memberFan,@PathVariable("page") Integer page) {
+            @ApiImplicitParam(paramType = "query", name = "page",
+                    value = "页数", required = true, dataTypeClass = Integer.class),
 
-        return iUserAttentionService.stars(memberFan,page);
+    })
+    public List<Map<String, String>> selectStar(@PathVariable("memberId") Integer memberId, @PathVariable("page") Integer page) {
+
+        return iUserAttentionService.selectAttentionUserId(memberId,page);
 
     }
 
