@@ -90,47 +90,47 @@ public class UserContactController {
     }
 
     @ApiOperation(value = "根据用户Id查询其粉丝", notes = "返回列表", httpMethod = "GET")
-    @GetMapping("/userContactFrontDesk/selectFan")
+    @GetMapping("/userContactFrontDesk/selectFan/{memberId}/{page}")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberStar",
                     value = "被关注者id", required = true, dataTypeClass = Integer.class),
     })
-    public List<UserAttentionBean> selectFan(Integer memberStar,Integer page) {
+    public List<UserAttentionBean> selectFan(@PathVariable("memberId") Integer memberStar,@PathVariable("page") Integer page) {
 
         return iUserAttentionService.fans(memberStar,page);
 
     }
 
     @ApiOperation(value = "根据用户Id查询其粉丝数", notes = "返回粉丝数", httpMethod = "GET")
-    @GetMapping("/userContactFrontDesk/selectFans")
+    @GetMapping("/userContactFrontDesk/selectFans/{memberId}")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberStar",
                     value = "被关注者id", required = true, dataTypeClass = Integer.class),
     })
-    public Integer selectFans(Integer memberStar) {
+    public Integer selectFans(@PathVariable("memberId") Integer memberStar) {
         return iUserAttentionService.selectFansByMemberId(memberStar);
     }
 
 
     @ApiOperation(value = "根据用户Id查询其关注的人", notes = "返回列表", httpMethod = "GET")
-    @GetMapping("/userContactFrontDesk/selectStar")
+    @GetMapping("/userContactFrontDesk/selectStar/{memberId}/{page}")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberFan",
                     value = "被关注者id", required = true, dataTypeClass = Integer.class),
     })
-    public List<UserAttentionBean> selectStar(Integer memberFan,Integer page) {
+    public List<UserAttentionBean> selectStar(@PathVariable("memberId") Integer memberFan,@PathVariable("page") Integer page) {
 
         return iUserAttentionService.stars(memberFan,page);
 
     }
 
     @ApiOperation(value = "根据用户Id查询其关注的人数", notes = "返回关注的人数", httpMethod = "GET")
-    @GetMapping("/userContactFrontDesk/selectStars")
+    @GetMapping("/userContactFrontDesk/selectStars/{memberId}")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "memberFan",
                     value = "memberFan", required = true, dataTypeClass = Integer.class),
     })
-    public Integer selectStars(Integer memberFan) {
+    public Integer selectStars(@PathVariable("memberId") Integer memberFan) {
 
         return iUserAttentionService.selectStarsByMemberId(memberFan);
 
