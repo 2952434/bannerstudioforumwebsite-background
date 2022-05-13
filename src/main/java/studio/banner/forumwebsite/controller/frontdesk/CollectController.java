@@ -211,4 +211,12 @@ public class CollectController {
     public RespBean selectCollectFavoriteId(@PathVariable("userId") Integer userId,@PathVariable("postId") Integer postId){
         return iCollectService.selectCollectFavoriteId(userId, postId);
     }
+
+    @GetMapping("/selectCollectFavoriteByFavoriteId/{favoriteId}")
+    @ApiOperation(value = "根据收藏夹id获取收藏夹",httpMethod = "GET")
+    @ApiImplicitParam(paramType = "query",name = "favoriteId",
+            value = "收藏夹id",required = true,dataTypeClass = Integer.class)
+    public RespBean selectCollectFavoriteByFavoriteId(@PathVariable Integer favoriteId){
+        return iCollectService.selectCollectFavoriteByFavoriteId(favoriteId);
+    }
 }

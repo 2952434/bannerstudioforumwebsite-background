@@ -70,10 +70,6 @@ public class MemberInformationServiceImpl implements IMemberInformationService {
     public MemberInformationBean selectUserMsg(Integer memberId) {
         QueryWrapper<MemberInformationBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("member_id",memberId);
-        //        memberInformationBean.setMemberFans(iUserAttentionService.selectFansByMemberId(memberId));
-//        memberInformationBean.setMemberAttention(iUserAttentionService.selectStarsByMemberId(memberId));
-//        memberInformationBean.setMemberPostNum(iPostService.selectPostNumByMemberId(memberId));
-//        memberInformationMapper.update(memberInformationBean,queryWrapper);
         return memberInformationMapper.selectOne(queryWrapper);
     }
 
@@ -191,6 +187,17 @@ public class MemberInformationServiceImpl implements IMemberInformationService {
 
         Map<String, String> map = memberInformationMapper.selectAllInformationByMemberId(memberId);
         return RespBean.ok("查询成功", map);
+    }
+
+    @Override
+    public RespBean updateMemberInformation(MemberInformationBean memberInformationBean) {
+        int updateById = memberInformationMapper.updateById(memberInformationBean);
+        if (updateById==1){
+            logger.info("更新用户成功");
+            return RespBean.ok("更新成功");
+        }
+        logger.error("更新用户失败");
+        return RespBean.error("更新用户失败");
     }
 
 

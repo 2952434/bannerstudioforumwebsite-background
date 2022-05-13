@@ -22,7 +22,7 @@ public interface PostEsMapper extends ElasticsearchRepository<PostEsBean, Intege
      * @param pageable
      * @return
      */
-    List<PostEsBean> findByPostContentAndPostTitleAndPostType(String title, String context, String postType, Pageable pageable);
+    List<PostEsBean> findByPostContentAndPostTitleAndPostTypeAndMemberName(String title, String context, String postType,String memberName, Pageable pageable);
 
     /**
      * 根据用户id删除用户帖子

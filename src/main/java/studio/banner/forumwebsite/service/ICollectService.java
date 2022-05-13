@@ -136,4 +136,11 @@ public interface ICollectService {
      * @return
      */
     RespBean selectCollectFavoriteId(Integer userId,Integer postId);
+
+    /**
+     * 通过收藏夹id获取收藏夹
+     * @param favoriteId
+     * @return
+     */
+    RespBean selectCollectFavoriteByFavoriteId(Integer favoriteId);
 }

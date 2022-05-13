@@ -94,4 +94,11 @@ public interface IMemberInformationService {
      * @return Map<String,String>
      */
     RespBean selectAllInformationByMemberId(Integer memberId);
+
+    /**
+     * 更新用户信息
+     * @param memberInformationBean
+     * @return
+     */
+    RespBean updateMemberInformation(MemberInformationBean memberInformationBean);
 }

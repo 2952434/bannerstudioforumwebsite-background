@@ -91,6 +91,7 @@ public class CollectServiceImpl implements ICollectService {
         QueryWrapper<CollectFavoriteBean> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id",userId);
         List<CollectFavoriteBean> collectFavoriteBeans = collectFavoriteMapper.selectList(queryWrapper);
+
         if (userId.equals(selectId)){
             return RespBean.ok("查询成功",collectFavoriteBeans);
         }
@@ -297,6 +298,12 @@ public class CollectServiceImpl implements ICollectService {
         collectBean = new CollectBean();
         collectBean.setFavoriteId(Integer.parseInt(String.valueOf(map.get("favorite_id"))));
         return RespBean.ok("查询成功",collectBean);
+    }
+
+    @Override
+    public RespBean selectCollectFavoriteByFavoriteId(Integer favoriteId) {
+
+        return RespBean.ok("查询成功",collectFavoriteMapper.selectById(favoriteId));
     }
 
 

@@ -141,4 +141,35 @@ public class UserMsgController {
     public RespBean selectAllInformationByMemberId(@PathVariable Integer memberId){
         return iMemberInformationService.selectAllInformationByMemberId(memberId);
     }
+
+    @PutMapping("/updateMemberInformation")
+    @ApiOperation(value = "更新用户信息",httpMethod = "PUT")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "memberId",
+                    value = "用户Id", dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "memberName",
+                    value = "用户昵称", dataTypeClass = String.class),
+            @ApiImplicitParam(paramType = "query", name = "memberSex",
+                    value = "用户性别", dataTypeClass = String.class),
+            @ApiImplicitParam(paramType = "query", name = "memberAge",
+                    value = "用户年龄", dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "memberTime",
+                    value = "注册时间", dataTypeClass = String.class),
+            @ApiImplicitParam(paramType = "query", name = "memberHead",
+                    value = "用户头像", dataTypeClass = String.class),
+            @ApiImplicitParam(paramType = "query", name = "memberFans",
+                    value = "用户粉丝数", dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "memberFans",
+                    value = "用户粉丝数", dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "memberAttention",
+                    value = "用户关注数", dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "memberBirthday",
+                    value = "格式必须为xxxx-xx-xx", required = false, dataTypeClass = Date.class),
+            @ApiImplicitParam(paramType = "query", name = "memberSignature",
+                    value = "个性签名", dataTypeClass = String.class)
+
+    })
+    public RespBean updateMemberInformation(MemberInformationBean memberInformationBean) {
+        return iMemberInformationService.updateMemberInformation(memberInformationBean);
+    }
 }
