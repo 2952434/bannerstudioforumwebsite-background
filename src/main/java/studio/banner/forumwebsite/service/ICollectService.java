@@ -143,4 +143,11 @@ public interface ICollectService {
      * @return
      */
     RespBean selectCollectFavoriteByFavoriteId(Integer favoriteId);
+
+    /**
+     * 跟据收藏夹id清除该收藏夹
+     * @param favoriteId
+     * @return
+     */
+    RespBean deleteCollectByFavoriteId(Integer favoriteId);
 }

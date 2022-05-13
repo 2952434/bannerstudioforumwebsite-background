@@ -306,5 +306,21 @@ public class CollectServiceImpl implements ICollectService {
         return RespBean.ok("查询成功",collectFavoriteMapper.selectById(favoriteId));
     }
 
+    /**
+     * 跟据收藏夹id清除该收藏夹
+     * @param favoriteId
+     * @return
+     */
+    @Override
+    public RespBean deleteCollectByFavoriteId(Integer favoriteId) {
+        QueryWrapper<CollectBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("favorite_id",favoriteId);
+        int delete = collectMapper.delete(queryWrapper);
+        if (delete==1){
+            return RespBean.ok("删除成功");
+        }
+        return RespBean.error("删除失败");
+    }
+
 
 }

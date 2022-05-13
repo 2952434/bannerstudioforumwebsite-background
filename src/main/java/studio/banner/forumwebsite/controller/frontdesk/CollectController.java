@@ -219,4 +219,12 @@ public class CollectController {
     public RespBean selectCollectFavoriteByFavoriteId(@PathVariable Integer favoriteId){
         return iCollectService.selectCollectFavoriteByFavoriteId(favoriteId);
     }
+
+    @DeleteMapping("/deleteCollectByFavoriteId/{favoriteId}")
+    @ApiOperation(value = "根据收藏夹id清除该收藏夹",httpMethod = "DELETE")
+    @ApiImplicitParam(paramType = "query",name = "favoriteId",
+            value = "收藏夹id",required = true,dataTypeClass = Integer.class)
+    public RespBean deleteCollectByFavoriteId(@PathVariable Integer favoriteId) {
+        return iCollectService.deleteCollectByFavoriteId(favoriteId);
+    }
 }
