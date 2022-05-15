@@ -4,6 +4,7 @@ import studio.banner.forumwebsite.bean.PostLikeBean;
 import studio.banner.forumwebsite.bean.RespBean;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: Ljx
@@ -55,7 +56,7 @@ public interface IPostLikeService {
      * @param page
      * @return
      */
-    List<PostLikeBean> selectPostLikeByUserId(Integer userId, Integer page);
+    List<Map<String, String>> selectPostLikeByUserId(Integer userId, Integer page);
 
     /**
      * 根据点赞id取消显示
@@ -67,6 +68,7 @@ public interface IPostLikeService {
     /**
      * 通过用户id取消点赞信息全部展示
      * @param userId
+     * @return
      */
-    void deletePostLikeAllInformation(Integer userId);
+    boolean deletePostLikeAllInformation(Integer userId);
 }

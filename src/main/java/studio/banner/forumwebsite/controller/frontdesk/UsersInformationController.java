@@ -98,14 +98,14 @@ public class UsersInformationController {
         return RespBean.error("无该用户信息");
     }
 
-    @GetMapping("/selectUserGrade")
-    @ApiOperation(value = "查询所有年级",httpMethod = "GET")
-    public RespBean selectGradeGroupBy(HttpServletRequest request){
+    @GetMapping("/selectUserGrade/{grade}")
+    @ApiOperation(value = "根据年级查询所有年级",httpMethod = "GET")
+    public RespBean selectGradeGroupBy(HttpServletRequest request,@PathVariable String grade){
         String header = request.getHeader("Authorization");
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", header);
         HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
-        ResponseEntity<RespBean> entity = restTemplate.exchange("https://oauth.bannerstudio.club/admin/selectGradeGroupBy", HttpMethod.GET, httpEntity, RespBean.class);
+        ResponseEntity<RespBean> entity = restTemplate.exchange("https://oauth.bannerstudio.club/admin/selectGradeGroupBy/"+grade, HttpMethod.GET, httpEntity, RespBean.class);
         return entity.getBody();
     }
 

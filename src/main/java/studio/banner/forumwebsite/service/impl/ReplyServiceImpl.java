@@ -14,6 +14,7 @@ import studio.banner.forumwebsite.service.IReplyService;
 import studio.banner.forumwebsite.utils.TimeUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -153,20 +154,8 @@ public class ReplyServiceImpl implements IReplyService {
 
 
     @Override
-    public List<ReplyBean> selectReplyInformationById(Integer memberId, Integer page) {
-        QueryWrapper<ReplyBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("reply_comment_member_id",memberId).eq("reply_show",0).orderByDesc("reply_time");
-        Page<ReplyBean> page1 = new Page<>(page,7);
-        Page<ReplyBean> replyBeanPage = replyMapper.selectPage(page1, queryWrapper);
-        List<ReplyBean> records = replyBeanPage.getRecords();
-        for (ReplyBean record : records) {
-            CommentBean commentBean = iCommentService.selectComment(record.getCommentId());
-            record.setCommentContent(commentBean.getCommentContent());
-            MemberInformationBean memberInformationBean = iMemberInformationService.selectUserMsg(record.getReplyCommentMemberId());
-            record.setHeadUrl(memberInformationBean.getMemberHead());
-            record.setUserName(memberInformationBean.getMemberName());
-        }
-        return records;
+    public List<Map<String, String>> selectReplyInformationById(Integer memberId, Integer page) {
+        return replyMapper.selectReplyInformationById(memberId,(page-1)*15);
     }
 
     @Override
@@ -177,10 +166,10 @@ public class ReplyServiceImpl implements IReplyService {
     }
 
     @Override
-    public void deleteAllReplyInformationById(Integer memberId) {
+    public boolean deleteAllReplyInformationById(Integer memberId) {
         UpdateWrapper<ReplyBean> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("reply_comment_member_id",memberId).set("reply_show",1);
-        replyMapper.update(null, updateWrapper);
+        return replyMapper.update(null, updateWrapper)==1;
     }
 
 }

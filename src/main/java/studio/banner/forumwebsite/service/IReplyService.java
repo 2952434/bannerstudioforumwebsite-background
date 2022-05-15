@@ -4,6 +4,7 @@ import studio.banner.forumwebsite.bean.ReplyBean;
 import studio.banner.forumwebsite.bean.RespBean;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -78,7 +79,7 @@ public interface IReplyService {
      * @param page
      * @return
      */
-    List<ReplyBean> selectReplyInformationById(Integer memberId,Integer page);
+    List<Map<String, String>> selectReplyInformationById(Integer memberId, Integer page);
 
     /**
      * 通过评论id取消该评论展示
@@ -90,6 +91,7 @@ public interface IReplyService {
     /**
      * 通过用户id取消全部评论展示
      * @param memberId
+     * @return
      */
-    void deleteAllReplyInformationById(Integer memberId);
+    boolean deleteAllReplyInformationById(Integer memberId);
 }

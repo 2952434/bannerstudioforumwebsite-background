@@ -106,6 +106,9 @@ public class CollectServiceImpl implements ICollectService {
 
     @Override
     public RespBean deleteCollectFavorite(Integer favoriteId, Integer moveFavoriteId) {
+        if (favoriteId.equals(moveFavoriteId)){
+            return RespBean.error("删除失败");
+        }
         if (moveFavoriteId==null){
             return RespBean.error("请选择");
         }

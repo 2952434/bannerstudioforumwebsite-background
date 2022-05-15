@@ -1,10 +1,10 @@
 package studio.banner.forumwebsite.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import studio.banner.forumwebsite.bean.CommentBean;
 import studio.banner.forumwebsite.bean.RespBean;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -99,7 +99,7 @@ public interface ICommentService {
      * @param page
      * @return
      */
-    List<CommentBean> selectCommentByMemberId(Integer memberId,Integer page);
+    List<Map<String, String>> selectCommentByMemberId(Integer memberId, Integer page);
 
     /**
      * 根据评论id取消显示信息

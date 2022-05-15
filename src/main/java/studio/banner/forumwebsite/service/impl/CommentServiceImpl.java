@@ -2,7 +2,6 @@ package studio.banner.forumwebsite.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +15,7 @@ import studio.banner.forumwebsite.service.*;
 import studio.banner.forumwebsite.utils.TimeUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -183,21 +183,16 @@ public class CommentServiceImpl implements ICommentService {
         commentMapper.update(null,updateWrapper);
     }
 
+    /**
+     * 根据用户id分页查询被评论信息
+     * @param memberId
+     * @param page
+     * @return
+     */
     @Override
-    public List<CommentBean> selectCommentByMemberId(Integer memberId, Integer page) {
-        QueryWrapper<CommentBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("post_member_id",memberId).eq("comment_show",0).orderByDesc("comment_time");
-        Page<CommentBean> page1 = new Page<>(page,7);
-        Page<CommentBean> commentBeanPage = commentMapper.selectPage(page1, queryWrapper);
-        List<CommentBean> records = commentBeanPage.getRecords();
-        for (CommentBean record : records) {
-            PostBean postBean = iPostService.selectPost(record.getCommentPostId());
-            record.setPostTitle(postBean.getPostTitle());
-            MemberInformationBean memberInformationBean = iMemberInformationService.selectUserMsg(record.getCommentMemberId());
-            record.setHeadUrl(memberInformationBean.getMemberHead());
-            record.setUserName(memberInformationBean.getMemberName());
-        }
-        return records;
+    public List<Map<String, String>> selectCommentByMemberId(Integer memberId, Integer page) {
+
+        return commentMapper.selectCommentByMemberId(memberId, (page-1)*15);
     }
 
     @Override

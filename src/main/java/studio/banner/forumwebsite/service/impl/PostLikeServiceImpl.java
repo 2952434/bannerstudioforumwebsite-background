@@ -2,10 +2,8 @@ package studio.banner.forumwebsite.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import studio.banner.forumwebsite.bean.MemberInformationBean;
 import studio.banner.forumwebsite.bean.PostLikeBean;
 import studio.banner.forumwebsite.bean.RespBean;
 import studio.banner.forumwebsite.mapper.PostLikeMapper;
@@ -15,6 +13,7 @@ import studio.banner.forumwebsite.service.IPostService;
 import studio.banner.forumwebsite.utils.TimeUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: Ljx
@@ -84,18 +83,8 @@ public class PostLikeServiceImpl implements IPostLikeService {
     }
 
     @Override
-    public List<PostLikeBean> selectPostLikeByUserId(Integer userId, Integer page) {
-        Page<PostLikeBean> page1 = new Page<>(page,5);
-        QueryWrapper<PostLikeBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("be_user_like_id",userId).eq("like_show",0);
-        Page<PostLikeBean> postLikeBeanPage = postLikeMapper.selectPage(page1, queryWrapper);
-        List<PostLikeBean> records = postLikeBeanPage.getRecords();
-        for (PostLikeBean record : records) {
-            MemberInformationBean memberInformationBean = iMemberInformationService.selectUserMsg(record.getUserLikeId());
-            record.setHeadUrl(memberInformationBean.getMemberHead());
-            record.setUserName(memberInformationBean.getMemberName());
-        }
-        return records;
+    public List<Map<String, String>> selectPostLikeByUserId(Integer userId, Integer page) {
+        return postLikeMapper.selectPostLikeByUserId(userId, (page - 1) * 15);
     }
 
     @Override
@@ -106,9 +95,9 @@ public class PostLikeServiceImpl implements IPostLikeService {
     }
 
     @Override
-    public void deletePostLikeAllInformation(Integer userId) {
+    public boolean deletePostLikeAllInformation(Integer userId) {
         UpdateWrapper<PostLikeBean> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("be_user_like_id", userId).set("like_show", 1);
-        postLikeMapper.update(null, updateWrapper);
+        return postLikeMapper.update(null, updateWrapper)==1;
     }
 }
