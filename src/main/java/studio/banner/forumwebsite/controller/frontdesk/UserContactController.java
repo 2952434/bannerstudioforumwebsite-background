@@ -97,8 +97,18 @@ public class UserContactController {
                     value = "被关注者id", required = true, dataTypeClass = Integer.class),
     })
     public List<Map<String, String>> selectFan(@PathVariable("memberId") Integer memberId, @PathVariable("page") Integer page) {
-
-        return iUserAttentionService.selectFanByUserId(memberId,page);
+        List<Map<String, String>> userAttentionBeans = iUserAttentionService.selectFanByUserId(memberId, page);
+        for (Map<String, String> userAttentionBean : userAttentionBeans) {
+            boolean contacted = iUserAttentionService.contacted(Integer.parseInt(String.valueOf(userAttentionBean.get("be_attention_id"))), Integer.parseInt(String.valueOf(userAttentionBean.get("attention_id"))));
+            if (contacted) {
+                userAttentionBean.put("isFollow", "true");
+                userAttentionBean.put("texts", "已关注");
+            } else {
+                userAttentionBean.put("isFollow", "false");
+                userAttentionBean.put("texts", "关注");
+            }
+        }
+        return userAttentionBeans;
 
     }
 
