@@ -37,6 +37,16 @@ public class ShowAttentionController {
     })
     public RespBean selectAttentionInformation(@PathVariable Integer memberId,@PathVariable Integer page) {
         List<Map<String, String>> userAttentionBeans = iUserAttentionService.selectAttentionInformation(memberId, page);
+        for (Map<String, String> userAttentionBean : userAttentionBeans) {
+            boolean contacted = iUserAttentionService.contacted(Integer.parseInt(String.valueOf(userAttentionBean.get("be_attention_id"))), Integer.parseInt(String.valueOf(userAttentionBean.get("attention_id"))));
+            if (contacted) {
+                userAttentionBean.put("isFollow", "true");
+                userAttentionBean.put("texts", "已关注");
+            } else {
+                userAttentionBean.put("isFollow", "false");
+                userAttentionBean.put("texts", "关注");
+            }
+        }
         return RespBean.ok("查询成功",userAttentionBeans);
     }
 
