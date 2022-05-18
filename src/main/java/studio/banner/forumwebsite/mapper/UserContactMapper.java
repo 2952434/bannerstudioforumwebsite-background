@@ -34,4 +34,13 @@ public interface UserContactMapper extends BaseMapper<UserAttentionBean> {
      */
     @Select("select me.*,at.* from tab_member_information me,tab_user_attention at where at.attention_id = #{userId} and at.be_attention_id = me.member_id order by at.contact_time desc limit #{page},12")
     List<Map<String,String>> selectAttentionUserId(@Param("userId") Integer userId,@Param("page") Integer page);
+
+    /**
+     * 根据用户id查询其粉丝信息并分页
+     * @param userId
+     * @param page
+     * @return
+     */
+    @Select("select me.*,at.* from tab_member_information me,tab_user_attention at where at.attention_show=0 and at.be_attention_id = #{userId} and at.attention_id = me.member_id order by at.contact_time desc limit #{page},12")
+    List<Map<String, String>> selectAttentionInformation(@Param("userId") Integer userId,@Param("page") Integer page);
 }

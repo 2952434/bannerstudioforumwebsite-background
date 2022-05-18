@@ -134,7 +134,7 @@ public class UserAttentionServiceImpl implements IUserAttentionService {
 
     @Override
     public List<Map<String, String>> selectAttentionInformation(Integer memberId, Integer page) {
-        return userContactMapper.selectFanByUserId(memberId, page * 12);
+        return userContactMapper.selectAttentionInformation(memberId, page * 12);
     }
 
     @Override
