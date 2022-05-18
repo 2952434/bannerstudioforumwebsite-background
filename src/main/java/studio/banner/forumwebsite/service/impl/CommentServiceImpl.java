@@ -112,17 +112,8 @@ public class CommentServiceImpl implements ICommentService {
      */
     @Override
     public RespBean selectAllCommentByPostId(Integer commentPostId,Integer page) {
-        QueryWrapper<CommentBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("comment_post_id", commentPostId);
-        Page<CommentBean> page1 = new Page<>(page,10);
-        Page<CommentBean> commentBeanPage = commentMapper.selectPage(page1, queryWrapper);
-        List<CommentBean> records = commentBeanPage.getRecords();
-        for (CommentBean record : records) {
-            MemberInformationBean memberInformationBean = iMemberInformationService.selectUserMsg(record.getCommentMemberId());
-            record.setHeadUrl(memberInformationBean.getMemberHead());
-            record.setUserName(memberInformationBean.getMemberName());
-        }
-        return RespBean.ok("查询成功",records);
+        List<Map<String, String>> maps = commentMapper.selectAllCommentByPostId(commentPostId, (page-1)*5);
+        return RespBean.ok("查询成功",maps);
     }
 
     /**

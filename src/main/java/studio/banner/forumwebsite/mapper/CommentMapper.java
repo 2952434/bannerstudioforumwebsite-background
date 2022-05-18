@@ -27,4 +27,13 @@ public interface CommentMapper extends BaseMapper<CommentBean> {
      */
     @Select("select co.*,me.member_head,me.member_name,po.post_title from tab_comment co,tab_member_information me,tab_post po where co.comment_member_id = me.member_id and co.comment_post_id = po.post_id and co.post_member_id = #{memberId} and co.comment_show = 0 order by co.comment_time desc limit #{page},15")
     List<Map<String,String>> selectCommentByMemberId(@Param("memberId") Integer memberId,@Param("page") Integer page);
+
+    /**
+     * 根据帖子id查询该帖子
+     * @param commentPostId
+     * @param page
+     * @return
+     */
+    @Select("select co.*,me.member_name,me.member_head from tab_comment co,tab_member_information me where co.comment_member_id = me.member_id and co.comment_post_id = #{commentPostId} order by co.comment_time desc limit #{page},5")
+    List<Map<String,String>> selectAllCommentByPostId(@Param("commentPostId") Integer commentPostId,@Param("page") Integer page);
 }
