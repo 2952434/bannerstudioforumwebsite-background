@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import studio.banner.forumwebsite.bean.*;
 import studio.banner.forumwebsite.mapper.*;
 import studio.banner.forumwebsite.service.*;
@@ -56,11 +57,13 @@ public class PostServiceImpl implements IPostService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public RespBean insertPost(PostBean postBean) {
         if (postBean == null) {
             return RespBean.error("帖子信息错误添加失败");
         }
-        postBean.setPostTime(TimeUtils.getDateString());
+        String dateString = TimeUtils.getDateString();
+        postBean.setPostTime(dateString);
         if (postMapper.insert(postBean)==1){
             UpdateWrapper<MemberInformationBean> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("member_id",postBean.getPostMemberId()).set("member_post_num",selectPostNumByMemberId(postBean.getPostMemberId()));
@@ -71,7 +74,15 @@ public class PostServiceImpl implements IPostService {
             }
             redisTemplate.opsForHash().put("forumPostInsertNum", "todayPostInsertNum",String.valueOf(Integer.parseInt(String.valueOf(todayPostInsertNum))+1));
             logger.info("插入帖子成功");
-            return RespBean.ok("插入帖子成功");
+
+            QueryWrapper<PostBean> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("post_member_id",postBean.getPostMemberId()).eq("post_time",dateString);
+            PostBean postBean1 = postMapper.selectOne(queryWrapper);
+            if (postBean1!=null){
+                return RespBean.ok("插入帖子成功",postBean1.getPostId());
+            }else {
+                return RespBean.error("帖子插入失败");
+            }
         }
         return RespBean.error("帖子插入失败");
     }
