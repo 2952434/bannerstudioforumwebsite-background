@@ -27,4 +27,13 @@ public interface ReplyMapper extends BaseMapper<ReplyBean> {
      */
     @Select("select re.*,co.comment_content,me.member_head,me.member_name from tab_reply re,tab_comment co,tab_member_information me where re.reply_comment_member_id = #{memberId} and me.member_id = re.reply_member_id and re.comment_id = co.comment_id and re.reply_show = 0 order by re.reply_time desc limit #{page},15")
     List<Map<String,String>> selectReplyInformationById(@Param("memberId") Integer memberId,@Param("page") Integer page);
+
+    /**
+     * 根据评论id查询该评论下的回复
+     * @param commentId
+     * @param page
+     * @return
+     */
+    @Select("select re.*,me.member_name,me.member_head from tab_reply re,tab_member_information me where re.comment_id = #{commentId} and re.reply_comment_member_id = me.member_id order by re.reply_time desc limit #{page},5")
+    List<Map<String,String>> selectAllReplyByCommentId(@Param("commentId")Integer commentId,@Param("page") Integer page);
 }

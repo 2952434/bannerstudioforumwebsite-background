@@ -136,19 +136,8 @@ public class ReplyServiceImpl implements IReplyService {
      */
     @Override
     public RespBean selectAllReplyByCommentId(Integer commentId,Integer page) {
-        QueryWrapper<ReplyBean> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("comment_id", commentId).orderByDesc("reply_time");
-        Page<ReplyBean> page1 = new Page<>(page,6);
-        List<ReplyBean> records = replyMapper.selectPage(page1, queryWrapper).getRecords();
-        for (ReplyBean record : records) {
-            MemberInformationBean memberInformationBean = iMemberInformationService.selectUserMsg(record.getReplyCommentMemberId());
-            record.setHeadUrl(memberInformationBean.getMemberHead());
-            record.setUserName(memberInformationBean.getMemberName());
-        }
-        if (records.size()==0){
-            return RespBean.error("该评论下无回复");
-        }
-        return RespBean.ok("查询成功",records);
+        List<Map<String, String>> maps = replyMapper.selectAllReplyByCommentId(commentId, (page - 1) * 5);
+        return RespBean.ok("查询成功",maps);
     }
 
 
