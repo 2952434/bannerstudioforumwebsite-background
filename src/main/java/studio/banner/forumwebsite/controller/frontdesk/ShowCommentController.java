@@ -106,6 +106,13 @@ public class ShowCommentController {
         }else {
             return RespBean.error("删除失败");
         }
+    }
 
+    @GetMapping("/selectAllReplyNumByCommentId/{commentId}")
+    @ApiOperation(value = "根据评论id查询该评论下的回复数量",httpMethod = "GET")
+    @ApiImplicitParam(dataType = "query",name = "commentId",
+            value = "评论id",required = true,dataTypeClass = Integer.class)
+    public Integer selectAllReplyNumByCommentId(@PathVariable Integer commentId) {
+        return iCommentService.selectAllCommentNumByPostId(commentId);
     }
 }

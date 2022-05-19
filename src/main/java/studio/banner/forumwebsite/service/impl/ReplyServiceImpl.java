@@ -161,4 +161,11 @@ public class ReplyServiceImpl implements IReplyService {
         return replyMapper.update(null, updateWrapper)==1;
     }
 
+    @Override
+    public Integer selectAllReplyNumByCommentId(Integer commentId) {
+        QueryWrapper<ReplyBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("comment_id",commentId);
+        return replyMapper.selectCount(queryWrapper);
+    }
+
 }

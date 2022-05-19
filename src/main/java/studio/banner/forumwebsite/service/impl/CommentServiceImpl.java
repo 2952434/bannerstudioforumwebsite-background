@@ -116,6 +116,13 @@ public class CommentServiceImpl implements ICommentService {
         return RespBean.ok("查询成功",maps);
     }
 
+    @Override
+    public Integer selectAllCommentNumByPostId(Integer commentPostId) {
+        QueryWrapper<CommentBean> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("comment_post_id",commentPostId);
+        return commentMapper.selectCount(queryWrapper);
+    }
+
     /**
      * 根据用户id查找该用户全部评论
      *

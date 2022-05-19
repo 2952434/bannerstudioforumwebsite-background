@@ -122,4 +122,12 @@ public class CommentController {
         }
         return RespBean.error("查询失败，未找到该评论");
     }
+
+    @GetMapping("/selectAllCommentNumByPostId/{commentPostId}")
+    @ApiOperation(value = "根据帖子id获取评论数量",httpMethod = "GET")
+    @ApiImplicitParam(dataType = "query",name = "commentPostId",
+            value = "帖子id",required = true,dataTypeClass = Integer.class)
+    public Integer selectAllCommentNumByPostId(@PathVariable Integer commentPostId) {
+        return iCommentService.selectAllCommentNumByPostId(commentPostId);
+    }
 }

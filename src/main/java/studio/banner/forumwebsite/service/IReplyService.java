@@ -94,4 +94,11 @@ public interface IReplyService {
      * @return
      */
     boolean deleteAllReplyInformationById(Integer memberId);
+
+    /**
+     * 根据评论id查询该评论下的回复总数
+     * @param commentId
+     * @return
+     */
+    Integer selectAllReplyNumByCommentId(Integer commentId);
 }

@@ -53,6 +53,13 @@ public interface ICommentService {
     RespBean selectAllCommentByPostId(Integer commentPostId,Integer page);
 
     /**
+     * 根据帖子id获取评论总数
+     * @param commentPostId
+     * @return
+     */
+    Integer selectAllCommentNumByPostId(Integer commentPostId);
+
+    /**
      * 根据用户id查找该用户全部评论
      *
      * @param commentMemberId 用户id
