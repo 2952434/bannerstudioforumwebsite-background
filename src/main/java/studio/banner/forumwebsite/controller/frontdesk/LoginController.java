@@ -64,7 +64,7 @@ public class LoginController {
         headers.add("Authorization", header);
         HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
 //        ResponseEntity<AuthUser> entity = restTemplate.exchange("https://oauth.bannerstudio.club/admin/getInformation/" + username, HttpMethod.GET, httpEntity, AuthUser.class);
-        ResponseEntity<AuthUser> entity = restTemplate.exchange("https://192.144.233.202:8090/admin/getInformation/" + username, HttpMethod.GET, httpEntity, AuthUser.class);
+        ResponseEntity<AuthUser> entity = restTemplate.exchange("http://192.144.233.202:8090/admin/getInformation/" + username, HttpMethod.GET, httpEntity, AuthUser.class);
         AuthUser authUser = entity.getBody();
 //        更新数据库操作
         if (authUser == null) {

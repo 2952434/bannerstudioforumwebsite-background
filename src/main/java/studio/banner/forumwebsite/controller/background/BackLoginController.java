@@ -44,7 +44,7 @@ public class BackLoginController {
             map.add("redirect_uri", "http://localhost:8081/transfer");
             map.add("grant_type", "authorization_code");
 //            Map<String, String> resp = restTemplate.postForObject("https://oauth.bannerstudio.club/oauth/token", map, Map.class);
-            Map<String, String> resp = restTemplate.postForObject("https://192.144.233.202:8090/oauth/token", map, Map.class);
+            Map<String, String> resp = restTemplate.postForObject("http://192.144.233.202:8090/oauth/token", map, Map.class);
             access_token = resp.get("access_token");
             System.out.println(access_token);
             refresh_token = resp.get("refresh_token");

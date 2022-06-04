@@ -106,7 +106,7 @@ public class UsersInformationController {
         headers.add("Authorization", header);
         HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
 //        ResponseEntity<RespBean> entity = restTemplate.exchange("https://oauth.bannerstudio.club/admin/selectGradeGroupBy/"+grade, HttpMethod.GET, httpEntity, RespBean.class);
-        ResponseEntity<RespBean> entity = restTemplate.exchange("https://192.144.233.202:8090/admin/selectGradeGroupBy/"+grade, HttpMethod.GET, httpEntity, RespBean.class);
+        ResponseEntity<RespBean> entity = restTemplate.exchange("http://192.144.233.202:8090/admin/selectGradeGroupBy/"+grade, HttpMethod.GET, httpEntity, RespBean.class);
         return entity.getBody();
     }
 
@@ -118,7 +118,7 @@ public class UsersInformationController {
         headers.add("Authorization", header);
         HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
 //        ResponseEntity<RespBean> entity = restTemplate.exchange("https://oauth.bannerstudio.club/admin/selectDirectionGroupBy", HttpMethod.GET, httpEntity, RespBean.class);
-        ResponseEntity<RespBean> entity = restTemplate.exchange("https://192.144.233.202:8090/admin/selectDirectionGroupBy", HttpMethod.GET, httpEntity, RespBean.class);
+        ResponseEntity<RespBean> entity = restTemplate.exchange("http://192.144.233.202:8090/admin/selectDirectionGroupBy", HttpMethod.GET, httpEntity, RespBean.class);
         return entity.getBody();
     }
 
@@ -139,7 +139,7 @@ public class UsersInformationController {
         headers.add("Authorization", header);
         HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
 //        ResponseEntity<RespBean> entity = restTemplate.exchange("https://oauth.bannerstudio.club/admin/selectUserIdAndMemberName/{direction}/{grade}", HttpMethod.GET, httpEntity, RespBean.class,map);
-        ResponseEntity<RespBean> entity = restTemplate.exchange("https://192.144.233.202:8090/admin/selectUserIdAndMemberName/{direction}/{grade}", HttpMethod.GET, httpEntity, RespBean.class,map);
+        ResponseEntity<RespBean> entity = restTemplate.exchange("http://192.144.233.202:8090/admin/selectUserIdAndMemberName/{direction}/{grade}", HttpMethod.GET, httpEntity, RespBean.class,map);
         return entity.getBody();
     }
 
