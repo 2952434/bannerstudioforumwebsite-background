@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import studio.banner.forumwebsite.bean.*;
 import studio.banner.forumwebsite.mapper.ReplyMapper;
 import studio.banner.forumwebsite.service.ICommentService;
@@ -42,6 +43,7 @@ public class ReplyServiceImpl implements IReplyService {
      * @return boolean
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public RespBean insertReply(ReplyBean replyBean) {
         if (replyBean != null) {
             replyBean.setReplyTime(TimeUtils.getDateString());

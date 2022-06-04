@@ -97,7 +97,7 @@ public class ReplyController {
     }
 
 
-    @GetMapping("/replyFrontDesk/selectAllReplyByCommentId")
+    @GetMapping("/replyFrontDesk/selectAllReplyByCommentId/{commentId}/{page}")
     @ApiOperation(value = "根据评论id查找该评论下全部回复", notes = "评论需存在", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "commentId",
@@ -105,7 +105,7 @@ public class ReplyController {
             @ApiImplicitParam(paramType = "query", name = "page",
                     value = "分页查询页数", required = true, dataTypeClass = Integer.class)
     })
-    public RespBean selectAllReplyByCommentId(Integer commentId,Integer page) {
+    public RespBean selectAllReplyByCommentId(@PathVariable Integer commentId,@PathVariable Integer page) {
         return iReplyService.selectAllReplyByCommentId(commentId,page);
     }
 
