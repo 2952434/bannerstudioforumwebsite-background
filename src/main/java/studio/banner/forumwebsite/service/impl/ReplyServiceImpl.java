@@ -139,6 +139,9 @@ public class ReplyServiceImpl implements IReplyService {
     @Override
     public RespBean selectAllReplyByCommentId(Integer commentId,Integer page) {
         List<Map<String, String>> maps = replyMapper.selectAllReplyByCommentId(commentId, (page - 1) * 5);
+        for (Map<String, String> map : maps) {
+            map.put("isShow","false");
+        }
         return RespBean.ok("查询成功",maps);
     }
 

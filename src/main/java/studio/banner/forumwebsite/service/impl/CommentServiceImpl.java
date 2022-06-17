@@ -113,6 +113,9 @@ public class CommentServiceImpl implements ICommentService {
     @Override
     public RespBean selectAllCommentByPostId(Integer commentPostId,Integer page) {
         List<Map<String, String>> maps = commentMapper.selectAllCommentByPostId(commentPostId, (page-1)*5);
+        for (Map<String, String> map : maps) {
+            map.put("isShow","false");
+        }
         return RespBean.ok("查询成功",maps);
     }
 
