@@ -36,6 +36,8 @@ public class TestMassageSevice {
     private MemberInformationMapper memberInformationMapper;
     @Autowired
     private IPostEsService postEsService;
+    @Autowired
+    private ICommentService commentService;
     @Test
     public void test01(){
 //        List<FixedInformationBean> fixedInformationBeans = fixedInformationMapper.selectList(null);
@@ -97,6 +99,11 @@ public class TestMassageSevice {
     @Test
     public void userContactMapper(){
         System.out.println(userContactMapper.selectFanByUserId(50, 0));
+    }
+
+    @Test
+    public void selectAllCommentByPostId(){
+        System.out.println(commentService.selectAllCommentByPostId(1, 1).getObj());
     }
     @Test
     public void testSave() {
