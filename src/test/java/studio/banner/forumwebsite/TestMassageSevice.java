@@ -28,6 +28,9 @@ public class TestMassageSevice {
     @Autowired
     private ICollectService iCollectService;
     @Autowired
+    protected ICommentService iCommentService;
+
+    @Autowired
     private PostMapper postMapper;
     @Autowired
     private IUserAttentionService iUserAttentionService;
@@ -104,6 +107,11 @@ public class TestMassageSevice {
     @Test
     public void selectAllCommentByPostId(){
         System.out.println(commentService.selectAllCommentByPostId(1, 1).getObj());
+    }
+
+    @Test
+    public void testComment(){
+        System.out.println(iCommentService.selectComment(130) != null);
     }
     @Test
     public void testSave() {

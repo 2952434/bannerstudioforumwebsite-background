@@ -86,7 +86,7 @@ public class CommentController {
             @ApiImplicitParam(paramType = "query", name = "commentId",
                     value = "评论id", required = true, dataTypeClass = Integer.class),
     })
-    public RespBean deleteComment(Integer commentId,Integer memberId) {
+    public RespBean deleteComment(@PathVariable Integer commentId,@PathVariable Integer memberId) {
         if (iCommentService.selectComment(commentId) != null) {
             return iCommentService.deleteComment(commentId,memberId);
         }

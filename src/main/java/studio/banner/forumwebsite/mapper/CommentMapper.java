@@ -42,6 +42,6 @@ public interface CommentMapper extends BaseMapper<CommentBean> {
      * @param commentId
      * @return
      */
-    @Select("select re.*,me.member_name,me.member_head from tab_reply re,tab_member_information me where re.comment_id = #{commentId} and re.reply_comment_member_id = me.member_id order by re.reply_time desc ")
+    @Select("select re.*,me.member_name,me.member_head,(select member_name from tab_member_information where member_id = re.reply_comment_member_id ) be_reply_name from tab_reply re,tab_member_information me where re.comment_id = #{commentId} and re.reply_comment_member_id = me.member_id order by re.reply_time desc")
     List<Map<String,String>> selectAllReplyByCommentId(@Param("commentId")Integer commentId);
 }
