@@ -193,6 +193,7 @@ public class MemberInformationServiceImpl implements IMemberInformationService {
     public RespBean updateMemberInformation(MemberInformationBean memberInformationBean) {
         UpdateWrapper<MemberInformationBean> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("member_id",memberInformationBean.getMemberId());
+        memberInformationBean.setMemberAge(TimeUtils.getAgeFromBirthTime(memberInformationBean.getMemberBirthday()));
         int updateById = memberInformationMapper.update(memberInformationBean,updateWrapper);
         if (updateById==1){
             logger.info("更新用户成功");

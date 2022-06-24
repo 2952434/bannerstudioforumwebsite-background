@@ -35,7 +35,7 @@ public class TencentPhotoController {
         res.put("url", url);
         res.put("success", 1);
         res.put("message", "upload success!");
-        System.out.println(res.get(url));
+
         return res;
     }
 
