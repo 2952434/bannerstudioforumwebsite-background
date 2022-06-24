@@ -98,27 +98,27 @@ public class UsersInformationController {
         return RespBean.error("无该用户信息");
     }
 
-    @GetMapping("/selectUserGrade/{grade}")
-    @ApiOperation(value = "根据年级查询所有年级",httpMethod = "GET")
-    public RespBean selectGradeGroupBy(HttpServletRequest request,@PathVariable String grade){
+    @GetMapping("/selectUserGrade")
+    @ApiOperation(value = "查询所有年级",httpMethod = "GET")
+    public RespBean selectGradeGroupBy(HttpServletRequest request){
         String header = request.getHeader("Authorization");
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", header);
         HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
 //        ResponseEntity<RespBean> entity = restTemplate.exchange("https://oauth.bannerstudio.club/admin/selectGradeGroupBy/"+grade, HttpMethod.GET, httpEntity, RespBean.class);
-        ResponseEntity<RespBean> entity = restTemplate.exchange("http://192.144.233.202:8090/admin/selectGradeGroupBy/"+grade, HttpMethod.GET, httpEntity, RespBean.class);
+        ResponseEntity<RespBean> entity = restTemplate.exchange("http://192.144.233.202:8090/admin/selectGradeGroupBy/", HttpMethod.GET, httpEntity, RespBean.class);
         return entity.getBody();
     }
 
-    @GetMapping("/selectDirectionGroupBy")
-    @ApiOperation(value = "查询所有方向",httpMethod = "GET")
-    public RespBean selectDirectionGroupBy(HttpServletRequest request){
+    @GetMapping("/selectDirectionGroupBy/{grade}")
+    @ApiOperation(value = "根据年级查询所有方向",httpMethod = "GET")
+    public RespBean selectDirectionGroupBy(HttpServletRequest request,@PathVariable String grade){
         String header = request.getHeader("Authorization");
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", header);
         HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
 //        ResponseEntity<RespBean> entity = restTemplate.exchange("https://oauth.bannerstudio.club/admin/selectDirectionGroupBy", HttpMethod.GET, httpEntity, RespBean.class);
-        ResponseEntity<RespBean> entity = restTemplate.exchange("http://192.144.233.202:8090/admin/selectDirectionGroupBy", HttpMethod.GET, httpEntity, RespBean.class);
+        ResponseEntity<RespBean> entity = restTemplate.exchange("http://192.144.233.202:8090/admin/selectDirectionGroupBy"+grade, HttpMethod.GET, httpEntity, RespBean.class);
         return entity.getBody();
     }
 
