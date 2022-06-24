@@ -272,11 +272,14 @@ public class PostController {
     @ApiOperation(value = "帖子排行榜Test", httpMethod = "GET")
     public RespBean add() {
         Set<ZSetOperations.TypedTuple<String>> add = iRedisService.addRedis();
-        List<Object> list = new ArrayList<>();
+        List<Map<String,String>> list = new ArrayList<>();
         for (ZSetOperations.TypedTuple<String> tuple : add) {
             String value = tuple.getValue();
             JSONObject object = JSON.parseObject(value);
-            list.add(object);
+            Map<String,String> map1 = new HashMap<>();
+            map1.put("postId", (String) object.get("postId"));
+            map1.put("postTitle", (String) object.get("postTitle"));
+            list.add(map1);
         }
         return RespBean.ok(list);
     }
@@ -284,8 +287,7 @@ public class PostController {
     @GetMapping("/selectPostRank")
     @ApiOperation(value = "帖子排行榜查询", httpMethod = "GET")
     public RespBean selectPostRank() {
-        Set<ZSetOperations.TypedTuple<String>> rank = iRedisService.selectPostRank();
-        return RespBean.ok(rank);
+        return RespBean.ok(iRedisService.selectPostRank());
     }
 
 

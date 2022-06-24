@@ -3,6 +3,7 @@ package studio.banner.forumwebsite.service;
 import org.springframework.data.redis.core.ZSetOperations;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -31,7 +32,7 @@ public interface IRedisService {
      *
      * @return Set<ZSetOperations.TypedTuple < String>>
      */
-    Set<ZSetOperations.TypedTuple<String>> selectPostRank();
+    List<Map<String,String>> selectPostRank();
 
     /**
      * 每天自动更新用户15天增长浏览量

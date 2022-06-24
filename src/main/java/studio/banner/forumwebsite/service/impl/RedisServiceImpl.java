@@ -1,6 +1,7 @@
 package studio.banner.forumwebsite.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.collections.CollectionUtils;
@@ -16,10 +17,7 @@ import studio.banner.forumwebsite.mapper.MemberInformationMapper;
 import studio.banner.forumwebsite.mapper.PostMapper;
 import studio.banner.forumwebsite.service.IRedisService;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @Author: Ljx
@@ -93,8 +91,18 @@ public class RedisServiceImpl implements IRedisService {
      * @return Set<ZSetOperations.TypedTuple < String>>
      */
     @Override
-    public Set<ZSetOperations.TypedTuple<String>> selectPostRank() {
-        return redisTemplate.opsForZSet().reverseRangeWithScores(POST_RANK, 0, 9);
+    public List<Map<String, String>> selectPostRank() {
+        Set<ZSetOperations.TypedTuple<String>> typedTuples = redisTemplate.opsForZSet().reverseRangeWithScores(POST_RANK, 0, 9);
+        List<Map<String,String>> list = new ArrayList<>();
+        for (ZSetOperations.TypedTuple<String> tuple : typedTuples) {
+            String value = tuple.getValue();
+            JSONObject object = JSON.parseObject(value);
+            Map<String,String> map1 = new HashMap<>();
+            map1.put("postId", (String) object.get("postId"));
+            map1.put("postTitle", (String) object.get("postTitle"));
+            list.add(map1);
+        }
+        return list;
     }
 
     @Override
