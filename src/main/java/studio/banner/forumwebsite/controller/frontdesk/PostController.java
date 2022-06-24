@@ -1,6 +1,7 @@
 package studio.banner.forumwebsite.controller.frontdesk;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -274,8 +275,8 @@ public class PostController {
         List<Object> list = new ArrayList<>();
         for (ZSetOperations.TypedTuple<String> tuple : add) {
             String value = tuple.getValue();
-            Object parse = JSON.parse(value);
-            list.add(parse);
+            JSONObject object = JSON.parseObject(value);
+            list.add(object);
         }
         return RespBean.ok(list);
     }

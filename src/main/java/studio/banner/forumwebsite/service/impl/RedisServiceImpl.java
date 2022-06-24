@@ -94,7 +94,7 @@ public class RedisServiceImpl implements IRedisService {
      */
     @Override
     public Set<ZSetOperations.TypedTuple<String>> selectPostRank() {
-        return redisTemplate.opsForZSet().reverseRangeWithScores(POST_RANK, 0, 10);
+        return redisTemplate.opsForZSet().reverseRangeWithScores(POST_RANK, 0, 9);
     }
 
     @Override
