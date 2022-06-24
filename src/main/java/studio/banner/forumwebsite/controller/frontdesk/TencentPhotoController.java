@@ -38,7 +38,7 @@ public class TencentPhotoController {
         return res;
     }
 
-    @DeleteMapping("/delete/{fileName}")
+    @DeleteMapping("/tencentPhotoFrontDesk/delete/{fileName}")
     @ApiOperation(value = "腾讯云删除接口", httpMethod = "DELETE")
     @ApiImplicitParam(name = "fileName", value = "图片名", dataTypeClass = String.class)
     public RespBean delete(@PathVariable String fileName) {
