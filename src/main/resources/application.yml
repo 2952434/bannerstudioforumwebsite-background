@@ -1,4 +1,5 @@
 spring:
+
   datasource:
     name: mysql
     type: com.alibaba.druid.pool.DruidDataSource
@@ -68,6 +69,13 @@ spring:
       smtp:
         socketFactoryClass: javax.net.ssl.SSLSocketFactory
       debug: true
+
+  devtools:
+    restart:
+#      关闭热部署
+      enabled: false
+#      不参与热部署
+      exclude: static/**,templates/**
 server:
   port: 8084
 

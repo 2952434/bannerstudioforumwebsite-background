@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Transformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.DefaultTypedTuple;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -49,7 +48,7 @@ public class RedisServiceImpl implements IRedisService {
         redisTemplate.opsForZSet().removeRangeByScore(POST_RANK, 0, 100);
         QueryWrapper<PostBean> queryWrapper = new QueryWrapper();
         queryWrapper.orderByDesc("post_page_view","post_like_number");
-        Page<PostBean> page = new Page<>(1,20);
+        Page<PostBean> page = new Page<>(1,10);
         Page<PostBean> page1 = postMapper.selectPage(page, queryWrapper);
         List<PostBean> records = page1.getRecords();
         Set<ZSetOperations.TypedTuple<String>> tuples = new HashSet<>();
@@ -60,7 +59,7 @@ public class RedisServiceImpl implements IRedisService {
             }
         }
         redisTemplate.opsForZSet().add(POST_RANK, tuples);
-        return redisTemplate.opsForZSet().reverseRangeWithScores(POST_RANK, 0, 15);
+        return redisTemplate.opsForZSet().reverseRangeWithScores(POST_RANK, 0, 10);
     }
 
     /**
@@ -95,7 +94,7 @@ public class RedisServiceImpl implements IRedisService {
      */
     @Override
     public Set<ZSetOperations.TypedTuple<String>> selectPostRank() {
-        return redisTemplate.opsForZSet().reverseRangeWithScores(POST_RANK, 0, 15);
+        return redisTemplate.opsForZSet().reverseRangeWithScores(POST_RANK, 0, 10);
     }
 
     @Override

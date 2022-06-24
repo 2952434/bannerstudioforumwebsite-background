@@ -1,10 +1,12 @@
 package studio.banner.forumwebsite.controller.frontdesk;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.util.Json;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import studio.banner.forumwebsite.bean.*;
 import studio.banner.forumwebsite.service.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -272,7 +271,13 @@ public class PostController {
     @ApiOperation(value = "帖子排行榜Test", httpMethod = "GET")
     public RespBean add() {
         Set<ZSetOperations.TypedTuple<String>> add = iRedisService.addRedis();
-        return RespBean.ok(add);
+        List<Object> list = new ArrayList<>();
+        for (ZSetOperations.TypedTuple<String> tuple : add) {
+            String value = tuple.getValue();
+            Object parse = JSON.parse(value);
+            list.add(parse);
+        }
+        return RespBean.ok(list);
     }
 
     @GetMapping("/selectPostRank")

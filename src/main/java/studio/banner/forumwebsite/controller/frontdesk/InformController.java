@@ -27,8 +27,6 @@ public class InformController {
 
     @Autowired
     private IInformService informService;
-
-
     @GetMapping("/selectInformNum")
     @ApiOperation(value = "查询通知总数量",httpMethod = "GET")
     public RespBean selectInformNum() {

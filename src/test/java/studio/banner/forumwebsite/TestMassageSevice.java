@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import springfox.documentation.spring.web.json.Json;
 import studio.banner.forumwebsite.bean.*;
+import studio.banner.forumwebsite.controller.frontdesk.PostController;
 import studio.banner.forumwebsite.mapper.FixedInformationMapper;
 import studio.banner.forumwebsite.mapper.MemberInformationMapper;
 import studio.banner.forumwebsite.mapper.PostMapper;
@@ -19,6 +20,9 @@ import java.util.*;
 
 @SpringBootTest
 public class TestMassageSevice {
+
+    @Autowired
+    private PostController postController;
     @Autowired
     private IMessageService messageService;
     @Autowired
@@ -141,5 +145,9 @@ public class TestMassageSevice {
         for (Message message : listByFromAndTo) {
             System.out.println(message);
         }
+    }
+    @Test
+    public void test(){
+        postController.add();
     }
 }

@@ -1,7 +1,6 @@
 package studio.banner.forumwebsite.service;
 
 import org.springframework.data.redis.core.ZSetOperations;
-import studio.banner.forumwebsite.bean.RespBean;
 
 import java.util.List;
 import java.util.Set;
