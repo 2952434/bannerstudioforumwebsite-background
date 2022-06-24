@@ -191,7 +191,9 @@ public class MemberInformationServiceImpl implements IMemberInformationService {
 
     @Override
     public RespBean updateMemberInformation(MemberInformationBean memberInformationBean) {
-        int updateById = memberInformationMapper.updateById(memberInformationBean);
+        UpdateWrapper<MemberInformationBean> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("member_id",memberInformationBean.getMemberId());
+        int updateById = memberInformationMapper.update(memberInformationBean,updateWrapper);
         if (updateById==1){
             logger.info("更新用户成功");
             return RespBean.ok("更新成功");
