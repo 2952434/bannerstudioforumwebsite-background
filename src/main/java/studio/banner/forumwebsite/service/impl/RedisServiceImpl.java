@@ -94,11 +94,14 @@ public class RedisServiceImpl implements IRedisService {
     public List<Map<String, String>> selectPostRank() {
         Set<ZSetOperations.TypedTuple<String>> typedTuples = redisTemplate.opsForZSet().reverseRangeWithScores(POST_RANK, 0, 9);
         List<Map<String,String>> list = new ArrayList<>();
+        if (typedTuples==null){
+            return list;
+        }
         for (ZSetOperations.TypedTuple<String> tuple : typedTuples) {
             String value = tuple.getValue();
             JSONObject object = JSON.parseObject(value);
             Map<String,String> map1 = new HashMap<>();
-            map1.put("postId", (String) object.get("postId"));
+            map1.put("postId",String.valueOf(object.get("postId")));
             map1.put("postTitle", (String) object.get("postTitle"));
             list.add(map1);
         }

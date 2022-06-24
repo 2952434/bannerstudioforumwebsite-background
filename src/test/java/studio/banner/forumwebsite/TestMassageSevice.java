@@ -148,6 +148,6 @@ public class TestMassageSevice {
     }
     @Test
     public void test(){
-        postController.add();
+        postController.selectPostRank();
     }
 }
