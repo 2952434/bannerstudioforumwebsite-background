@@ -27,14 +27,15 @@ public class TencentPhotoController {
     @Autowired
     private ITencentYunService iTencentYunService;
 
-    @RequestMapping(value = "/tencentPhotoFrontDesk/upload")
+    @PostMapping(value = "/tencentPhotoFrontDesk/upload")
     @ApiOperation(value = "腾讯云上传接口", notes = "上传图片不能为空", httpMethod = "POST")
-    public JSONObject upload(@RequestParam(value = "editormd-image-file", required = false) MultipartFile file, HttpServletRequest request) {
+    public JSONObject upload(@RequestBody MultipartFile file) {
         String url = iTencentYunService.upload(file);
         JSONObject res = new JSONObject();
         res.put("url", url);
         res.put("success", 1);
         res.put("message", "upload success!");
+        System.out.println(res.get(url));
         return res;
     }
 
