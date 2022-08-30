@@ -39,12 +39,12 @@ public class BackLoginController {
         if (code != null) {
             MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
             map.add("code", code);
-            map.add("client_id", "bannerstudioofficialwebsite");
-            map.add("client_secret", "bannerstudioofficialwebsite");
-            map.add("redirect_uri", "http://localhost:8081/transfer");
+            map.add("client_id", "bannerstudioforumwebsite");
+            map.add("client_secret", "bannerstudioforumwebsite");
+            map.add("redirect_uri", "https://forum.bannerstudio.club/transfer");
             map.add("grant_type", "authorization_code");
-//            Map<String, String> resp = restTemplate.postForObject("https://oauth.bannerstudio.club/oauth/token", map, Map.class);
-            Map<String, String> resp = restTemplate.postForObject("http://192.144.233.202:8090/oauth/token", map, Map.class);
+            Map<String, String> resp = restTemplate.postForObject("https://oauth.bannerstudio.club/oauth/token", map, Map.class);
+//            Map<String, String> resp = restTemplate.postForObject("http://192.144.233.202:8090/oauth/token", map, Map.class);
             access_token = resp.get("access_token");
             System.out.println(access_token);
             refresh_token = resp.get("refresh_token");
