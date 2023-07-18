@@ -5,9 +5,9 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://82.157.145.197/forum?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true
-      username: lijunxiang
-      password: asd.123
+      url: jdbc:mysql://IP/database?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true
+      username: ******
+      password: ******
       filter: stat
       initial-size: 1
       min-idle: 1
@@ -32,10 +32,10 @@ spring:
       max-request-size: 100MB
   #redis
   redis:
-    host: 82.157.145.197
-    port: 6379
+    host: IP
+    port: port
     database: 0
-    password: asd.123
+    password: ******
     jedis:
       pool:
         max-active: 8
@@ -46,7 +46,7 @@ spring:
 #    mongodb
   data:
     mongodb:
-      uri: mongodb://82.157.145.197:27017/test
+      uri: mongodb://IP/database
 
   mvc:
     view:
@@ -55,14 +55,14 @@ spring:
 #    es全文检索
   elasticsearch:
     rest:
-      uris: 82.157.145.197:9200
+      uris: IP:host
       read-timeout: 30s
       connection-timeout: 5s
   #  邮箱
   mail:
     host: smtp.qq.com
     port: 587
-    username: 2952434583@qq.com
+    username: email@qq.com
     password: spmkmsoighssdhdd
     default-encoding: UTF-8
     properties:
@@ -83,8 +83,8 @@ server:
 qcloud:
   path: https://ljxlwyq-1308186257.cos.ap-beijing.myqcloud.com
   bucketName: ljxlwyq-1308186257
-  secretId: AKIDQjsreDYfXEk14sTpvlNjsoW3NSK0ThhT
-  secretKey: bx41kFVWIq9F8oFRO8ex2tWu53nIbgW6
+  secretId: *****
+  secretKey: *****
   region: ap-beijing
   prefix: /images/
 
