@@ -38,3 +38,8 @@ mvnw
 mvnw.cmd
 target
 .git
+
+/src/main/docker/
+/src/main/resources/static/
+/src/main/resources/templates/
+/src/main/resources/application.yml
